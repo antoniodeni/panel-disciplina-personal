@@ -14,6 +14,17 @@ https://antoniodeni.github.io/panel-disciplina-personal/
 - iPhone: abrir el enlace en Safari, pulsar **Compartir** y elegir
   **Anadir a pantalla de inicio**.
 
+## Instalar en el PC
+
+- Chrome: abrir el enlace, pulsar los tres puntos, entrar en
+  **Transmitir, guardar y compartir** y elegir
+  **Instalar Panel de Disciplina Personal** o **Instalar pagina como aplicacion**.
+- Edge: abrir el enlace, pulsar los tres puntos, entrar en
+  **Aplicaciones** y elegir **Instalar este sitio como una aplicacion**.
+
+Despues se puede crear un acceso directo y fijar la aplicacion en Inicio o en
+la barra de tareas.
+
 ## Privacidad y datos
 
 Los datos se guardan en el almacenamiento local del dispositivo. No se
@@ -25,3 +36,8 @@ copia de seguridad.
 
 GitHub Pages publica la rama `main` desde la carpeta raiz. El repositorio y el
 acceso del conector estan limitados a esta aplicacion.
+
+## Estado y siguiente fase
+
+El estado exacto del proyecto y el punto de continuacion estan documentados en
+`ESTADO_PROYECTO.md`.
