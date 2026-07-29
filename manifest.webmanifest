@@ -1,0 +1,20 @@
+{
+  "name": "Panel de Disciplina Personal",
+  "short_name": "Disciplina",
+  "description": "Panel diario para revisar habitos, agenda, cierre del dia y balance personal.",
+  "start_url": "./panel-disciplina-personal.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f4f1",
+  "theme_color": "#1b2420",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
