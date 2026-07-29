@@ -1,0 +1,2791 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1b2420">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Disciplina">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Panel de Disciplina Personal</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f2f4f1;
+      --ink: #1b2420;
+      --muted: #68736d;
+      --line: #d5dbd6;
+      --panel: #ffffff;
+      --soft: #f4f6f3;
+      --green: #2f7d4c;
+      --green-2: #dcefe4;
+      --amber: #b8791a;
+      --amber-2: #f6ead5;
+      --red: #b84b45;
+      --red-2: #f4deda;
+      --blue: #315f8f;
+      --blue-2: #deebf8;
+      --shadow: 0 1px 2px rgba(23, 33, 27, 0.04), 0 10px 28px rgba(23, 33, 27, 0.05);
+      font-family: "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(49, 95, 143, 0.2);
+      outline-offset: 2px;
+    }
+
+    .app {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 8px 0 0;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .date-card {
+      min-width: 220px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(23, 33, 27, 0.04);
+      padding: 14px;
+    }
+
+    .date-card label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .date-card input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .date-actions {
+      display: grid;
+      grid-template-columns: 38px 1fr 38px;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .date-actions button {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .date-actions button:hover {
+      border-color: #b8c1ba;
+      background: #e9ede9;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: #f8faf8;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 13px;
+      min-height: 96px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+
+    .status {
+      border-left: 6px solid var(--amber);
+    }
+
+    .status.green {
+      border-left-color: var(--green);
+      background: var(--green-2);
+    }
+
+    .status.yellow {
+      border-left-color: var(--amber);
+      background: var(--amber-2);
+    }
+
+    .status.red {
+      border-left-color: var(--red);
+      background: var(--red-2);
+    }
+
+    .focus-box {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 12px;
+      line-height: 1.35;
+    }
+
+    .field input:hover,
+    .field textarea:hover,
+    .task-form input:hover,
+    .task-form select:hover {
+      border-color: #b8c1ba;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .task-form input:focus,
+    .task-form select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(49, 95, 143, 0.1);
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 38px;
+      border-radius: 6px;
+      padding: 9px 14px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .btn:hover {
+      background: #2b3631;
+    }
+
+    .btn.secondary:hover {
+      background: #e9ede9;
+    }
+
+    .btn.secondary {
+      background: var(--soft);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn.danger {
+      background: var(--red-2);
+      color: #7d2621;
+      border: 1px solid #e4bbb6;
+    }
+
+    .tabs {
+      display: flex;
+      width: max-content;
+      max-width: 100%;
+      gap: 3px;
+      flex-wrap: nowrap;
+      margin: 16px 0 18px;
+      position: sticky;
+      top: 8px;
+      z-index: 8;
+      padding: 4px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 4px 16px rgba(23, 33, 27, 0.07);
+      backdrop-filter: blur(12px);
+    }
+
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      border-radius: 6px;
+      padding: 9px 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      background: var(--soft);
+    }
+
+    .tab.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .section-intro {
+      margin: 2px 0 14px;
+    }
+
+    .section-intro h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-intro p,
+    .panel-copy {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .panel-copy {
+      margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 11px 12px;
+      background: #fff;
+      min-height: 60px;
+    }
+
+    .check-row:hover {
+      border-color: #bcc5be;
+      background: #fbfcfb;
+    }
+
+    .check-row .name {
+      font-weight: 800;
+    }
+
+    .check-row .hint {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .state-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 34px);
+      gap: 5px;
+    }
+
+    .state-buttons button {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .state-buttons button:hover {
+      border-color: #aeb8b0;
+      color: var(--ink);
+    }
+
+    .state-buttons button.active.done {
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
+    }
+
+    .state-buttons button.active.mid {
+      background: var(--amber);
+      color: #fff;
+      border-color: var(--amber);
+    }
+
+    .state-buttons button.active.no {
+      background: var(--red);
+      color: #fff;
+      border-color: var(--red);
+    }
+
+    .area-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(23, 33, 27, 0.03);
+    }
+
+    #areasGrid .area-card:nth-child(1) { border-top: 3px solid #8b7457; }
+    #areasGrid .area-card:nth-child(2) { border-top: 3px solid #527e64; }
+    #areasGrid .area-card:nth-child(3) { border-top: 3px solid #5d7f8a; }
+    #areasGrid .area-card:nth-child(4) { border-top: 3px solid #8a6c62; }
+    #areasGrid .area-card:nth-child(5) { border-top: 3px solid #637596; }
+    #areasGrid .area-card:nth-child(6) { border-top: 3px solid #77766f; }
+
+    .area-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      background: #f7f9f7;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .area-head strong {
+      font-size: 16px;
+    }
+
+    .area-head-copy {
+      display: grid;
+      gap: 3px;
+    }
+
+    .area-head-copy small {
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 900;
+      background: var(--blue-2);
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .area-body {
+      padding: 10px;
+    }
+
+    .task-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 180px auto;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .task-form input,
+    .task-form select {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .task-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 11px;
+      background: #fff;
+    }
+
+    .task-row:hover {
+      border-color: #bcc5be;
+    }
+
+    .task-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .task-row.done .task-text {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .task-main {
+      display: grid;
+      min-width: 0;
+      gap: 5px;
+    }
+
+    .task-area-select {
+      width: max-content;
+      max-width: 100%;
+      border: 0;
+      padding: 2px 22px 2px 0;
+      background: transparent;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .task-row.editing .task-text {
+      text-decoration: none;
+    }
+
+    .task-edit-input {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--green);
+      border-radius: 6px;
+      padding: 7px 8px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .edit {
+      min-height: 30px;
+      border-radius: 6px;
+      padding: 5px 9px;
+      background: var(--blue-2);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .remove {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background: var(--red-2);
+      color: #8f2f2a;
+      font-weight: 900;
+    }
+
+    .journal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .primary-journal {
+      grid-template-columns: 1fr;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .history-row {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: var(--green);
+    }
+
+    .empty {
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .daily-command {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #f8faf8;
+    }
+
+    .daily-command strong {
+      font-size: 14px;
+    }
+
+    .daily-command p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.42;
+    }
+
+    .minimum-panel.active {
+      border-color: var(--amber);
+      background: var(--amber-2);
+    }
+
+    .minimum-panel summary,
+    .optional-journal summary {
+      cursor: pointer;
+      font-weight: 900;
+      list-style-position: inside;
+    }
+
+    .minimum-panel details[open] summary,
+    .optional-journal[open] summary {
+      margin-bottom: 12px;
+    }
+
+    .optional-journal {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .close-state {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .close-state.closed {
+      border-color: #b9d8c4;
+      background: var(--green-2);
+      color: var(--green);
+    }
+
+    .selected-day {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--green);
+      border-radius: 6px;
+      background: #f8faf8;
+    }
+
+    .selected-day strong,
+    .selected-day span {
+      display: block;
+    }
+
+    .selected-day span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .selected-day time {
+      flex: 0 0 auto;
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      z-index: 20;
+      max-width: calc(100% - 28px);
+      padding: 12px 16px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+      opacity: 0;
+      transform: translate(-50%, 16px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .weekly-stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .weekly-layout {
+      align-items: start;
+    }
+
+    .weekly-area-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .weekly-area-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.8fr) minmax(140px, 1.4fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .weekly-area-row strong,
+    .weekly-area-row small {
+      display: block;
+    }
+
+    .weekly-area-row small {
+      margin-top: 3px;
+      color: var(--muted);
+    }
+
+    .weekly-progress {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: var(--soft);
+    }
+
+    .weekly-progress span {
+      display: block;
+      height: 100%;
+      background: var(--green);
+    }
+
+    .target-field {
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .target-field label {
+      margin: 0;
+    }
+
+    .target-field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+    }
+
+    .file-button {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .habit-plan-panel {
+      margin-top: 16px;
+    }
+
+    .habit-plan-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .habit-config-area {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcfb;
+    }
+
+    .habit-config-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .habit-config-head h3 {
+      margin: 0;
+    }
+
+    .small-button {
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 5px 9px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .small-button:hover {
+      border-color: #aeb8b0;
+      background: #e9ede9;
+    }
+
+    .small-button:disabled {
+      cursor: default;
+      opacity: 0.35;
+    }
+
+    .habit-config-list,
+    .pending-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .habit-config-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .habit-config-row.paused {
+      opacity: 0.62;
+    }
+
+    .habit-config-copy strong,
+    .habit-config-copy small {
+      display: block;
+    }
+
+    .habit-config-copy small {
+      margin-top: 3px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .habit-config-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .pending-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .pending-row.carried {
+      color: var(--muted);
+      background: var(--soft);
+    }
+
+    dialog {
+      width: min(560px, calc(100% - 24px));
+      max-height: calc(100vh - 40px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 0;
+      color: var(--ink);
+      background: #fff;
+      box-shadow: 0 24px 70px rgba(23, 33, 27, 0.24);
+    }
+
+    dialog::backdrop {
+      background: rgba(23, 33, 27, 0.56);
+    }
+
+    #habitForm {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .dialog-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .dialog-head h2 {
+      margin: 3px 0 0;
+      font-size: 22px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .dialog-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 23px;
+      line-height: 1;
+    }
+
+    .day-selector {
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .day-selector legend {
+      padding: 0 5px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    #habitDays {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    #habitDays label {
+      display: grid;
+      place-items: center;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    #habitDays label:has(input:checked) {
+      border-color: var(--green);
+      background: var(--green-2);
+      color: var(--green);
+    }
+
+    #habitDays input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-item {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fbfcfb;
+      padding: 12px;
+    }
+
+    .guide-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .guide-item span {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    @media (max-width: 900px) {
+      .topbar,
+      .hero-grid,
+      .grid,
+      .journal-grid,
+      .habit-plan-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        display: grid;
+      }
+
+      .scoreboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .weekly-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .date-card {
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .app {
+        width: calc(100% - 20px);
+        padding-top: 16px;
+        padding-bottom: 96px;
+      }
+
+      .panel {
+        padding: 15px;
+      }
+
+      .brand h1 {
+        font-size: 28px;
+      }
+
+      .brand p {
+        font-size: 14px;
+      }
+
+      .scoreboard,
+      .weekly-stats,
+      .history-row {
+        grid-template-columns: 1fr;
+      }
+
+      .check-row {
+        grid-template-columns: 1fr;
+      }
+
+      .state-buttons {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .state-buttons button {
+        width: 100%;
+        height: 40px;
+      }
+
+      .task-form {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+
+      .task-form input {
+        grid-column: 1 / -1;
+      }
+
+      .tabs {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 30;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+        overflow: visible;
+        border-width: 1px 0 0;
+        border-radius: 0;
+        box-shadow: 0 -6px 22px rgba(23, 33, 27, 0.1);
+      }
+
+      .tab {
+        min-width: 0;
+        min-height: 46px;
+        padding: 8px 2px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .toast {
+        bottom: 78px;
+      }
+
+      .selected-day {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .weekly-area-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .weekly-progress {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+
+      .habit-config-row,
+      .pending-row {
+        grid-template-columns: 1fr;
+      }
+
+      .habit-config-actions {
+        justify-content: flex-start;
+      }
+
+      #habitDays {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="topbar">
+      <div class="brand">
+        <h1>Panel de Disciplina Personal</h1>
+        <p>Abre el dia, verifica lo previsto y cierra con balance. No busca perfeccion: busca que vuelvas a cumplir y puedas ver la verdad de tu semana.</p>
+      </div>
+      <div class="date-card">
+        <label for="dayPicker">Dia de trabajo</label>
+        <input id="dayPicker" type="date">
+        <div class="date-actions">
+          <button type="button" id="prevDayBtn" aria-label="Dia anterior" title="Dia anterior">&larr;</button>
+          <button type="button" id="todayBtn">Hoy</button>
+          <button type="button" id="nextDayBtn" aria-label="Dia siguiente" title="Dia siguiente">&rarr;</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero-grid">
+      <div class="panel">
+        <h2 id="dayStateTitle">Estado de hoy</h2>
+        <div class="scoreboard">
+          <div class="metric status" id="dayStatus">
+            <span>Semaforo</span>
+            <strong id="statusLabel">Amarillo</strong>
+            <small id="statusText">Dia en marcha.</small>
+          </div>
+          <div class="metric">
+            <span>Cumplimiento</span>
+            <strong id="scorePercent">0%</strong>
+            <small>Habitos y tareas completadas.</small>
+          </div>
+          <div class="metric">
+            <span>Tareas</span>
+            <strong id="taskScore">0/0</strong>
+            <small>Lo previsto frente a lo hecho.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Primer paso claro</h2>
+        <div class="focus-box">
+          <div class="field">
+            <label for="priority">Prioridad real del dia</label>
+            <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
+          </div>
+          <div class="field">
+            <label for="nextStep">Siguiente paso de 15 minutos</label>
+            <input id="nextStep" placeholder="Ejemplo: abrir la chuleta y elegir publicacion o mensaje">
+          </div>
+          <div class="actions">
+            <button class="btn" id="badDayBtn">Modo dia malo</button>
+            <button class="btn secondary" id="startTemplateBtn">Planificar manana</button>
+            <button class="btn secondary" id="resetTodayBtn">Limpiar este dia</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Secciones">
+      <button class="tab active" data-tab="hoy">Hoy</button>
+      <button class="tab" data-tab="areas">Areas</button>
+      <button class="tab" data-tab="cierre">Cierre</button>
+      <button class="tab" data-tab="semana">Semana</button>
+      <button class="tab" data-tab="plan">Plan</button>
+      <button class="tab" data-tab="ajustes">Ajustes</button>
+    </nav>
+
+    <section class="view active" id="hoy">
+      <div class="selected-day" id="selectedDayBanner">
+        <div>
+          <strong id="selectedDayLabel">Estas viendo hoy</strong>
+          <span>Todo lo que marques se guardara en este dia.</span>
+        </div>
+        <time id="selectedDayDate"></time>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <h2>Inicio del dia</h2>
+          <div class="daily-command" id="dailyCommand">
+            <strong>Orden del dia</strong>
+            <p>Primero cuerpo y calma. Despues agenda. Despues una tarea real.</p>
+          </div>
+          <div class="check-list" id="morningList"></div>
+        </div>
+        <div class="panel" id="agendaPanel">
+          <h2 id="agendaTitle">Agenda prevista para hoy</h2>
+          <form class="task-form" id="taskForm">
+            <input id="taskInput" placeholder="Anade una tarea prevista para este dia">
+            <select id="taskArea" aria-label="Area de la tarea">
+              <option value="">Sin area</option>
+            </select>
+            <button class="btn" type="submit">Anadir</button>
+          </form>
+          <div class="task-list" id="taskList"></div>
+        </div>
+        <div class="panel minimum-panel" id="minimumPanel">
+          <details id="minimumDetails">
+            <summary>Minimos para salvar el dia</summary>
+            <div class="daily-command">
+              <strong id="minimumModeLabel">Solo cuentan al activar el modo dia malo</strong>
+              <p>Sirven para volver al movimiento cuando el plan normal se ha roto.</p>
+            </div>
+            <div class="check-list" id="minimumList"></div>
+          </details>
+        </div>
+        <div class="panel">
+          <h2>Ideas o fugas para aparcar</h2>
+          <div class="field">
+            <label for="parking">Lo que aparece pero no toca ahora</label>
+            <textarea id="parking" placeholder="Ejemplo: mirar otra herramienta, abrir otro frente, cambiar de plan..."></textarea>
+          </div>
+          <p class="footer-note">No se borra la idea. Se aparca para que no mande sobre el dia.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <section class="view" id="areas">
+      <div class="section-intro">
+        <h2>Verificacion por areas</h2>
+        <p>Marca solo lo que corresponda a este dia. Lo que dejes sin marcar no baja el resultado.</p>
+      </div>
+      <div class="grid" id="areasGrid"></div>
+    </section>
+
+    <section class="view" id="cierre">
+      <div class="grid">
+        <div class="panel">
+          <h2>Diario de cierre</h2>
+          <div class="close-state" id="closeState">Este dia todavia esta abierto.</div>
+          <div class="journal-grid primary-journal" id="journalGrid"></div>
+          <details class="optional-journal">
+            <summary>Reflexion adicional</summary>
+            <div class="journal-grid" id="journalOptional"></div>
+          </details>
+          <div class="field" style="margin-top: 12px;">
+            <label for="tomorrowFirst">Primer paso de manana</label>
+            <input id="tomorrowFirst" placeholder="Dejalo tan claro que manana no haya que pensar">
+          </div>
+          <div class="actions" style="margin-top: 12px;">
+            <button class="btn" id="closeDayBtn">Cerrar dia</button>
+            <button class="btn secondary" id="exportBtn">Exportar balance</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Pendientes del dia</h2>
+          <p class="panel-copy">Decide conscientemente que pasa con lo que no terminaste.</p>
+          <div class="pending-list" id="pendingCarryList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="semana">
+      <div class="section-intro">
+        <h2>Balance de los ultimos 7 dias</h2>
+        <p id="weeklyPeriod"></p>
+      </div>
+      <div class="scoreboard weekly-stats" id="weeklyStats"></div>
+      <div class="grid weekly-layout">
+        <div class="panel">
+          <h2>Ritmo por areas</h2>
+          <div class="weekly-area-list" id="weeklyAreas"></div>
+        </div>
+        <div class="panel">
+          <h2>Historial diario</h2>
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="plan">
+      <div class="grid">
+        <div class="panel">
+          <h2>Reglas del sistema</h2>
+          <div class="guide-list">
+            <div class="guide-item">
+              <strong>Plan normal</strong>
+              <span>Rutina de inicio, agenda realista y verificacion de las areas que toquen.</span>
+            </div>
+            <div class="guide-item">
+              <strong>Dia malo</strong>
+              <span>Los minimos sustituyen al plan normal. Salvar el dia tambien es disciplina.</span>
+            </div>
+            <div class="guide-item">
+              <strong>Semana</strong>
+              <span>El objetivo es repetir lo importante, no completar las seis areas todos los dias.</span>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Plan personal por areas</h2>
+          <p class="panel-copy">Define que significa avanzar y cuantos dias por semana quieres tocar cada area.</p>
+          <div class="check-list" id="lifePlanGrid"></div>
+        </div>
+      </div>
+      <div class="panel habit-plan-panel">
+        <h2>Habitos configurables</h2>
+        <p class="panel-copy">Elige el nombre, la version minima y los dias en los que corresponde cada habito.</p>
+        <div class="habit-plan-grid" id="habitPlanGrid"></div>
+      </div>
+    </section>
+
+    <section class="view" id="ajustes">
+      <div class="grid">
+        <div class="panel">
+          <h2>Proteccion de datos</h2>
+          <p class="panel-copy" id="dataSummary">Tus datos se guardan en este navegador.</p>
+          <div class="actions">
+            <button class="btn" id="backupBtn">Crear copia de seguridad</button>
+            <label class="btn secondary file-button" for="restoreInput">Restaurar copia</label>
+            <input id="restoreInput" type="file" accept="application/json,.json" hidden>
+          </div>
+          <p class="footer-note">La restauracion sustituye los datos actuales solo despues de pedir confirmacion.</p>
+        </div>
+        <div class="panel">
+          <h2>Uso diario</h2>
+          <div class="guide-list">
+            <div class="guide-item">
+              <strong>Manana</strong>
+              <span>Abre Hoy, revisa la prioridad y completa la rutina de inicio.</span>
+            </div>
+            <div class="guide-item">
+              <strong>Durante el dia</strong>
+              <span>Verifica tareas y areas sin maquillar el resultado.</span>
+            </div>
+            <div class="guide-item">
+              <strong>Noche</strong>
+              <span>Cierra el dia y deja escrito el primer paso de manana.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="habitDialog">
+    <form method="dialog" id="habitForm">
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow" id="habitDialogArea"></span>
+          <h2 id="habitDialogTitle">Editar habito</h2>
+        </div>
+        <button type="button" class="dialog-close" id="habitCancelBtn" aria-label="Cerrar">&times;</button>
+      </div>
+      <input type="hidden" id="habitAreaId">
+      <input type="hidden" id="habitId">
+      <div class="field">
+        <label for="habitName">Nombre del habito</label>
+        <input id="habitName" required maxlength="80">
+      </div>
+      <div class="field">
+        <label for="habitMinimum">Version minima</label>
+        <input id="habitMinimum" maxlength="100" placeholder="Ejemplo: caminar 10 minutos">
+      </div>
+      <fieldset class="day-selector">
+        <legend>Dias en los que corresponde</legend>
+        <div id="habitDays"></div>
+      </fieldset>
+      <div class="dialog-actions">
+        <button type="button" class="btn secondary" id="habitCancelSecondary">Cancelar</button>
+        <button type="submit" class="btn">Guardar habito</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const storageKey = "panel-disciplina-personal-v1";
+
+    const morningItems = [
+      ["agua", "Beber agua", "Arrancar el cuerpo antes que el movil"],
+      ["estirar", "Estiramiento", "5 a 10 minutos cuentan"],
+      ["respirar", "Respiracion o meditacion", "Bajar ruido antes de entrar al dia"],
+      ["agenda", "Revisar agenda", "Ver que toca de verdad"],
+      ["prioridad", "Elegir prioridad", "Una cosa importante primero"]
+    ];
+
+    const minimumItems = [
+      ["min-orden", "Orden minimo", "Recoger una cosa o dejar listo el escritorio"],
+      ["min-cuerpo", "Mover el cuerpo", "Caminar, estirar o hacer una serie corta"],
+      ["min-tarea", "Una tarea real", "15 minutos de algo que construya"],
+      ["min-cierre", "Cerrar el dia", "Escribir dos lineas aunque haya ido mal"]
+    ];
+
+    const areas = [
+      {
+        id: "alimentacion",
+        name: "Alimentacion",
+        habits: [
+          ["comida-real", "Comida decente", "No vivir de cualquier cosa"],
+          ["agua-dia", "Agua suficiente", "Mantener energia basica"],
+          ["sin-atracon", "Sin atracon o exceso fuerte", "Cuidar el control"]
+        ]
+      },
+      {
+        id: "deporte",
+        name: "Deporte",
+        habits: [
+          ["entreno", "Ejercicio hecho", "Entreno, paseo fuerte o rutina corta"],
+          ["movimiento", "Movimiento durante el dia", "No quedar bloqueado en silla"],
+          ["estiramiento-dia", "Estiramiento cumplido", "Cuerpo menos cerrado"]
+        ]
+      },
+      {
+        id: "estres",
+        name: "Estres y respiracion",
+        habits: [
+          ["meditacion", "Meditacion o respiracion", "Aunque sean 5 minutos"],
+          ["pausa", "Pausa consciente", "Parar antes de entrar en bucle"],
+          ["sin-bucle", "Corte de ansiedad", "Detectar y cortar una fuga"]
+        ]
+      },
+      {
+        id: "actitud",
+        name: "Actitud",
+        habits: [
+          ["verdad", "Me dije la verdad", "Sin excusas largas"],
+          ["firmeza", "Actue con firmeza", "Hice algo aunque no apetecia"],
+          ["sin-rendirme", "No tire el dia", "Si fallo, vuelvo al minimo"]
+        ]
+      },
+      {
+        id: "habitos",
+        name: "Habitos",
+        habits: [
+          ["bloque-real", "Bloque de trabajo real", "Construir antes que mirar"],
+          ["agenda-cumplida", "Agenda respetada", "Cumplir lo previsto"],
+          ["movil-control", "Movil controlado", "Sin perder el mando del dia"]
+        ]
+      },
+      {
+        id: "descanso",
+        name: "Descanso",
+        habits: [
+          ["hora-cierre", "Hora de cierre razonable", "Preparar dormir"],
+          ["pantallas", "Pantallas controladas", "Bajar estimulo al final"],
+          ["sueno", "Sueno cuidado", "Priorizar recuperacion"]
+        ]
+      }
+    ];
+
+    const habitMinimumDefaults = {
+      "comida-real": "Hacer al menos una comida decente",
+      "agua-dia": "Beber un vaso de agua ahora",
+      "sin-atracon": "Parar y esperar 10 minutos antes de seguir",
+      "entreno": "Mover el cuerpo durante 10 minutos",
+      "movimiento": "Dar un paseo corto",
+      "estiramiento-dia": "Estirar durante 3 minutos",
+      "meditacion": "Respirar conscientemente durante 2 minutos",
+      "pausa": "Parar y hacer 5 respiraciones",
+      "sin-bucle": "Alejarme 5 minutos de lo que alimenta el bucle",
+      "verdad": "Escribir una frase honesta",
+      "firmeza": "Hacer una accion aunque no apetezca",
+      "sin-rendirme": "Volver con una accion pequena",
+      "bloque-real": "Trabajar 15 minutos sin cambiar de frente",
+      "agenda-cumplida": "Completar una tarea prevista",
+      "movil-control": "Dejar el movil fuera 15 minutos",
+      "hora-cierre": "Decidir una hora de cierre",
+      "pantallas": "Apagar una pantalla 15 minutos antes",
+      "sueno": "Preparar la cama y bajar el ritmo"
+    };
+
+    const journalQuestions = [
+      ["real", "Que he hecho hoy que cuenta de verdad?"],
+      ["fallo", "Donde me he fallado?"],
+      ["foco", "Que me saco del foco?"],
+      ["aprendizaje", "Que aprendi o entendi hoy?"],
+      ["corregir", "Que corrijo manana?"]
+    ];
+
+    const primaryJournalIds = ["real", "fallo", "corregir"];
+    const dayOptions = [
+      [1, "L"],
+      [2, "M"],
+      [3, "X"],
+      [4, "J"],
+      [5, "V"],
+      [6, "S"],
+      [0, "D"]
+    ];
+
+    const lifePlanFields = [
+      ["alimentacion", "Alimentacion", "Ejemplo: comer simple, beber agua y evitar atracones"],
+      ["deporte", "Deporte", "Ejemplo: moverme todos los dias y entrenar 3 veces por semana"],
+      ["estres", "Estres y respiracion", "Ejemplo: 5 minutos de respiracion cuando note ruido mental"],
+      ["actitud", "Actitud", "Ejemplo: decirme la verdad y no tirar el dia por un fallo"],
+      ["habitos", "Habitos", "Ejemplo: cumplir agenda y hacer un bloque real antes de mirar tonterias"],
+      ["descanso", "Descanso", "Ejemplo: cerrar pantallas antes y dormir con horario mas estable"]
+    ];
+
+    const state = {
+      store: loadStore(),
+      date: todayKey()
+    };
+
+    const dayPicker = document.getElementById("dayPicker");
+    const priority = document.getElementById("priority");
+    const nextStep = document.getElementById("nextStep");
+    const parking = document.getElementById("parking");
+    const tomorrowFirst = document.getElementById("tomorrowFirst");
+
+    init();
+
+    function init() {
+      dayPicker.value = state.date;
+      ensureDay(state.date);
+      populateAreaSelect(document.getElementById("taskArea"), "");
+      renderHabitDayOptions();
+      renderAll();
+      bindEvents();
+    }
+
+    function bindEvents() {
+      dayPicker.addEventListener("change", () => {
+        state.date = dayPicker.value || todayKey();
+        ensureDay(state.date);
+        renderAll();
+      });
+
+      document.getElementById("prevDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, -1)));
+      document.getElementById("todayBtn").addEventListener("click", () => selectDate(todayKey()));
+      document.getElementById("nextDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, 1)));
+
+      document.querySelectorAll(".tab").forEach((button) => {
+        button.addEventListener("click", () => {
+          activateTab(button.dataset.tab);
+        });
+      });
+
+      [priority, nextStep, parking, tomorrowFirst].forEach((input) => {
+        input.addEventListener("input", () => {
+          const day = getDay();
+          day[input.id] = input.value;
+          save();
+          updateScore();
+        });
+      });
+
+      document.getElementById("taskForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const taskInput = document.getElementById("taskInput");
+        const taskArea = document.getElementById("taskArea");
+        const text = taskInput.value.trim();
+        if (!text) return;
+        getDay().tasks.push({ id: crypto.randomUUID(), text, done: false, area: taskArea.value });
+        taskInput.value = "";
+        taskArea.value = "";
+        save();
+        renderTasks();
+        renderPendingTasks();
+        renderCloseState();
+        renderAreas();
+        updateScore();
+      });
+
+      document.getElementById("badDayBtn").addEventListener("click", () => {
+        const day = getDay();
+        day.badDay = !day.badDay;
+        if (day.badDay) {
+          if (!day.priority) day.priority = "Salvar el dia con minimos";
+          if (!day.nextStep) day.nextStep = "Hacer el primer minimo posible";
+        }
+        save();
+        renderAll();
+        showToast(day.badDay ? "Modo dia malo activado" : "Plan normal recuperado");
+      });
+
+      document.getElementById("startTemplateBtn").addEventListener("click", () => {
+        const sourceDay = state.store.days[todayKey()];
+        state.date = shiftDate(todayKey(), 1);
+        dayPicker.value = state.date;
+        ensureDay(state.date);
+        const day = getDay();
+        if (!day.priority) day.priority = sourceDay?.tomorrowFirst || "Cumplir una prioridad real";
+        if (!day.nextStep) day.nextStep = sourceDay?.tomorrowFirst || "Hacer el primer bloque de 15 minutos";
+        if (!day.tasks.length) {
+          day.tasks = [
+            { id: crypto.randomUUID(), text: "Hacer rutina de inicio", done: false, area: "habitos" },
+            { id: crypto.randomUUID(), text: "Completar un bloque de trabajo real", done: false, area: "habitos" },
+            { id: crypto.randomUUID(), text: "Cerrar el dia con diario", done: false, area: "actitud" }
+          ];
+        }
+        save();
+        renderAll();
+        activateTab("hoy");
+        showToast(`Manana preparado: ${formatLongDate(state.date)}`);
+        requestAnimationFrame(() => {
+          document.getElementById("agendaPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+          document.getElementById("taskInput").focus({ preventScroll: true });
+        });
+      });
+
+      document.getElementById("resetTodayBtn").addEventListener("click", () => {
+        if (!confirm("Esto limpia solo el dia seleccionado. ¿Seguro?")) return;
+        state.store.days[state.date] = freshDay(state.store.habitConfig);
+        save();
+        renderAll();
+      });
+
+      document.getElementById("closeDayBtn").addEventListener("click", () => {
+        const day = getDay();
+        day.closed = !day.closed;
+        day.closedAt = day.closed ? new Date().toISOString() : null;
+        save();
+        renderAll();
+        const unresolved = day.tasks.filter((task) => !task.done && !task.carriedTo && !task.dismissed).length;
+        const message = day.closed && unresolved
+          ? `Dia cerrado. Quedan ${unresolved} pendientes por decidir`
+          : day.closed
+            ? "Dia cerrado y guardado"
+            : "Dia abierto de nuevo";
+        showToast(message);
+      });
+
+      document.getElementById("exportBtn").addEventListener("click", exportDay);
+      document.getElementById("backupBtn").addEventListener("click", exportBackup);
+      document.getElementById("restoreInput").addEventListener("change", restoreBackup);
+      document.getElementById("habitForm").addEventListener("submit", saveHabitFromDialog);
+      document.getElementById("habitCancelBtn").addEventListener("click", closeHabitDialog);
+      document.getElementById("habitCancelSecondary").addEventListener("click", closeHabitDialog);
+    }
+
+    function renderAll() {
+      const day = getDay();
+      priority.value = day.priority || "";
+      nextStep.value = day.nextStep || "";
+      parking.value = day.parking || "";
+      tomorrowFirst.value = day.tomorrowFirst || "";
+      renderChecks("morningList", morningItems, "morning");
+      renderChecks("minimumList", minimumItems, "minimums");
+      renderLifePlan();
+      renderHabitPlan();
+      renderTasks();
+      renderAreas();
+      renderJournal();
+      renderPendingTasks();
+      renderHistory();
+      renderWeekly();
+      renderSelectedDay();
+      renderDayMode();
+      renderCloseState();
+      renderDataSummary();
+      updateScore();
+    }
+
+    function renderSelectedDay() {
+      const relation = dayRelation(state.date);
+      const relationText = relation === "today"
+        ? "hoy"
+        : relation === "tomorrow"
+          ? "manana"
+          : `el ${formatShortDate(state.date)}`;
+
+      document.getElementById("selectedDayLabel").textContent = `Estas viendo ${relationText}`;
+      document.getElementById("selectedDayDate").textContent = formatLongDate(state.date);
+      document.getElementById("agendaTitle").textContent = `Agenda prevista para ${relationText}`;
+      document.getElementById("dayStateTitle").textContent = relation === "today"
+        ? "Estado de hoy"
+        : relation === "tomorrow"
+          ? "Plan de manana"
+          : `Estado del ${formatShortDate(state.date)}`;
+    }
+
+    function renderDayMode() {
+      const day = getDay();
+      const badDayButton = document.getElementById("badDayBtn");
+      const minimumPanel = document.getElementById("minimumPanel");
+      const minimumDetails = document.getElementById("minimumDetails");
+      const minimumModeLabel = document.getElementById("minimumModeLabel");
+      const dailyCommand = document.getElementById("dailyCommand");
+
+      badDayButton.textContent = day.badDay ? "Volver al plan normal" : "Modo dia malo";
+      minimumPanel.classList.toggle("active", day.badDay);
+      minimumDetails.open = day.badDay;
+      minimumModeLabel.textContent = day.badDay
+        ? "Modo dia malo activo: estos son tus compromisos"
+        : "Solo cuentan al activar el modo dia malo";
+      dailyCommand.querySelector("strong").textContent = day.badDay ? "Plan normal en pausa" : "Orden del dia";
+      dailyCommand.querySelector("p").textContent = day.badDay
+        ? "Haz los minimos, cumple una tarea real y cierra el dia."
+        : "Primero cuerpo y calma. Despues agenda. Despues una tarea real.";
+    }
+
+    function renderCloseState() {
+      const day = getDay();
+      const stateBox = document.getElementById("closeState");
+      const button = document.getElementById("closeDayBtn");
+      const unresolved = day.tasks.filter((task) => !task.done && !task.carriedTo && !task.dismissed).length;
+      stateBox.classList.toggle("closed", day.closed);
+      stateBox.textContent = day.closed
+        ? `Dia cerrado. Resultado final: ${calculateScore(day).percent}%.`
+        : unresolved
+          ? `Dia abierto. Quedan ${unresolved} pendientes por decidir.`
+          : "Este dia todavia esta abierto.";
+      button.textContent = day.closed ? "Volver a abrir el dia" : "Cerrar dia";
+    }
+
+    function renderDataSummary() {
+      const dayCount = Object.keys(state.store.days).length;
+      const taskCount = Object.values(state.store.days)
+        .reduce((total, day) => total + (day.tasks?.length || 0), 0);
+      const activeHabits = areas.reduce((total, area) =>
+        total + getAreaHabits(area.id).filter((habit) => habit.active).length, 0);
+      document.getElementById("dataSummary").textContent =
+        `Guardados en este navegador: ${dayCount} dias, ${taskCount} tareas y ${activeHabits} habitos activos.`;
+    }
+
+    function renderChecks(containerId, items, bucket) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      items.forEach(([id, name, hint]) => {
+        container.appendChild(checkRow(name, hint, getDay()[bucket][id] || "none", (value) => {
+          getDay()[bucket][id] = value;
+          save();
+          renderChecks(containerId, items, bucket);
+          updateScore();
+        }));
+      });
+    }
+
+    function renderLifePlan() {
+      const grid = document.getElementById("lifePlanGrid");
+      if (!grid) return;
+      state.store.lifePlan = state.store.lifePlan || {};
+      state.store.weeklyTargets = state.store.weeklyTargets || {};
+      grid.innerHTML = "";
+      lifePlanFields.forEach(([id, label, placeholder]) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "field";
+        wrapper.innerHTML = `
+          <label for="life-${id}">${label}</label>
+          <textarea id="life-${id}" placeholder="${placeholder}"></textarea>
+          <div class="target-field">
+            <label for="target-${id}">Objetivo de dias por semana</label>
+            <input id="target-${id}" type="number" min="1" max="7" inputmode="numeric">
+          </div>
+        `;
+        const textarea = wrapper.querySelector("textarea");
+        const target = wrapper.querySelector("input");
+        textarea.value = state.store.lifePlan[id] || "";
+        target.value = state.store.weeklyTargets[id] || 3;
+        textarea.addEventListener("input", () => {
+          state.store.lifePlan[id] = textarea.value;
+          save();
+        });
+        target.addEventListener("change", () => {
+          const value = Math.min(7, Math.max(1, Number(target.value) || 1));
+          state.store.weeklyTargets[id] = value;
+          target.value = value;
+          save();
+          renderWeekly();
+        });
+        grid.appendChild(wrapper);
+      });
+    }
+
+    function renderHabitPlan() {
+      const grid = document.getElementById("habitPlanGrid");
+      grid.innerHTML = "";
+      areas.forEach((area) => {
+        const section = document.createElement("section");
+        section.className = "habit-config-area";
+        section.innerHTML = `
+          <div class="habit-config-head">
+            <h3></h3>
+            <button type="button" class="small-button add-habit">Anadir</button>
+          </div>
+          <div class="habit-config-list"></div>
+        `;
+        section.querySelector("h3").textContent = area.name;
+        section.querySelector(".add-habit").addEventListener("click", () => openHabitDialog(area.id));
+        const list = section.querySelector(".habit-config-list");
+        const habits = getAreaHabits(area.id);
+        if (!habits.length) {
+          list.innerHTML = '<div class="empty">No hay habitos en esta area.</div>';
+        }
+        habits.forEach((habit, index) => {
+          const row = document.createElement("div");
+          row.className = `habit-config-row ${habit.active ? "" : "paused"}`;
+          row.innerHTML = `
+            <div class="habit-config-copy">
+              <strong></strong>
+              <small class="habit-minimum"></small>
+              <small class="habit-days"></small>
+            </div>
+            <div class="habit-config-actions">
+              <button type="button" class="small-button move-up" aria-label="Subir habito" title="Subir">&uarr;</button>
+              <button type="button" class="small-button move-down" aria-label="Bajar habito" title="Bajar">&darr;</button>
+              <button type="button" class="small-button edit-habit">Editar</button>
+              <button type="button" class="small-button toggle-habit"></button>
+            </div>
+          `;
+          row.querySelector("strong").textContent = habit.name;
+          row.querySelector(".habit-minimum").textContent =
+            habit.minimum ? `Minimo: ${habit.minimum}` : "Sin version minima";
+          row.querySelector(".habit-days").textContent = formatHabitDays(habit.days);
+          row.querySelector(".toggle-habit").textContent = habit.active ? "Pausar" : "Activar";
+          row.querySelector(".move-up").disabled = index === 0;
+          row.querySelector(".move-down").disabled = index === habits.length - 1;
+          row.querySelector(".move-up").addEventListener("click", () => moveHabit(area.id, habit.id, -1));
+          row.querySelector(".move-down").addEventListener("click", () => moveHabit(area.id, habit.id, 1));
+          row.querySelector(".edit-habit").addEventListener("click", () => openHabitDialog(area.id, habit.id));
+          row.querySelector(".toggle-habit").addEventListener("click", () => toggleHabit(area.id, habit.id));
+          list.appendChild(row);
+        });
+        grid.appendChild(section);
+      });
+    }
+
+    function renderHabitDayOptions() {
+      const container = document.getElementById("habitDays");
+      container.innerHTML = "";
+      dayOptions.forEach(([value, label]) => {
+        const wrapper = document.createElement("label");
+        wrapper.innerHTML = `<input type="checkbox" value="${value}"><span>${label}</span>`;
+        container.appendChild(wrapper);
+      });
+    }
+
+    function openHabitDialog(areaId, habitId = "") {
+      const area = areas.find((item) => item.id === areaId);
+      const habit = habitId ? getAreaHabits(areaId).find((item) => item.id === habitId) : null;
+      document.getElementById("habitDialogArea").textContent = area?.name || "";
+      document.getElementById("habitDialogTitle").textContent = habit ? "Editar habito" : "Nuevo habito";
+      document.getElementById("habitAreaId").value = areaId;
+      document.getElementById("habitId").value = habit?.id || "";
+      document.getElementById("habitName").value = habit?.name || "";
+      document.getElementById("habitMinimum").value = habit?.minimum || "";
+      const selectedDays = habit?.days || dayOptions.map(([value]) => value);
+      document.querySelectorAll("#habitDays input").forEach((input) => {
+        input.checked = selectedDays.includes(Number(input.value));
+      });
+      document.getElementById("habitDialog").showModal();
+      document.getElementById("habitName").focus();
+    }
+
+    function closeHabitDialog() {
+      document.getElementById("habitDialog").close();
+    }
+
+    function saveHabitFromDialog(event) {
+      event.preventDefault();
+      const areaId = document.getElementById("habitAreaId").value;
+      const habitId = document.getElementById("habitId").value;
+      const name = document.getElementById("habitName").value.trim();
+      const minimum = document.getElementById("habitMinimum").value.trim();
+      const days = [...document.querySelectorAll("#habitDays input:checked")]
+        .map((input) => Number(input.value));
+      if (!name) {
+        showToast("El habito necesita un nombre");
+        return;
+      }
+      if (!days.length) {
+        showToast("Elige al menos un dia");
+        return;
+      }
+
+      const habits = state.store.habitConfig[areaId];
+      if (habitId) {
+        const habit = habits.find((item) => item.id === habitId);
+        if (habit) {
+          habit.name = name;
+          habit.minimum = minimum;
+          habit.days = days;
+        }
+      } else {
+        const newHabit = {
+          id: `personal-${crypto.randomUUID()}`,
+          name,
+          minimum,
+          days,
+          active: true,
+          order: habits.length
+        };
+        habits.push(newHabit);
+        Object.values(state.store.days).forEach((day) => {
+          day.areas[areaId] = day.areas[areaId] || {};
+          day.areas[areaId][newHabit.id] = "none";
+        });
+      }
+      save();
+      closeHabitDialog();
+      renderHabitPlan();
+      renderAreas();
+      renderDataSummary();
+      updateScore();
+      showToast("Habito guardado");
+    }
+
+    function toggleHabit(areaId, habitId) {
+      const habit = getAreaHabits(areaId).find((item) => item.id === habitId);
+      if (!habit) return;
+      habit.active = !habit.active;
+      save();
+      renderHabitPlan();
+      renderAreas();
+      renderDataSummary();
+      updateScore();
+      showToast(habit.active ? "Habito activado" : "Habito pausado");
+    }
+
+    function moveHabit(areaId, habitId, direction) {
+      const habits = getAreaHabits(areaId);
+      const index = habits.findIndex((item) => item.id === habitId);
+      const nextIndex = index + direction;
+      if (index < 0 || nextIndex < 0 || nextIndex >= habits.length) return;
+      [habits[index].order, habits[nextIndex].order] = [habits[nextIndex].order, habits[index].order];
+      state.store.habitConfig[areaId] = habits;
+      save();
+      renderHabitPlan();
+    }
+
+    function getAreaHabits(areaId) {
+      return [...(state.store.habitConfig?.[areaId] || [])]
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+    }
+
+    function isHabitScheduled(habit, dateKey) {
+      const [year, month, day] = dateKey.split("-").map(Number);
+      return habit.days.includes(new Date(year, month - 1, day).getDay());
+    }
+
+    function formatHabitDays(days) {
+      if (days.length === 7) return "Todos los dias";
+      const labels = dayOptions
+        .filter(([value]) => days.includes(value))
+        .map(([, label]) => label);
+      return `Dias: ${labels.join(", ")}`;
+    }
+
+    function renderAreas() {
+      const grid = document.getElementById("areasGrid");
+      grid.innerHTML = "";
+      areas.forEach((area) => {
+        const card = document.createElement("article");
+        card.className = "area-card";
+        const score = areaScore(area);
+        const scoreLabel = score === null ? "Sin datos" : `${score}%`;
+        const areaTasks = getDay().tasks.filter((task) => task.area === area.id);
+        const completedAreaTasks = areaTasks.filter((task) => task.done).length;
+        const scheduledHabits = getAreaHabits(area.id)
+          .filter((habit) => habit.active && isHabitScheduled(habit, state.date));
+        const taskSummary = areaTasks.length
+          ? `Tareas vinculadas: ${completedAreaTasks}/${areaTasks.length}`
+          : "Sin tareas vinculadas";
+        card.innerHTML = `
+          <div class="area-head">
+            <div class="area-head-copy">
+              <strong>${area.name}</strong>
+              <small>${scheduledHabits.length} habitos previstos. ${taskSummary}</small>
+            </div>
+            <span class="pill">${scoreLabel}</span>
+          </div>
+          <div class="area-body check-list"></div>
+        `;
+        const body = card.querySelector(".area-body");
+        if (!scheduledHabits.length) {
+          body.innerHTML = '<div class="empty">Hoy no hay habitos programados en esta area.</div>';
+        }
+        scheduledHabits.forEach((habit) => {
+          const hint = habit.minimum ? `Minimo: ${habit.minimum}` : "Sin version minima definida";
+          body.appendChild(checkRow(habit.name, hint, getDay().areas[area.id][habit.id] || "none", (value) => {
+            getDay().areas[area.id][habit.id] = value;
+            save();
+            renderAreas();
+            updateScore();
+          }, { midLabel: "Minimo" }));
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function renderTasks() {
+      const list = document.getElementById("taskList");
+      const tasks = getDay().tasks;
+      list.innerHTML = "";
+      if (!tasks.length) {
+        list.innerHTML = '<div class="empty">Anade aqui lo previsto para este dia. Luego podras verificarlo.</div>';
+        return;
+      }
+      tasks.forEach((task) => {
+        const row = document.createElement("div");
+        row.className = `task-row ${task.done ? "done" : ""}`;
+        row.innerHTML = `
+          <input type="checkbox" ${task.done ? "checked" : ""} aria-label="Marcar tarea">
+          <div class="task-main">
+            <span class="task-text"></span>
+            <select class="task-area-select" aria-label="Area de la tarea"></select>
+          </div>
+          <button class="edit" aria-label="Editar tarea">Editar</button>
+          <button class="remove" aria-label="Eliminar tarea">x</button>
+        `;
+        row.querySelector(".task-text").textContent = task.text;
+        const areaSelect = row.querySelector(".task-area-select");
+        populateAreaSelect(areaSelect, task.area || "");
+        areaSelect.addEventListener("change", () => {
+          task.area = areaSelect.value;
+          save();
+          renderAreas();
+          showToast(task.area ? "Tarea conectada con su area" : "Tarea sin area");
+        });
+        row.querySelector("input").addEventListener("change", (event) => {
+          task.done = event.target.checked;
+          save();
+          renderTasks();
+          renderPendingTasks();
+          renderCloseState();
+          renderAreas();
+          updateScore();
+        });
+        row.querySelector(".edit").addEventListener("click", () => {
+          startTaskEdit(row, task);
+        });
+        row.querySelector(".remove").addEventListener("click", () => {
+          getDay().tasks = getDay().tasks.filter((item) => item.id !== task.id);
+          save();
+          renderTasks();
+          renderPendingTasks();
+          renderCloseState();
+          renderAreas();
+          updateScore();
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function populateAreaSelect(select, selected) {
+      select.innerHTML = '<option value="">Sin area</option>';
+      areas.forEach((area) => {
+        const option = document.createElement("option");
+        option.value = area.id;
+        option.textContent = area.name;
+        option.selected = area.id === selected;
+        select.appendChild(option);
+      });
+    }
+
+    function startTaskEdit(row, task) {
+      const textCell = row.querySelector(".task-text");
+      const editButton = row.querySelector(".edit");
+      const saveButton = editButton.cloneNode(true);
+      const input = document.createElement("input");
+      input.className = "task-edit-input";
+      input.value = task.text;
+      input.setAttribute("aria-label", "Nombre de la tarea");
+
+      row.classList.add("editing");
+      textCell.textContent = "";
+      textCell.appendChild(input);
+      saveButton.textContent = "Guardar";
+      saveButton.setAttribute("aria-label", "Guardar tarea");
+      editButton.replaceWith(saveButton);
+      input.focus();
+      input.select();
+
+      const saveEdit = () => {
+        const text = input.value.trim();
+        if (!text) {
+          showToast("La tarea necesita un nombre");
+          input.focus();
+          return;
+        }
+        task.text = text;
+        save();
+        renderTasks();
+        renderPendingTasks();
+        renderCloseState();
+        showToast("Tarea actualizada");
+      };
+
+      saveButton.addEventListener("click", saveEdit);
+      input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") saveEdit();
+        if (event.key === "Escape") renderTasks();
+      });
+    }
+
+    function renderJournal() {
+      const primaryGrid = document.getElementById("journalGrid");
+      const optionalGrid = document.getElementById("journalOptional");
+      primaryGrid.innerHTML = "";
+      optionalGrid.innerHTML = "";
+      journalQuestions.forEach(([id, label]) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "field";
+        wrapper.innerHTML = `<label for="journal-${id}">${label}</label><textarea id="journal-${id}"></textarea>`;
+        const textarea = wrapper.querySelector("textarea");
+        textarea.value = getDay().journal[id] || "";
+        textarea.addEventListener("input", () => {
+          getDay().journal[id] = textarea.value;
+          save();
+        });
+        const target = primaryJournalIds.includes(id) ? primaryGrid : optionalGrid;
+        target.appendChild(wrapper);
+      });
+      document.querySelector(".optional-journal").open = journalQuestions
+        .filter(([id]) => !primaryJournalIds.includes(id))
+        .some(([id]) => Boolean(getDay().journal[id]?.trim()));
+    }
+
+    function renderPendingTasks() {
+      const list = document.getElementById("pendingCarryList");
+      const pending = getDay().tasks.filter((task) => !task.done);
+      list.innerHTML = "";
+      if (!pending.length) {
+        list.innerHTML = '<div class="empty">No quedan tareas pendientes.</div>';
+        return;
+      }
+      pending.forEach((task) => {
+        const row = document.createElement("div");
+        const resolved = task.carriedTo || task.dismissed;
+        row.className = `pending-row ${resolved ? "carried" : ""}`;
+        const status = task.carriedTo
+          ? `Pasada al ${formatShortDate(task.carriedTo)}`
+          : task.dismissed
+            ? "Cerrada sin trasladar"
+            : "Sin decidir";
+        row.innerHTML = `
+          <div>
+            <strong class="pending-name"></strong>
+            <small class="pending-status"></small>
+          </div>
+          <div class="habit-config-actions pending-actions"></div>
+        `;
+        row.querySelector(".pending-name").textContent = task.text;
+        row.querySelector(".pending-status").textContent = status;
+        const actions = row.querySelector(".pending-actions");
+        if (!resolved) {
+          const carryButton = document.createElement("button");
+          carryButton.type = "button";
+          carryButton.className = "small-button";
+          carryButton.textContent = "Pasar a manana";
+          carryButton.addEventListener("click", () => carryTaskToTomorrow(task));
+          const dismissButton = document.createElement("button");
+          dismissButton.type = "button";
+          dismissButton.className = "small-button";
+          dismissButton.textContent = "No trasladar";
+          dismissButton.addEventListener("click", () => dismissPendingTask(task));
+          actions.append(carryButton, dismissButton);
+        }
+        list.appendChild(row);
+      });
+    }
+
+    function carryTaskToTomorrow(task) {
+      const tomorrowKey = shiftDate(state.date, 1);
+      ensureDay(tomorrowKey);
+      const tomorrow = state.store.days[tomorrowKey];
+      const alreadyExists = tomorrow.tasks.some((item) =>
+        item.carriedFrom?.date === state.date && item.carriedFrom?.taskId === task.id
+      );
+      if (!alreadyExists) {
+        tomorrow.tasks.push({
+          id: crypto.randomUUID(),
+          text: task.text,
+          done: false,
+          area: task.area || "",
+          carriedFrom: { date: state.date, taskId: task.id }
+        });
+      }
+      task.carriedTo = tomorrowKey;
+      save();
+      renderPendingTasks();
+      renderCloseState();
+      renderWeekly();
+      showToast(`Tarea pasada al ${formatShortDate(tomorrowKey)}`);
+    }
+
+    function dismissPendingTask(task) {
+      task.dismissed = true;
+      save();
+      renderPendingTasks();
+      renderCloseState();
+      showToast("Pendiente cerrado sin trasladar");
+    }
+
+    function renderWeekly() {
+      const endKey = state.date > todayKey() ? todayKey() : state.date;
+      const keys = lastSevenKeys(endKey);
+      const recorded = keys
+        .map((key) => state.store.days[key])
+        .filter(Boolean);
+      const tasks = recorded.flatMap((day) => day.tasks || []);
+      const completedTasks = tasks.filter((task) => task.done).length;
+      const carriedTasks = tasks.filter((task) => task.carriedFrom).length;
+      const closedDays = recorded.filter((day) => day.closed).length;
+      const savedDays = recorded.filter((day) => day.badDay && day.closed).length;
+      const taskPercent = tasks.length ? Math.round((completedTasks / tasks.length) * 100) : 0;
+
+      document.getElementById("weeklyPeriod").textContent =
+        `${formatShortDate(keys[0])} - ${formatShortDate(keys[keys.length - 1])}`;
+      document.getElementById("weeklyStats").innerHTML = `
+        <div class="metric">
+          <span>Dias registrados</span>
+          <strong>${recorded.length}/7</strong>
+          <small>Dias con informacion guardada.</small>
+        </div>
+        <div class="metric">
+          <span>Dias cerrados</span>
+          <strong>${closedDays}</strong>
+          <small>Balances terminados conscientemente.</small>
+        </div>
+        <div class="metric">
+          <span>Tareas cumplidas</span>
+          <strong>${taskPercent}%</strong>
+          <small>${completedTasks} de ${tasks.length}. ${carriedTasks} llegaron trasladadas.</small>
+        </div>
+        <div class="metric">
+          <span>Dias salvados</span>
+          <strong>${savedDays}</strong>
+          <small>Modo dia malo activado y cerrado.</small>
+        </div>
+      `;
+
+      const areaList = document.getElementById("weeklyAreas");
+      areaList.innerHTML = "";
+      areas.forEach((area) => {
+        const target = state.store.weeklyTargets?.[area.id] || 3;
+        const activeDays = keys.filter((key) => {
+          const day = state.store.days[key];
+          return day ? hasAreaActivity(day, area.id) : false;
+        }).length;
+        const percent = Math.min(100, Math.round((activeDays / target) * 100));
+        const row = document.createElement("div");
+        row.className = "weekly-area-row";
+        row.innerHTML = `
+          <div>
+            <strong>${area.name}</strong>
+            <small>${activeDays} de ${target} dias objetivo</small>
+          </div>
+          <div class="weekly-progress"><span style="width:${percent}%"></span></div>
+          <span class="pill">${percent}%</span>
+        `;
+        areaList.appendChild(row);
+      });
+    }
+
+    function renderHistory() {
+      const history = document.getElementById("historyList");
+      const endKey = state.date > todayKey() ? todayKey() : state.date;
+      const keys = lastSevenKeys(endKey)
+        .filter((key) => state.store.days[key])
+        .reverse();
+      history.innerHTML = "";
+      if (!keys.length) {
+        history.innerHTML = '<div class="empty">Todavia no hay historial.</div>';
+        return;
+      }
+      keys.forEach((key) => {
+        const snapshot = calculateScore(state.store.days[key]);
+        const row = document.createElement("div");
+        row.className = "history-row";
+        row.innerHTML = `
+          <strong>${formatShortDate(key)}</strong>
+          <div>
+            <div class="bar"><span style="width:${snapshot.percent}%"></span></div>
+            <small>${state.store.days[key].priority || "Sin prioridad escrita"}</small>
+          </div>
+          <span class="pill">${snapshot.label}</span>
+        `;
+        history.appendChild(row);
+      });
+    }
+
+    function hasAreaActivity(day, areaId) {
+      const habitValues = Object.values(day.areas?.[areaId] || {});
+      const hasHabit = habitValues.some((value) => value === "done" || value === "mid");
+      const hasTask = (day.tasks || []).some((task) => task.area === areaId && task.done);
+      return hasHabit || hasTask;
+    }
+
+    function lastSevenKeys(endKey) {
+      return Array.from({ length: 7 }, (_, index) => shiftDate(endKey, index - 6));
+    }
+
+    function checkRow(name, hint, value, onChange, options = {}) {
+      const row = document.createElement("div");
+      row.className = "check-row";
+      row.innerHTML = `
+        <div>
+          <span class="name"></span>
+          <span class="hint"></span>
+        </div>
+        <div class="state-buttons" aria-label="Estado"></div>
+      `;
+      row.querySelector(".name").textContent = name;
+      row.querySelector(".hint").textContent = hint;
+      const buttons = [
+        ["done", "OK", "Hecho"],
+        ["mid", "~", options.midLabel || "A medias"],
+        ["no", "x", "No hecho"]
+      ];
+      const group = row.querySelector(".state-buttons");
+      buttons.forEach(([stateName, symbol, label]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `${stateName} ${value === stateName ? "active" : ""}`;
+        button.textContent = symbol;
+        button.title = label;
+        button.setAttribute("aria-label", label);
+        button.addEventListener("click", () => onChange(value === stateName ? "none" : stateName));
+        group.appendChild(button);
+      });
+      return row;
+    }
+
+    function updateScore() {
+      const snapshot = calculateScore(getDay());
+      document.getElementById("scorePercent").textContent = `${snapshot.percent}%`;
+      document.getElementById("taskScore").textContent = `${snapshot.doneTasks}/${snapshot.totalTasks}`;
+      document.getElementById("statusLabel").textContent = snapshot.label;
+      document.getElementById("statusText").textContent = snapshot.text;
+      const status = document.getElementById("dayStatus");
+      status.className = `metric status ${snapshot.color}`;
+    }
+
+    function calculateScore(day) {
+      const values = [];
+      if (day.badDay) {
+        collectValues(day.minimums, values);
+      } else {
+        collectValues(day.morning, values);
+      }
+      areas.forEach((area) => collectValues(day.areas[area.id], values, true));
+      const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
+      const habitMax = values.length * 2;
+      const doneTasks = day.tasks.filter((task) => task.done).length;
+      const totalTasks = day.tasks.length;
+      const taskPoints = doneTasks * 2;
+      const taskMax = Math.max(totalTasks * 2, 0);
+      const max = habitMax + taskMax;
+      const percent = max ? Math.round(((habitPoints + taskPoints) / max) * 100) : 0;
+      if (!max) {
+        return {
+          percent: 0,
+          doneTasks,
+          totalTasks,
+          label: "Sin datos",
+          color: "",
+          text: "Empieza por definir una prioridad o una tarea."
+        };
+      }
+      let label = "Rojo";
+      let color = "red";
+      let text = "Dia flojo. Vuelve al minimo.";
+      if (percent >= 70) {
+        label = "Verde";
+        color = "green";
+        text = "Dia cumplido con base solida.";
+      } else if (percent >= 40) {
+        label = "Amarillo";
+        color = "yellow";
+        text = "Dia salvable. Cierra bien.";
+      }
+      return { percent, doneTasks, totalTasks, label, color, text };
+    }
+
+    function areaScore(area) {
+      const values = Object.values(getDay().areas[area.id])
+        .filter((value) => value !== "none");
+      const linkedTasks = getDay().tasks.filter((task) => task.area === area.id);
+      const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
+      const taskPoints = linkedTasks.filter((task) => task.done).length * 2;
+      const max = (values.length + linkedTasks.length) * 2;
+      if (!max) return null;
+      return Math.round(((habitPoints + taskPoints) / max) * 100);
+    }
+
+    function collectValues(bucket, values, onlyTouched = false) {
+      Object.values(bucket || {}).forEach((value) => {
+        if (!onlyTouched || value !== "none") values.push(value);
+      });
+    }
+
+    function valuePoints(value) {
+      if (value === "done") return 2;
+      if (value === "mid") return 1;
+      return 0;
+    }
+
+    function ensureDay(dateKey) {
+      if (!state.store.days[dateKey]) {
+        state.store.days[dateKey] = freshDay(state.store.habitConfig);
+        save();
+      } else {
+        state.store.days[dateKey] = normalizeDay(state.store.days[dateKey], state.store.habitConfig);
+      }
+    }
+
+    function freshDay(habitConfig) {
+      const areaState = {};
+      areas.forEach((area) => {
+        areaState[area.id] = {};
+        (habitConfig?.[area.id] || []).forEach((habit) => {
+          areaState[area.id][habit.id] = "none";
+        });
+      });
+      return {
+        priority: "",
+        nextStep: "",
+        parking: "",
+        tomorrowFirst: "",
+        badDay: false,
+        closed: false,
+        closedAt: null,
+        morning: Object.fromEntries(morningItems.map(([id]) => [id, "none"])),
+        minimums: Object.fromEntries(minimumItems.map(([id]) => [id, "none"])),
+        areas: areaState,
+        tasks: [],
+        journal: Object.fromEntries(journalQuestions.map(([id]) => [id, ""]))
+      };
+    }
+
+    function getDay() {
+      ensureDay(state.date);
+      return state.store.days[state.date];
+    }
+
+    function normalizeDay(day, habitConfig) {
+      const normalized = day && typeof day === "object" ? day : {};
+      normalized.priority = normalized.priority || "";
+      normalized.nextStep = normalized.nextStep || "";
+      normalized.parking = normalized.parking || "";
+      normalized.tomorrowFirst = normalized.tomorrowFirst || "";
+      normalized.badDay = Boolean(normalized.badDay);
+      normalized.closed = Boolean(normalized.closed);
+      normalized.closedAt = normalized.closedAt || null;
+      normalized.morning = normalized.morning || {};
+      normalized.minimums = normalized.minimums || {};
+      normalized.areas = normalized.areas || {};
+      normalized.journal = normalized.journal || {};
+      normalized.tasks = Array.isArray(normalized.tasks) ? normalized.tasks : [];
+
+      morningItems.forEach(([id]) => {
+        if (!(id in normalized.morning)) normalized.morning[id] = "none";
+      });
+      minimumItems.forEach(([id]) => {
+        if (!(id in normalized.minimums)) normalized.minimums[id] = "none";
+      });
+      areas.forEach((area) => {
+        normalized.areas[area.id] = normalized.areas[area.id] || {};
+        (habitConfig?.[area.id] || []).forEach((habit) => {
+          if (!(habit.id in normalized.areas[area.id])) normalized.areas[area.id][habit.id] = "none";
+        });
+      });
+      journalQuestions.forEach(([id]) => {
+        if (!(id in normalized.journal)) normalized.journal[id] = "";
+      });
+      normalized.tasks.forEach((task) => {
+        if (!("area" in task)) task.area = "";
+      });
+      return normalized;
+    }
+
+    function createDefaultHabitConfig() {
+      const config = {};
+      areas.forEach((area) => {
+        config[area.id] = area.habits.map(([id, name, hint], index) => ({
+          id,
+          name,
+          minimum: habitMinimumDefaults[id] || hint,
+          days: dayOptions.map(([value]) => value),
+          active: true,
+          order: index
+        }));
+      });
+      return config;
+    }
+
+    function normalizeHabitConfig(config) {
+      const defaults = createDefaultHabitConfig();
+      const normalized = config && typeof config === "object" ? config : {};
+      areas.forEach((area) => {
+        const existing = Array.isArray(normalized[area.id]) ? normalized[area.id] : [];
+        const defaultById = Object.fromEntries(defaults[area.id].map((habit) => [habit.id, habit]));
+        const cleaned = existing.map((habit, index) => {
+          const fallback = defaultById[habit.id] || {};
+          const days = Array.isArray(habit.days)
+            ? habit.days.map(Number).filter((value) => value >= 0 && value <= 6)
+            : fallback.days || dayOptions.map(([value]) => value);
+          return {
+            id: habit.id || `personal-${crypto.randomUUID()}`,
+            name: String(habit.name || fallback.name || "Habito"),
+            minimum: String(habit.minimum ?? fallback.minimum ?? ""),
+            days: [...new Set(days.length ? days : dayOptions.map(([value]) => value))],
+            active: habit.active !== false,
+            order: Number.isFinite(Number(habit.order)) ? Number(habit.order) : index
+          };
+        });
+        defaults[area.id].forEach((habit) => {
+          if (!cleaned.some((item) => item.id === habit.id)) cleaned.push(habit);
+        });
+        normalized[area.id] = cleaned;
+      });
+      return normalized;
+    }
+
+    function normalizeStore(store) {
+      const normalized = store && typeof store === "object" ? store : {};
+      normalized.days = normalized.days && typeof normalized.days === "object" ? normalized.days : {};
+      normalized.lifePlan = normalized.lifePlan && typeof normalized.lifePlan === "object"
+        ? normalized.lifePlan
+        : {};
+      normalized.weeklyTargets = normalized.weeklyTargets && typeof normalized.weeklyTargets === "object"
+        ? normalized.weeklyTargets
+        : {};
+      normalized.habitConfig = normalizeHabitConfig(normalized.habitConfig);
+      areas.forEach((area) => {
+        if (!normalized.weeklyTargets[area.id]) normalized.weeklyTargets[area.id] = 3;
+      });
+      Object.keys(normalized.days).forEach((key) => {
+        normalized.days[key] = normalizeDay(normalized.days[key], normalized.habitConfig);
+      });
+      return normalized;
+    }
+
+    function loadStore() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) return normalizeStore(JSON.parse(saved));
+      } catch (error) {
+        console.warn("No se pudo cargar el guardado local", error);
+      }
+      return normalizeStore({ days: {} });
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(state.store));
+      } catch (error) {
+        console.warn("No se pudo guardar", error);
+      }
+    }
+
+    function activateTab(tabId) {
+      document.querySelectorAll(".tab").forEach((item) => {
+        item.classList.toggle("active", item.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".view").forEach((item) => {
+        item.classList.toggle("active", item.id === tabId);
+      });
+      if (tabId === "semana") renderWeekly();
+      if (tabId === "areas") renderAreas();
+    }
+
+    function selectDate(dateKey) {
+      state.date = dateKey;
+      dayPicker.value = dateKey;
+      ensureDay(dateKey);
+      renderAll();
+    }
+
+    function todayKey() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      return new Date(now.getTime() - offset * 60000).toISOString().slice(0, 10);
+    }
+
+    function shiftDate(dateKey, days) {
+      const [year, month, day] = dateKey.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
+      date.setDate(date.getDate() + days);
+      const offset = date.getTimezoneOffset();
+      return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 10);
+    }
+
+    function formatShortDate(key) {
+      const [year, month, day] = key.split("-");
+      return `${day}/${month}/${year}`;
+    }
+
+    function formatLongDate(key) {
+      const [year, month, day] = key.split("-").map(Number);
+      return new Intl.DateTimeFormat("es-ES", {
+        weekday: "long",
+        day: "numeric",
+        month: "long"
+      }).format(new Date(year, month - 1, day));
+    }
+
+    function dayRelation(key) {
+      if (key === todayKey()) return "today";
+      if (key === shiftDate(todayKey(), 1)) return "tomorrow";
+      return "other";
+    }
+
+    let toastTimer;
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    function appendLine(existing, line) {
+      return existing ? `${existing}\n${line}` : line;
+    }
+
+    function exportBackup() {
+      const backup = {
+        app: "Panel de Disciplina Personal",
+        version: 3,
+        exportedAt: new Date().toISOString(),
+        data: state.store
+      };
+      downloadText(
+        JSON.stringify(backup, null, 2),
+        `copia-disciplina-${todayKey()}.json`,
+        "application/json;charset=utf-8"
+      );
+      showToast("Copia de seguridad creada");
+    }
+
+    async function restoreBackup(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        const parsed = JSON.parse(await file.text());
+        const restored = normalizeStore(parsed.data || parsed);
+        if (!Object.keys(restored.days).length && !confirm("La copia no contiene dias guardados. Restaurarla igualmente?")) {
+          event.target.value = "";
+          return;
+        }
+        if (!confirm("La restauracion sustituira los datos actuales. Continuar?")) {
+          event.target.value = "";
+          return;
+        }
+        state.store = restored;
+        state.date = todayKey();
+        dayPicker.value = state.date;
+        ensureDay(state.date);
+        save();
+        renderAll();
+        activateTab("hoy");
+        showToast("Copia restaurada correctamente");
+      } catch (error) {
+        showToast("La copia no es valida");
+      } finally {
+        event.target.value = "";
+      }
+    }
+
+    function downloadText(content, filename, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportDay() {
+      const day = getDay();
+      const score = calculateScore(day);
+      const lines = [
+        `Balance personal - ${formatShortDate(state.date)}`,
+        "",
+        `Semaforo: ${score.label}`,
+        `Cumplimiento: ${score.percent}%`,
+        `Prioridad: ${day.priority || "-"}`,
+        `Siguiente paso: ${day.nextStep || "-"}`,
+        "",
+        "Tareas:",
+        ...day.tasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`),
+        "",
+        "Diario:",
+        ...journalQuestions.map(([id, label]) => `${label}\n${day.journal[id] || "-"}`),
+        "",
+        `Primer paso de manana: ${day.tomorrowFirst || "-"}`
+      ];
+      downloadText(
+        lines.join("\n"),
+        `balance-personal-${state.date}.txt`,
+        "text/plain;charset=utf-8"
+      );
+    }
+
+    if ("serviceWorker" in navigator && location.protocol !== "file:") {
+      navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>
+
