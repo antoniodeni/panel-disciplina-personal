@@ -3,9 +3,12 @@
 Aplicacion personal para organizar el inicio del dia, la agenda prevista, los
 habitos, las seis areas vitales, el cierre diario y el balance semanal.
 
-La pantalla de inicio muestra primero el estado, la prioridad, el siguiente
-paso y los accesos para empezar la rutina, abrir la agenda o cerrar el dia. El
-menu abre cada seccion por separado para evitar una pantalla larga y cargada.
+La pantalla de inicio muestra primero un calendario compacto, el semaforo, el
+cumplimiento y una agenda principal de hasta tres tareas. Cada tarea puede
+llevar hora y marcarse como principal desde Agenda. Debajo quedan la prioridad,
+el siguiente paso y los accesos para empezar la rutina, abrir la agenda o
+cerrar el dia. El menu abre cada seccion por separado para evitar una pantalla
+larga y cargada.
 
 El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
@@ -54,4 +57,3 @@ acceso del conector estan limitados a esta aplicacion.
 
 El estado exacto del proyecto y el punto de continuacion estan documentados en
 `ESTADO_PROYECTO.md`.
-
