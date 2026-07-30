@@ -52,7 +52,9 @@ sincronizacion:
 5. Selector directo para las seis areas creado.
 6. Datos y funciones anteriores conservados.
 7. Pruebas de logica y estructura superadas.
-8. Pendiente: revision visual final y validacion de uso con Antonio.
+8. Revision visual en escritorio y movil superada sin desbordamiento horizontal.
+9. Navegacion, accesos directos y regreso del navegador comprobados.
+10. Pendiente: validacion de uso diario con Antonio.
 
 ## Decision de arquitectura
 
