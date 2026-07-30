@@ -329,6 +329,11 @@
       backdrop-filter: blur(12px);
     }
 
+    .mobile-nav,
+    .mobile-menu-panel {
+      display: none;
+    }
+
     .dashboard-links {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1369,31 +1374,70 @@
       }
 
       .tabs {
-        position: fixed;
-        inset: auto 0 0 0;
+        display: none;
+      }
+
+      .mobile-nav {
+        position: sticky;
+        top: 0;
         z-index: 30;
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
-        overflow: visible;
-        border-width: 1px 0 0;
-        border-radius: 0;
-        box-shadow: 0 -6px 22px rgba(23, 33, 27, 0.1);
+        gap: 4px;
+        margin: 0 -10px 16px;
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(242, 244, 241, 0.97);
+        box-shadow: 0 5px 14px rgba(23, 33, 27, 0.07);
+        backdrop-filter: blur(12px);
       }
 
-      .tab {
+      .mobile-nav button {
         min-width: 0;
-        min-height: 46px;
-        padding: 8px 2px;
+        min-height: 42px;
+        padding: 7px 3px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--ink);
         font-size: 11px;
+        font-weight: 800;
         white-space: nowrap;
       }
 
-      .tab:nth-child(n + 6) {
-        display: none;
+      .mobile-nav button.active,
+      .mobile-nav button[aria-expanded="true"] {
+        border-color: var(--ink);
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .mobile-menu-panel {
+        position: sticky;
+        top: 58px;
+        z-index: 29;
+        margin: -10px -10px 16px;
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(242, 244, 241, 0.98);
+        box-shadow: 0 7px 16px rgba(23, 33, 27, 0.08);
+      }
+
+      .mobile-menu-panel.open {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .mobile-menu-panel button {
+        min-height: 44px;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--ink);
+        font-weight: 800;
+        text-align: left;
       }
 
       .dashboard-links {
@@ -1493,6 +1537,24 @@
       <button class="tab" data-tab="plan">Plan</button>
       <button class="tab" data-tab="ajustes">Ajustes</button>
     </nav>
+
+    <nav class="mobile-nav" aria-label="Navegacion principal">
+      <button class="active" data-go="inicio">Hoy</button>
+      <button data-go="agenda">Agenda</button>
+      <button data-go="habitos">Rutina</button>
+      <button data-go="cierre">Cierre</button>
+      <button id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileMenuPanel">Menu</button>
+    </nav>
+    <div class="mobile-menu-panel" id="mobileMenuPanel" aria-label="Mas secciones">
+      <button data-go="inicio">Inicio</button>
+      <button data-go="agenda">Agenda</button>
+      <button data-go="habitos">Rutina</button>
+      <button data-go="areas">Areas</button>
+      <button data-go="cierre">Cierre</button>
+      <button data-go="semana">Semana</button>
+      <button data-go="plan">Plan personal</button>
+      <button data-go="ajustes">Ajustes</button>
+    </div>
 
     <section class="view active" id="inicio">
       <div class="hero-grid">
@@ -2070,6 +2132,11 @@
 
       document.querySelectorAll("[data-go]").forEach((button) => {
         button.addEventListener("click", () => activateTab(button.dataset.go));
+      });
+
+      document.getElementById("mobileMenuBtn").addEventListener("click", toggleMobileMenu);
+      document.querySelectorAll("#mobileMenuPanel [data-go]").forEach((button) => {
+        button.addEventListener("click", closeMobileMenu);
       });
 
       document.querySelectorAll("[data-area]").forEach((button) => {
@@ -3505,6 +3572,13 @@
       document.querySelectorAll(".tab").forEach((item) => {
         item.classList.toggle("active", item.dataset.tab === navigationId);
       });
+      document.querySelectorAll(".mobile-nav [data-go]").forEach((item) => {
+        item.classList.toggle("active", item.dataset.go === navigationId);
+      });
+      document.getElementById("mobileMenuBtn")?.classList.toggle(
+        "active",
+        ["areas", "semana", "plan", "ajustes"].includes(navigationId)
+      );
       document.querySelectorAll(".view").forEach((item) => {
         item.classList.toggle("active", item.id === tabId);
       });
@@ -3515,6 +3589,20 @@
         history.pushState(null, "", `#${tabId}`);
       }
       window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleMobileMenu() {
+      const panel = document.getElementById("mobileMenuPanel");
+      const button = document.getElementById("mobileMenuBtn");
+      const isOpen = panel.classList.toggle("open");
+      button.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    function closeMobileMenu() {
+      const panel = document.getElementById("mobileMenuPanel");
+      const button = document.getElementById("mobileMenuBtn");
+      panel.classList.remove("open");
+      button.setAttribute("aria-expanded", "false");
     }
 
     function selectDate(dateKey) {
