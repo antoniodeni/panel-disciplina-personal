@@ -15,6 +15,11 @@ si ya existe, senala el pilar con menor cumplimiento y propone su minimo. En
 Agenda, las tareas principales se agrupan en Ahora, las demas en Despues y las
 completadas pasan automaticamente a Hecho.
 
+Los porcentajes comparan siempre lo hecho contra todas las acciones previstas
+para ese dia. Una accion completada no puede dar un 100% si quedan otras
+pendientes. El emblema de Linea Constructiva aparece centrado en la cabecera y
+la paleta toma sus verdes y dorados como acentos.
+
 El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
@@ -30,9 +35,9 @@ https://antoniodeni.github.io/panel-disciplina-personal/
 ## Instalar en el movil
 
 - Android: abrir el enlace en Chrome y elegir **Instalar aplicacion** o
-  **Anadir a pantalla de inicio**.
+  **AÃ±adir a pantalla de inicio**.
 - iPhone: abrir el enlace en Safari, pulsar **Compartir** y elegir
-  **Anadir a pantalla de inicio**.
+  **AÃ±adir a pantalla de inicio**.
 
 ## Instalar en el PC
 
