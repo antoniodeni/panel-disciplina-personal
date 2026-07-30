@@ -287,6 +287,41 @@
       margin-bottom: 16px;
     }
 
+    .dashboard-alert {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 13px 14px;
+      border: 1px solid #ead8ad;
+      border-left: 5px solid var(--amber);
+      border-radius: 8px;
+      background: #fffaf0;
+    }
+
+    .dashboard-alert h3,
+    .dashboard-alert p {
+      margin: 0;
+    }
+
+    .dashboard-alert h3 {
+      font-size: 15px;
+    }
+
+    .dashboard-alert p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .dashboard-alert.good {
+      border-color: #c6dfce;
+      border-left-color: var(--green);
+      background: var(--green-2);
+    }
+
     .dashboard-pillars {
       margin-bottom: 16px;
       padding: 13px;
@@ -1090,6 +1125,43 @@
       gap: 8px;
     }
 
+    .agenda-groups {
+      display: grid;
+      gap: 16px;
+    }
+
+    .agenda-group {
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .agenda-group-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .agenda-group-head h3,
+    .agenda-group-head p {
+      margin: 0;
+    }
+
+    .agenda-group-head h3 {
+      font-size: 15px;
+    }
+
+    .agenda-group-head p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .agenda-group .empty {
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
     .task-row {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto auto auto;
@@ -1785,6 +1857,15 @@
         margin-top: 5px;
       }
 
+      .dashboard-alert {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      .dashboard-alert .small-button {
+        justify-self: start;
+      }
+
       .dashboard-pillars {
         padding: 11px;
       }
@@ -2034,6 +2115,14 @@
           </div>
         </div>
 
+        <section class="dashboard-alert" id="dashboardAlert" aria-labelledby="dashboardAlertTitle">
+          <div>
+            <h3 id="dashboardAlertTitle">Define la prioridad de hoy</h3>
+            <p id="dashboardAlertText">Una prioridad clara evita que la agenda decida por ti.</p>
+          </div>
+          <button class="small-button" id="dashboardAlertAction" type="button">Definir prioridad</button>
+        </section>
+
         <section class="dashboard-pillars" aria-labelledby="dashboardPillarsTitle">
           <div class="dashboard-pillars-head">
             <div>
@@ -2106,7 +2195,29 @@
             </div>
             <button class="btn" type="submit">Anadir</button>
           </form>
-          <div class="task-list" id="taskList"></div>
+          <div class="agenda-groups">
+            <section class="agenda-group" aria-labelledby="agendaNowTitle">
+              <div class="agenda-group-head">
+                <h3 id="agendaNowTitle">Ahora</h3>
+                <p>Lo principal del dia.</p>
+              </div>
+              <div class="task-list" id="taskListNow"></div>
+            </section>
+            <section class="agenda-group" aria-labelledby="agendaLaterTitle">
+              <div class="agenda-group-head">
+                <h3 id="agendaLaterTitle">Despues</h3>
+                <p>Importante, pero no es lo primero.</p>
+              </div>
+              <div class="task-list" id="taskListLater"></div>
+            </section>
+            <section class="agenda-group" aria-labelledby="agendaDoneTitle">
+              <div class="agenda-group-head">
+                <h3 id="agendaDoneTitle">Hecho</h3>
+                <p>Lo que ya esta cerrado.</p>
+              </div>
+              <div class="task-list" id="taskListDone"></div>
+            </section>
+          </div>
         </div>
         <div class="panel">
           <h2>Ideas o fugas para aparcar</h2>
@@ -2635,6 +2746,28 @@
         activateTab("areas");
       });
 
+      document.getElementById("dashboardAlertAction").addEventListener("click", () => {
+        const action = document.getElementById("dashboardAlertAction");
+        const target = action.dataset.target || "inicio";
+        activateTab(target);
+        requestAnimationFrame(() => {
+          if (action.dataset.focus === "minimumDetails") {
+            const minimumDetails = document.getElementById("minimumDetails");
+            minimumDetails.open = true;
+            minimumDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+            return;
+          }
+          if (action.dataset.focus) {
+            document.getElementById(action.dataset.focus)?.focus({ preventScroll: true });
+            return;
+          }
+          if (action.dataset.area && target === "areas") {
+            document.getElementById(`area-${action.dataset.area}`)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+
       document.getElementById("goCloseBtn").addEventListener("click", () => {
         activateTab("cierre");
         requestAnimationFrame(() => document.getElementById("journalGrid")
@@ -2808,6 +2941,7 @@
       renderHeaderDate();
       renderDayMode();
       renderDashboardCommand();
+      renderDashboardAlert();
       renderDashboardAgenda();
       renderCloseState();
       renderDataSummary();
@@ -2849,6 +2983,100 @@
           : day.priority
             ? "Tu prioridad ya esta definida. Ahora conviertela en una accion concreta."
             : "Empieza por decidir una prioridad real y dar el primer paso.";
+    }
+
+    function renderDashboardAlert() {
+      const day = getDay();
+      const alert = document.getElementById("dashboardAlert");
+      const title = document.getElementById("dashboardAlertTitle");
+      const text = document.getElementById("dashboardAlertText");
+      const action = document.getElementById("dashboardAlertAction");
+      const configure = (nextTitle, nextText, buttonText, target, area = "", focus = "", good = false) => {
+        title.textContent = nextTitle;
+        text.textContent = nextText;
+        action.textContent = buttonText;
+        action.dataset.target = target;
+        action.dataset.area = area;
+        action.dataset.focus = focus;
+        alert.classList.toggle("good", good);
+      };
+
+      if (day.closed) {
+        configure(
+          "El dia ya esta cerrado",
+          "Revisa el balance o prepara el siguiente dia cuando quieras.",
+          "Ver cierre",
+          "cierre",
+          "",
+          "",
+          true
+        );
+        return;
+      }
+
+      if (day.badDay) {
+        configure(
+          "Hoy cuentan los minimos",
+          "No intentes recuperar todo. Haz una accion pequena y cierra el dia.",
+          "Ver minimos",
+          "habitos",
+          "",
+          "minimumDetails"
+        );
+        return;
+      }
+
+      if (!day.priority?.trim()) {
+        configure(
+          "Define la prioridad de hoy",
+          "Una prioridad clara evita que la agenda decida por ti.",
+          "Definir prioridad",
+          "inicio",
+          "",
+          "priority"
+        );
+        return;
+      }
+
+      const weakest = areas
+        .map((area) => ({ area, percent: todayAreaPercent(area.id) ?? 0 }))
+        .sort((a, b) => a.percent - b.percent)[0];
+      if (weakest && weakest.percent < 70) {
+        const objective = state.store.objectives[weakest.area.id];
+        const fallback = getAreaHabits(weakest.area.id)[0]?.minimum || "Haz una accion minima";
+        const minimum = objective?.minimum || fallback;
+        configure(
+          `${weakest.area.name}: ${weakest.percent}% hoy`,
+          `Haz ahora: ${minimum}`,
+          `Abrir ${weakest.area.name}`,
+          weakest.area.id === "alimentacion" ? "alimentacion" : "areas",
+          weakest.area.id
+        );
+        return;
+      }
+
+      const nextTask = day.tasks
+        .filter((task) => task.important && !task.done && !task.dismissed)
+        .sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"))[0];
+      if (nextTask) {
+        configure(
+          "La base de los pilares esta en marcha",
+          `Siguiente tarea principal: ${nextTask.text}`,
+          "Abrir agenda",
+          "agenda"
+        );
+        return;
+      }
+
+      configure(
+        "El dia esta ordenado",
+        "Mantiene el plan, completa la agenda y cierra con una nota honesta.",
+        "Ver cierre",
+        "cierre",
+        "",
+        "",
+        true
+      );
     }
 
     function renderHeaderDate() {
@@ -3406,13 +3634,15 @@
     }
 
     function renderTasks() {
-      const list = document.getElementById("taskList");
       const tasks = getDay().tasks;
-      list.innerHTML = "";
-      if (!tasks.length) {
-        list.innerHTML = '<div class="empty">Anade aqui lo previsto para este dia. Luego podras verificarlo.</div>';
-        return;
-      }
+      const lists = {
+        now: document.getElementById("taskListNow"),
+        later: document.getElementById("taskListLater"),
+        done: document.getElementById("taskListDone")
+      };
+      Object.values(lists).forEach((list) => {
+        list.innerHTML = "";
+      });
       tasks.forEach((task) => {
         const row = document.createElement("div");
         row.className = `task-row ${task.done ? "done" : ""}`;
@@ -3475,7 +3705,19 @@
           renderAreas();
           updateScore();
         });
-        list.appendChild(row);
+        const destination = task.done ? lists.done : task.important ? lists.now : lists.later;
+        destination.appendChild(row);
+      });
+
+      const emptyMessages = {
+        now: "Marca como Principal la tarea que toca hacer ahora.",
+        later: "No hay tareas pendientes para despues.",
+        done: "Todavia no has cerrado ninguna tarea."
+      };
+      Object.entries(lists).forEach(([key, list]) => {
+        if (!list.childElementCount) {
+          list.innerHTML = `<div class="empty">${emptyMessages[key]}</div>`;
+        }
       });
     }
 
@@ -3827,6 +4069,7 @@
       document.getElementById("statusText").textContent = snapshot.text;
       const status = document.getElementById("dayStatus");
       status.className = `metric status ${snapshot.color}`;
+      renderDashboardAlert();
     }
 
     function calculateScore(day) {
