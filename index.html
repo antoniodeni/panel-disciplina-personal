@@ -79,7 +79,7 @@
 
     .topbar {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 18px;
       margin-bottom: 20px;
@@ -103,46 +103,72 @@
     }
 
     .date-card {
-      min-width: 220px;
+      position: relative;
+      width: 68px;
+      min-width: 68px;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       box-shadow: 0 1px 2px rgba(23, 33, 27, 0.04);
-      padding: 14px;
+      overflow: hidden;
     }
 
-    .date-card label {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .date-card input {
+    .date-calendar {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 9px 10px;
-      background: #fff;
+      border: 0;
+      padding: 0;
+      background: transparent;
       color: var(--ink);
+      cursor: pointer;
+    }
+
+    .date-month {
+      display: block;
+      padding: 5px 4px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .date-number {
+      display: block;
+      padding: 7px 4px 5px;
+      font-size: 29px;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .date-picker-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .date-actions {
       display: grid;
-      grid-template-columns: 38px 1fr 38px;
-      gap: 6px;
-      margin-top: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
     }
 
     .date-actions button {
-      min-height: 34px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
+      min-height: 23px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-radius: 0;
       background: var(--soft);
       color: var(--ink);
+      font-size: 11px;
       font-weight: 800;
+    }
+
+    .date-actions button:last-child {
+      border-right: 0;
     }
 
     .date-actions button:hover {
@@ -210,6 +236,80 @@
 
     .dashboard-secondary-actions {
       margin-top: 8px;
+    }
+
+    .dashboard-agenda {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .dashboard-agenda-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-agenda-head h3,
+    .dashboard-agenda-head p {
+      margin: 0;
+    }
+
+    .dashboard-agenda-head p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dashboard-agenda-list {
+      display: grid;
+      gap: 7px;
+    }
+
+    .dashboard-agenda-row {
+      display: grid;
+      grid-template-columns: auto auto minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .dashboard-agenda-row input {
+      width: 17px;
+      height: 17px;
+    }
+
+    .dashboard-agenda-row.done .dashboard-agenda-text {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .dashboard-agenda-time {
+      min-width: 42px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .dashboard-agenda-text {
+      overflow: hidden;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-agenda-empty {
+      padding: 10px 12px;
+      border: 1px dashed var(--line);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .panel {
@@ -789,22 +889,54 @@
 
     .task-form {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 180px auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
       margin-bottom: 12px;
+    }
+
+    .task-form #taskInput {
+      grid-column: 1 / -1;
+    }
+
+    .task-task-options {
+      display: grid;
+      grid-template-columns: 94px minmax(0, 1fr) auto;
+      gap: 8px;
+      min-width: 0;
     }
 
     .simple-form {
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
-    .task-form input,
+    .task-form input:not([type="checkbox"]),
     .task-form select {
       border: 1px solid var(--line);
       border-radius: 6px;
       padding: 10px;
       background: #fff;
       color: var(--ink);
+    }
+
+    .task-primary-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .task-primary-toggle input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
     }
 
     .task-list {
@@ -814,7 +946,7 @@
 
     .task-row {
       display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      grid-template-columns: auto minmax(0, 1fr) auto auto auto;
       align-items: center;
       gap: 10px;
       border: 1px solid var(--line);
@@ -841,6 +973,22 @@
       display: grid;
       min-width: 0;
       gap: 5px;
+    }
+
+    .task-meta {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .task-time-input {
+      width: 82px;
+      border: 0;
+      padding: 1px 3px;
+      background: transparent;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
     }
 
     .task-area-select {
@@ -876,6 +1024,21 @@
       color: var(--blue);
       font-size: 13px;
       font-weight: 800;
+    }
+
+    .task-primary {
+      min-height: 30px;
+      border-radius: 6px;
+      padding: 5px 8px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .task-primary.active {
+      background: var(--amber-2);
+      color: #8b6410;
     }
 
     .remove {
@@ -1361,8 +1524,9 @@
       }
 
       .topbar {
-        display: grid;
-        gap: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
         margin-bottom: 10px;
         padding-bottom: 10px;
       }
@@ -1380,7 +1544,7 @@
       }
 
       .date-card {
-        min-width: 0;
+        min-width: 68px;
       }
 
       .dashboard-links {
@@ -1474,8 +1638,20 @@
         grid-template-columns: minmax(0, 1fr) auto;
       }
 
-      .task-form input {
+      .task-form #taskInput {
         grid-column: 1 / -1;
+      }
+
+      .task-task-options {
+        grid-template-columns: 86px minmax(0, 1fr);
+      }
+
+      .task-task-options .task-primary-toggle {
+        grid-column: 1 / -1;
+      }
+
+      .dashboard-agenda-head {
+        align-items: flex-start;
       }
 
       .tabs {
@@ -1622,11 +1798,14 @@
         <p>Organiza el dia, cumple lo previsto y cierra con una vision clara.</p>
       </div>
       <div class="date-card">
-        <label for="dayPicker">Dia de trabajo</label>
-        <input id="dayPicker" type="date">
+        <button class="date-calendar" id="datePickerButton" type="button" aria-label="Elegir dia de trabajo" title="Elegir otro dia">
+          <span class="date-month" id="headerDateMonth">JUL</span>
+          <strong class="date-number" id="headerDateNumber">30</strong>
+        </button>
+        <input class="date-picker-input" id="dayPicker" type="date" aria-label="Dia de trabajo">
         <div class="date-actions">
           <button type="button" id="prevDayBtn" aria-label="Dia anterior" title="Dia anterior">&larr;</button>
-          <button type="button" id="todayBtn">Hoy</button>
+          <button type="button" id="todayBtn" aria-label="Ir a hoy" title="Ir a hoy">Hoy</button>
           <button type="button" id="nextDayBtn" aria-label="Dia siguiente" title="Dia siguiente">&rarr;</button>
         </div>
       </div>
@@ -1690,6 +1869,17 @@
           </div>
         </div>
 
+        <section class="dashboard-agenda" aria-labelledby="dashboardAgendaTitle">
+          <div class="dashboard-agenda-head">
+            <div>
+              <h3 id="dashboardAgendaTitle">Agenda principal</h3>
+              <p>Hasta tres tareas que hoy no se pueden escapar.</p>
+            </div>
+            <button class="small-button" id="dashboardAgendaBtn" type="button">Editar agenda</button>
+          </div>
+          <div class="dashboard-agenda-list" id="dashboardAgendaList"></div>
+        </section>
+
         <div class="dashboard-focus">
           <div class="field">
             <label for="priority">Prioridad real del dia</label>
@@ -1739,9 +1929,16 @@
           <h2 id="agendaTitle">Agenda prevista para hoy</h2>
           <form class="task-form" id="taskForm">
             <input id="taskInput" placeholder="Anade una tarea prevista para este dia">
-            <select id="taskArea" aria-label="Area de la tarea">
-              <option value="">Sin area</option>
-            </select>
+            <div class="task-task-options">
+              <input id="taskTime" type="time" aria-label="Hora de la tarea">
+              <select id="taskArea" aria-label="Area de la tarea">
+                <option value="">Sin area</option>
+              </select>
+              <label class="task-primary-toggle" for="taskPrimary">
+                <input id="taskPrimary" type="checkbox">
+                Principal
+              </label>
+            </div>
             <button class="btn" type="submit">Anadir</button>
           </form>
           <div class="task-list" id="taskList"></div>
@@ -2190,6 +2387,8 @@
     const nutritionRescueAction = document.getElementById("nutritionRescueAction");
     const dashboardPrompt = document.getElementById("dashboardPrompt");
     const dashboardDayLabel = document.getElementById("dashboardDayLabel");
+    const headerDateMonth = document.getElementById("headerDateMonth");
+    const headerDateNumber = document.getElementById("headerDateNumber");
 
     init();
 
@@ -2210,6 +2409,14 @@
         renderAll();
       });
 
+      document.getElementById("datePickerButton").addEventListener("click", () => {
+        if (typeof dayPicker.showPicker === "function") {
+          dayPicker.showPicker();
+          return;
+        }
+        dayPicker.focus();
+        dayPicker.click();
+      });
       document.getElementById("prevDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, -1)));
       document.getElementById("todayBtn").addEventListener("click", () => selectDate(todayKey()));
       document.getElementById("nextDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, 1)));
@@ -2256,6 +2463,11 @@
       });
 
       document.getElementById("goAgendaBtn").addEventListener("click", () => {
+        activateTab("agenda");
+        requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
+      });
+
+      document.getElementById("dashboardAgendaBtn").addEventListener("click", () => {
         activateTab("agenda");
         requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
       });
@@ -2311,6 +2523,7 @@
           const day = getDay();
           day[input.id] = input.value;
           save();
+          renderDashboardCommand();
           updateScore();
         });
       });
@@ -2319,13 +2532,25 @@
         event.preventDefault();
         const taskInput = document.getElementById("taskInput");
         const taskArea = document.getElementById("taskArea");
+        const taskTime = document.getElementById("taskTime");
+        const taskPrimary = document.getElementById("taskPrimary");
         const text = taskInput.value.trim();
         if (!text) return;
-        getDay().tasks.push({ id: crypto.randomUUID(), text, done: false, area: taskArea.value });
+        getDay().tasks.push({
+          id: crypto.randomUUID(),
+          text,
+          done: false,
+          area: taskArea.value,
+          time: taskTime.value,
+          important: taskPrimary.checked
+        });
         taskInput.value = "";
+        taskTime.value = "";
         taskArea.value = "";
+        taskPrimary.checked = false;
         save();
         renderTasks();
+        renderDashboardAgenda();
         renderPendingTasks();
         renderCloseState();
         renderAreas();
@@ -2354,9 +2579,9 @@
         if (!day.nextStep) day.nextStep = sourceDay?.tomorrowFirst || "Hacer el primer bloque de 15 minutos";
         if (!day.tasks.length) {
           day.tasks = [
-            { id: crypto.randomUUID(), text: "Hacer rutina de inicio", done: false, area: "habitos" },
-            { id: crypto.randomUUID(), text: "Completar un bloque de trabajo real", done: false, area: "habitos" },
-            { id: crypto.randomUUID(), text: "Cerrar el dia con diario", done: false, area: "actitud" }
+            { id: crypto.randomUUID(), text: "Hacer rutina de inicio", done: false, area: "habitos", time: "08:00", important: true },
+            { id: crypto.randomUUID(), text: "Completar un bloque de trabajo real", done: false, area: "habitos", time: "10:00", important: true },
+            { id: crypto.randomUUID(), text: "Cerrar el dia con diario", done: false, area: "actitud", time: "22:00", important: true }
           ];
         }
         save();
@@ -2370,7 +2595,7 @@
       });
 
       document.getElementById("resetTodayBtn").addEventListener("click", () => {
-        if (!confirm("Esto limpia solo el dia seleccionado. ¿Seguro?")) return;
+        if (!confirm("Esto limpia solo el dia seleccionado. Â¿Seguro?")) return;
         state.store.days[state.date] = freshDay(state.store.habitConfig);
         save();
         renderAll();
@@ -2417,8 +2642,10 @@
       renderHistory();
       renderWeekly();
       renderSelectedDay();
+      renderHeaderDate();
       renderDayMode();
       renderDashboardCommand();
+      renderDashboardAgenda();
       renderCloseState();
       renderDataSummary();
       updateScore();
@@ -2459,6 +2686,52 @@
           : day.priority
             ? "Tu prioridad ya esta definida. Ahora conviertela en una accion concreta."
             : "Empieza por decidir una prioridad real y dar el primer paso.";
+    }
+
+    function renderHeaderDate() {
+      const [year, month, day] = state.date.split("-").map(Number);
+      const selectedDate = new Date(year, month - 1, day, 12);
+      headerDateNumber.textContent = String(day);
+      headerDateMonth.textContent = selectedDate
+        .toLocaleDateString("es-ES", { month: "short" })
+        .replace(".", "")
+        .toUpperCase();
+    }
+
+    function renderDashboardAgenda() {
+      const list = document.getElementById("dashboardAgendaList");
+      const mainTasks = getDay().tasks
+        .filter((task) => task.important && !task.dismissed)
+        .sort((a, b) => (a.time || "99:99").localeCompare(b.time || "99:99"))
+        .slice(0, 3);
+      list.innerHTML = "";
+
+      if (!mainTasks.length) {
+        list.innerHTML = '<div class="dashboard-agenda-empty">Marca una tarea como Principal en Agenda para verla siempre aqui.</div>';
+        return;
+      }
+
+      mainTasks.forEach((task) => {
+        const row = document.createElement("label");
+        row.className = `dashboard-agenda-row ${task.done ? "done" : ""}`;
+        row.innerHTML = `
+          <input type="checkbox" ${task.done ? "checked" : ""} aria-label="Completar tarea principal">
+          <span class="dashboard-agenda-time">${task.time || "Sin hora"}</span>
+          <span class="dashboard-agenda-text"></span>
+        `;
+        row.querySelector(".dashboard-agenda-text").textContent = task.text;
+        row.querySelector("input").addEventListener("change", (event) => {
+          task.done = event.target.checked;
+          save();
+          renderTasks();
+          renderDashboardAgenda();
+          renderPendingTasks();
+          renderCloseState();
+          renderAreas();
+          updateScore();
+        });
+        list.appendChild(row);
+      });
     }
 
     function renderDayMode() {
@@ -2997,12 +3270,23 @@
           <input type="checkbox" ${task.done ? "checked" : ""} aria-label="Marcar tarea">
           <div class="task-main">
             <span class="task-text"></span>
-            <select class="task-area-select" aria-label="Area de la tarea"></select>
+            <div class="task-meta">
+              <input class="task-time-input" type="time" aria-label="Hora de la tarea">
+              <select class="task-area-select" aria-label="Area de la tarea"></select>
+            </div>
           </div>
+          <button class="task-primary ${task.important ? "active" : ""}" aria-pressed="${Boolean(task.important)}">Principal</button>
           <button class="edit" aria-label="Editar tarea">Editar</button>
           <button class="remove" aria-label="Eliminar tarea">x</button>
         `;
         row.querySelector(".task-text").textContent = task.text;
+        const timeInput = row.querySelector(".task-time-input");
+        timeInput.value = task.time || "";
+        timeInput.addEventListener("change", () => {
+          task.time = timeInput.value;
+          save();
+          renderDashboardAgenda();
+        });
         const areaSelect = row.querySelector(".task-area-select");
         populateAreaSelect(areaSelect, task.area || "");
         areaSelect.addEventListener("change", () => {
@@ -3015,10 +3299,18 @@
           task.done = event.target.checked;
           save();
           renderTasks();
+          renderDashboardAgenda();
           renderPendingTasks();
           renderCloseState();
           renderAreas();
           updateScore();
+        });
+        row.querySelector(".task-primary").addEventListener("click", () => {
+          task.important = !task.important;
+          save();
+          renderTasks();
+          renderDashboardAgenda();
+          showToast(task.important ? "Tarea marcada como principal" : "Tarea quitada de la agenda principal");
         });
         row.querySelector(".edit").addEventListener("click", () => {
           startTaskEdit(row, task);
@@ -3027,6 +3319,7 @@
           getDay().tasks = getDay().tasks.filter((item) => item.id !== task.id);
           save();
           renderTasks();
+          renderDashboardAgenda();
           renderPendingTasks();
           renderCloseState();
           renderAreas();
@@ -3075,6 +3368,7 @@
         task.text = text;
         save();
         renderTasks();
+        renderDashboardAgenda();
         renderPendingTasks();
         renderCloseState();
         showToast("Tarea actualizada");
@@ -3543,6 +3837,10 @@
       }));
       normalized.tasks.forEach((task) => {
         if (!("area" in task)) task.area = "";
+        task.time = typeof task.time === "string" && /^\d{2}:\d{2}$/.test(task.time)
+          ? task.time
+          : "";
+        task.important = Boolean(task.important);
       });
       return normalized;
     }
@@ -3894,4 +4192,3 @@
   </script>
 </body>
 </html>
-
