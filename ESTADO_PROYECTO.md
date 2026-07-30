@@ -90,6 +90,7 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 16. Alerta de accion basada en prioridad y pilar mas debil; agenda separada en Ahora, Despues y Hecho.
 17. Métricas corregidas contra acciones previstas, logo Línea Constructiva integrado y paleta adaptada.
 18. Diseño móvil simplificado: cabecera sin saludo, logo visible, calendario compacto y jerarquía verde y naranja.
+19. Inicio ordenado por acción: siguiente paso, estado, agenda, pilares y herramientas secundarias; botones auditados.
 
 ## Decision de arquitectura
 
