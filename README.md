@@ -3,7 +3,8 @@
 Aplicacion personal para organizar el inicio del dia, la agenda prevista, los
 habitos, las seis areas vitales, el cierre diario y el balance semanal.
 
-La pantalla de inicio resume el estado, la prioridad y el siguiente paso. El
+La pantalla de inicio muestra primero el estado, la prioridad, el siguiente
+paso y los accesos para empezar la rutina, abrir la agenda o cerrar el dia. El
 menu abre cada seccion por separado para evitar una pantalla larga y cargada.
 
 El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
