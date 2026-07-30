@@ -450,6 +450,10 @@
       font-weight: 700;
     }
 
+    .meal-check-row {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
     .nutrition-shopping-row input {
       width: 17px;
       height: 17px;
@@ -2484,15 +2488,9 @@
         return;
       }
       meals.forEach((meal) => {
-        const row = document.createElement("div");
-        row.className = "meal-row";
-        const copy = document.createElement("strong");
-        copy.textContent = meal.name;
-        row.appendChild(copy);
-        const states = document.createElement("div");
-        states.appendChild(checkRow(
+        const row = checkRow(
           meal.name,
-          "",
+          "Comida prevista para este dia",
           meal.status,
           (value) => {
             meal.status = value;
@@ -2502,8 +2500,8 @@
             renderWeekly();
           },
           { midLabel: "Comida parcial" }
-        ).querySelector(".state-buttons"));
-        row.appendChild(states);
+        );
+        row.classList.add("meal-check-row");
         const remove = document.createElement("button");
         remove.type = "button";
         remove.className = "remove";
