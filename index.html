@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1b2420">
+  <meta name="theme-color" content="#2a3a22">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Disciplina">
   <link rel="manifest" href="manifest.webmanifest">
@@ -13,20 +13,20 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f2f4f1;
-      --ink: #1b2420;
-      --muted: #68736d;
-      --line: #d5dbd6;
+      --bg: #f4f6f0;
+      --ink: #2a3a22;
+      --muted: #65705f;
+      --line: #d4dccd;
       --panel: #ffffff;
-      --soft: #f4f6f3;
-      --green: #2f7d4c;
-      --green-2: #dcefe4;
-      --amber: #b8791a;
-      --amber-2: #f6ead5;
+      --soft: #f1f5eb;
+      --green: #5d9218;
+      --green-2: #e3efd3;
+      --amber: #bd8617;
+      --amber-2: #f6ecd5;
       --red: #b84b45;
       --red-2: #f4deda;
-      --blue: #315f8f;
-      --blue-2: #deebf8;
+      --blue: #466d4f;
+      --blue-2: #dfede2;
       --shadow: 0 1px 2px rgba(23, 33, 27, 0.04), 0 10px 28px rgba(23, 33, 27, 0.05);
       font-family: "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -79,13 +79,24 @@
 
     .topbar {
       position: relative;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
       gap: 18px;
       margin-bottom: 20px;
       padding-bottom: 18px;
       border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-logo {
+      display: grid;
+      place-items: center;
+    }
+
+    .topbar-logo img {
+      width: 132px;
+      max-height: 54px;
+      object-fit: contain;
     }
 
     .topbar-left {
@@ -168,6 +179,7 @@
 
     .date-card {
       position: relative;
+      justify-self: end;
       width: 68px;
       min-width: 68px;
       background: var(--panel);
@@ -1733,7 +1745,6 @@
     }
 
     @media (max-width: 900px) {
-      .topbar,
       .hero-grid,
       .grid,
       .journal-grid,
@@ -1742,8 +1753,9 @@
       }
 
       .topbar {
-        display: flex;
-        align-items: flex-start;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
         gap: 12px;
         margin-bottom: 10px;
         padding-bottom: 10px;
@@ -1809,6 +1821,11 @@
         min-width: 54px;
         min-height: 36px;
         font-size: 12px;
+      }
+
+      .topbar-logo img {
+        width: 102px;
+        max-height: 42px;
       }
 
       .app-menu {
@@ -2062,6 +2079,9 @@
           <p>Decide lo importante y haz el siguiente paso.</p>
         </div>
       </div>
+      <div class="topbar-logo" aria-hidden="true">
+        <img src="assets/linea-constructiva-logo-192.png" alt="">
+      </div>
       <div class="date-card">
         <button class="date-calendar" id="datePickerButton" type="button" aria-label="Elegir dia de trabajo" title="Elegir otro dia">
           <span class="date-month" id="headerDateMonth">JUL</span>
@@ -2106,7 +2126,7 @@
           <div class="metric">
             <span>Cumplimiento</span>
             <strong id="scorePercent">0%</strong>
-            <small>Habitos y tareas.</small>
+            <small>Rutina y agenda.</small>
           </div>
           <div class="metric">
             <span>Tareas</span>
@@ -2163,7 +2183,7 @@
         </div>
         <div class="actions dashboard-secondary-actions">
           <button class="small-button" id="badDayBtn">Modo dia malo</button>
-          <button class="small-button" id="startTemplateBtn">Planificar manana</button>
+          <button class="small-button" id="startTemplateBtn">Planificar maÃ±ana</button>
           <button class="small-button" id="resetTodayBtn">Limpiar este dia</button>
         </div>
       </div>
@@ -2182,7 +2202,7 @@
         <div class="panel" id="agendaPanel">
           <h2 id="agendaTitle">Agenda prevista para hoy</h2>
           <form class="task-form" id="taskForm">
-            <input id="taskInput" placeholder="Anade una tarea prevista para este dia">
+            <input id="taskInput" placeholder="AÃ±ade una tarea prevista para este dÃ­a">
             <div class="task-task-options">
               <input id="taskTime" type="time" aria-label="Hora de la tarea">
               <select id="taskArea" aria-label="Area de la tarea">
@@ -2193,7 +2213,7 @@
                 Principal
               </label>
             </div>
-            <button class="btn" type="submit">Anadir</button>
+            <button class="btn" type="submit">AÃ±adir</button>
           </form>
           <div class="agenda-groups">
             <section class="agenda-group" aria-labelledby="agendaNowTitle">
@@ -2318,8 +2338,8 @@
         <div class="panel">
           <h2>Compra y frigorifico</h2>
           <form class="task-form simple-form" id="nutritionShoppingForm">
-            <input id="nutritionShoppingInput" placeholder="Anade un producto necesario">
-            <button class="btn" type="submit">Anadir</button>
+            <input id="nutritionShoppingInput" placeholder="AÃ±ade un producto necesario">
+            <button class="btn" type="submit">AÃ±adir</button>
           </form>
           <div class="check-list" id="nutritionShoppingList"></div>
         </div>
@@ -2328,7 +2348,7 @@
           <h2>Comidas previstas para hoy</h2>
           <form class="task-form simple-form" id="nutritionMealForm">
             <input id="nutritionMealInput" placeholder="Ejemplo: comida - arroz, pollo y verduras">
-            <button class="btn" type="submit">Anadir</button>
+            <button class="btn" type="submit">AÃ±adir</button>
           </form>
           <div class="check-list" id="nutritionMealList"></div>
         </div>
@@ -2355,8 +2375,8 @@
             <div class="journal-grid" id="journalOptional"></div>
           </details>
           <div class="field" style="margin-top: 12px;">
-            <label for="tomorrowFirst">Primer paso de manana</label>
-            <input id="tomorrowFirst" placeholder="Dejalo tan claro que manana no haya que pensar">
+            <label for="tomorrowFirst">Primer paso de maÃ±ana</label>
+            <input id="tomorrowFirst" placeholder="DÃ©jalo tan claro que maÃ±ana no haya que pensar">
           </div>
           <div class="actions" style="margin-top: 12px;">
             <button class="btn" id="closeDayBtn">Cerrar dia</button>
@@ -2438,7 +2458,7 @@
           <h2>Uso diario</h2>
           <div class="guide-list">
             <div class="guide-item">
-              <strong>Manana</strong>
+              <strong>MaÃ±ana</strong>
               <span>Abre Hoy, revisa la prioridad y completa la rutina de inicio.</span>
             </div>
             <div class="guide-item">
@@ -2447,7 +2467,7 @@
             </div>
             <div class="guide-item">
               <strong>Noche</strong>
-              <span>Cierra el dia y deja escrito el primer paso de manana.</span>
+              <span>Cierra el dÃ­a y deja escrito el primer paso de maÃ±ana.</span>
             </div>
           </div>
         </div>
@@ -2588,7 +2608,7 @@
       ["fallo", "Donde me he fallado?"],
       ["foco", "Que me saco del foco?"],
       ["aprendizaje", "Que aprendi o entendi hoy?"],
-      ["corregir", "Que corrijo manana?"]
+      ["corregir", "Â¿QuÃ© corrijo maÃ±ana?"]
     ];
 
     const primaryJournalIds = ["real", "fallo", "corregir"];
@@ -2883,7 +2903,7 @@
         save();
         renderAll();
         activateTab("agenda");
-        showToast(`Manana preparado: ${formatLongDate(state.date)}`);
+        showToast(`MaÃ±ana preparado: ${formatLongDate(state.date)}`);
         requestAnimationFrame(() => {
           document.getElementById("agendaPanel").scrollIntoView({ behavior: "smooth", block: "start" });
           document.getElementById("taskInput").focus({ preventScroll: true });
@@ -2955,7 +2975,7 @@
       const relationText = relation === "today"
         ? "hoy"
         : relation === "tomorrow"
-          ? "manana"
+          ? "maÃ±ana"
           : `el ${formatShortDate(state.date)}`;
 
       document.getElementById("selectedDayLabel").textContent = `Estas viendo ${relationText}`;
@@ -2964,7 +2984,7 @@
       document.getElementById("dayStateTitle").textContent = relation === "today"
         ? "Estado de hoy"
         : relation === "tomorrow"
-          ? "Plan de manana"
+          ? "Plan de maÃ±ana"
           : `Estado del ${formatShortDate(state.date)}`;
     }
 
@@ -2974,7 +2994,7 @@
       dashboardDayLabel.textContent = relation === "today"
         ? "Hoy"
         : relation === "tomorrow"
-          ? "Manana"
+          ? "MaÃ±ana"
           : formatShortDate(state.date);
       dashboardPrompt.textContent = day.closed
         ? "El dia esta cerrado. Revisa el resultado o prepara el siguiente paso."
@@ -3282,7 +3302,7 @@
       const items = state.store.nutrition.shoppingItems;
       list.innerHTML = "";
       if (!items.length) {
-        list.innerHTML = '<div class="empty">Anade los productos necesarios para tu plan.</div>';
+        list.innerHTML = '<div class="empty">AÃ±ade los productos necesarios para tu plan.</div>';
         return;
       }
       items.forEach((item) => {
@@ -3327,7 +3347,7 @@
       const meals = getDay().nutrition.meals;
       list.innerHTML = "";
       if (!meals.length) {
-        list.innerHTML = '<div class="empty">Anade las comidas previstas para poder medir el cumplimiento.</div>';
+        list.innerHTML = '<div class="empty">AÃ±ade las comidas previstas para poder medir el cumplimiento.</div>';
         return;
       }
       meals.forEach((meal) => {
@@ -3425,7 +3445,7 @@
         section.innerHTML = `
           <div class="habit-config-head">
             <h3></h3>
-            <button type="button" class="small-button add-habit">Anadir</button>
+          <button type="button" class="small-button add-habit">AÃ±adir</button>
           </div>
           <div class="habit-config-list"></div>
         `;
@@ -3827,7 +3847,7 @@
           const carryButton = document.createElement("button");
           carryButton.type = "button";
           carryButton.className = "small-button";
-          carryButton.textContent = "Pasar a manana";
+          carryButton.textContent = "Pasar a maÃ±ana";
           carryButton.addEventListener("click", () => carryTaskToTomorrow(task));
           const dismissButton = document.createElement("button");
           dismissButton.type = "button";
@@ -3981,9 +4001,12 @@
     }
 
     function areaPercentForDay(day, areaId) {
-      const values = Object.values(day.areas?.[areaId] || {})
-        .filter((value) => value !== "none");
-      const linkedTasks = (day.tasks || []).filter((task) => task.area === areaId);
+      const scheduledHabits = getAreaHabits(areaId)
+        .filter((habit) => habit.active && isHabitScheduled(habit, state.date));
+      const values = scheduledHabits
+        .map((habit) => day.areas?.[areaId]?.[habit.id] || "none");
+      const linkedTasks = (day.tasks || [])
+        .filter((task) => task.area === areaId && !task.dismissed && !task.carriedTo);
       const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
       const taskPoints = linkedTasks.filter((task) => task.done).length * 2;
       const max = (values.length + linkedTasks.length) * 2;
@@ -3998,8 +4021,7 @@
     }
 
     function nutritionMealPercent(day) {
-      const meals = (day.nutrition?.meals || [])
-        .filter((meal) => meal.status !== "none");
+      const meals = day.nutrition?.meals || [];
       if (!meals.length) return null;
       const points = meals.reduce((sum, meal) => sum + valuePoints(meal.status), 0);
       return Math.round((points / (meals.length * 2)) * 100);
@@ -4079,11 +4101,11 @@
       } else {
         collectValues(day.morning, values);
       }
-      areas.forEach((area) => collectValues(day.areas[area.id], values, true));
       const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
       const habitMax = values.length * 2;
-      const doneTasks = day.tasks.filter((task) => task.done).length;
-      const totalTasks = day.tasks.length;
+      const activeTasks = day.tasks.filter((task) => !task.dismissed && !task.carriedTo);
+      const doneTasks = activeTasks.filter((task) => task.done).length;
+      const totalTasks = activeTasks.length;
       const taskPoints = doneTasks * 2;
       const taskMax = Math.max(totalTasks * 2, 0);
       const max = habitMax + taskMax;
@@ -4541,7 +4563,7 @@
         "Diario:",
         ...journalQuestions.map(([id, label]) => `${label}\n${day.journal[id] || "-"}`),
         "",
-        `Primer paso de manana: ${day.tomorrowFirst || "-"}`
+        `Primer paso de maÃ±ana: ${day.tomorrowFirst || "-"}`
       ].join("\n");
     }
 
