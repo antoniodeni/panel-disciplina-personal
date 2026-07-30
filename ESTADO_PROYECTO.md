@@ -87,6 +87,7 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 13. Tarjetas de pilares compactadas para mostrar hoy y semana sin texto repetido.
 14. Calendario reducido a una tarjeta de fecha y agenda principal con hora y prioridades.
 15. Menu unificado arriba a la izquierda, saludo compacto y porcentajes de los seis pilares visibles al abrir.
+16. Alerta de accion basada en prioridad y pilar mas debil; agenda separada en Ahora, Despues y Hecho.
 
 ## Decision de arquitectura
 
