@@ -78,6 +78,7 @@
     }
 
     .topbar {
+      position: relative;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -87,19 +88,82 @@
       border-bottom: 1px solid var(--line);
     }
 
+    .topbar-left {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .menu-trigger {
+      min-width: 62px;
+      min-height: 38px;
+      margin-top: 1px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--ink);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .menu-trigger:hover,
+    .menu-trigger[aria-expanded="true"] {
+      background: #2b3631;
+    }
+
     .brand h1 {
       margin: 0;
-      font-size: 34px;
+      font-size: 27px;
       line-height: 1.1;
       letter-spacing: 0;
     }
 
     .brand p {
-      margin: 8px 0 0;
-      max-width: 680px;
+      margin: 4px 0 0;
+      max-width: 520px;
       color: var(--muted);
       font-size: 15px;
       line-height: 1.45;
+    }
+
+    .app-menu {
+      position: absolute;
+      top: calc(100% + 7px);
+      left: 0;
+      z-index: 50;
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: min(336px, 100%);
+      gap: 6px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 10px 26px rgba(23, 33, 27, 0.16);
+    }
+
+    .app-menu.open {
+      display: grid;
+    }
+
+    .app-menu button {
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .app-menu button:hover,
+    .app-menu button.active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #fff;
     }
 
     .date-card {
@@ -221,6 +285,88 @@
       grid-template-columns: 1.25fr repeat(2, minmax(0, 0.8fr));
       gap: 10px;
       margin-bottom: 16px;
+    }
+
+    .dashboard-pillars {
+      margin-bottom: 16px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .dashboard-pillars-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .dashboard-pillars-head h3,
+    .dashboard-pillars-head p {
+      margin: 0;
+    }
+
+    .dashboard-pillars-head p {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pillar-glance-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .pillar-glance {
+      display: grid;
+      gap: 3px;
+      min-height: 72px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .pillar-glance:hover {
+      border-color: #aeb8b0;
+      background: #fbfcfb;
+    }
+
+    .pillar-glance-label {
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .pillar-glance strong {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .pillar-glance small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pillar-glance-bar {
+      height: 5px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #e1e6e2;
+    }
+
+    .pillar-glance-bar span {
+      display: block;
+      height: 100%;
+      background: var(--green);
     }
 
     .dashboard-focus {
@@ -1555,6 +1701,10 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .pillar-glance-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
       .nutrition-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1577,6 +1727,20 @@
 
       .brand h1 {
         font-size: 24px;
+      }
+
+      .topbar-left {
+        gap: 9px;
+      }
+
+      .menu-trigger {
+        min-width: 54px;
+        min-height: 36px;
+        font-size: 12px;
+      }
+
+      .app-menu {
+        width: min(320px, 100%);
       }
 
       .brand p {
@@ -1619,6 +1783,23 @@
 
       .dashboard-overview .metric small {
         margin-top: 5px;
+      }
+
+      .dashboard-pillars {
+        padding: 11px;
+      }
+
+      .dashboard-pillars-head {
+        align-items: flex-start;
+      }
+
+      .pillar-glance {
+        min-height: 66px;
+        padding: 7px;
+      }
+
+      .pillar-glance strong {
+        font-size: 18px;
       }
 
       .check-row {
@@ -1793,9 +1974,12 @@
 <body>
   <main class="app">
     <section class="topbar">
-      <div class="brand">
-        <h1>Panel de Disciplina Personal</h1>
-        <p>Organiza el dia, cumple lo previsto y cierra con una vision clara.</p>
+      <div class="topbar-left">
+        <button class="menu-trigger" id="appMenuBtn" type="button" aria-expanded="false" aria-controls="appMenuPanel">Menu</button>
+        <div class="brand">
+          <h1>Hola, Antonio</h1>
+          <p>Decide lo importante y haz el siguiente paso.</p>
+        </div>
       </div>
       <div class="date-card">
         <button class="date-calendar" id="datePickerButton" type="button" aria-label="Elegir dia de trabajo" title="Elegir otro dia">
@@ -1809,36 +1993,17 @@
           <button type="button" id="nextDayBtn" aria-label="Dia siguiente" title="Dia siguiente">&rarr;</button>
         </div>
       </div>
+      <nav class="app-menu" id="appMenuPanel" aria-label="Secciones">
+        <button class="active" data-go="inicio">Inicio</button>
+        <button data-go="agenda">Agenda</button>
+        <button data-go="habitos">Rutina</button>
+        <button data-go="areas">Areas</button>
+        <button data-go="cierre">Cierre</button>
+        <button data-go="semana">Semana</button>
+        <button data-go="plan">Plan personal</button>
+        <button data-go="ajustes">Ajustes</button>
+      </nav>
     </section>
-
-    <nav class="tabs" aria-label="Secciones">
-      <button class="tab active" data-tab="inicio">Inicio</button>
-      <button class="tab" data-tab="agenda">Agenda</button>
-      <button class="tab" data-tab="habitos">Rutina</button>
-      <button class="tab" data-tab="areas">Areas</button>
-      <button class="tab" data-tab="cierre">Cierre</button>
-      <button class="tab" data-tab="semana">Semana</button>
-      <button class="tab" data-tab="plan">Plan</button>
-      <button class="tab" data-tab="ajustes">Ajustes</button>
-    </nav>
-
-    <nav class="mobile-nav" aria-label="Navegacion principal">
-      <button class="active" data-go="inicio">Hoy</button>
-      <button data-go="agenda">Agenda</button>
-      <button data-go="habitos">Rutina</button>
-      <button data-go="cierre">Cierre</button>
-      <button id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileMenuPanel">Menu</button>
-    </nav>
-    <div class="mobile-menu-panel" id="mobileMenuPanel" aria-label="Mas secciones">
-      <button data-go="inicio">Inicio</button>
-      <button data-go="agenda">Agenda</button>
-      <button data-go="habitos">Rutina</button>
-      <button data-go="areas">Areas</button>
-      <button data-go="cierre">Cierre</button>
-      <button data-go="semana">Semana</button>
-      <button data-go="plan">Plan personal</button>
-      <button data-go="ajustes">Ajustes</button>
-    </div>
 
     <section class="view active" id="inicio">
       <div class="panel dashboard-command">
@@ -1868,6 +2033,17 @@
             <small>Lo previsto frente a lo hecho.</small>
           </div>
         </div>
+
+        <section class="dashboard-pillars" aria-labelledby="dashboardPillarsTitle">
+          <div class="dashboard-pillars-head">
+            <div>
+              <h3 id="dashboardPillarsTitle">Progreso de los 6 pilares</h3>
+              <p>Porcentaje cumplido hoy. Toca un pilar para ver su detalle.</p>
+            </div>
+            <button class="small-button" id="dashboardPillarsBtn" type="button">Ver detalle</button>
+          </div>
+          <div class="pillar-glance-grid" id="pillarGlanceGrid"></div>
+        </section>
 
         <section class="dashboard-agenda" aria-labelledby="dashboardAgendaTitle">
           <div class="dashboard-agenda-head">
@@ -1902,17 +2078,6 @@
           <button class="small-button" id="resetTodayBtn">Limpiar este dia</button>
         </div>
       </div>
-
-      <section class="pillar-section" aria-labelledby="pillarTitle">
-        <div class="pillar-section-head">
-          <div>
-            <h2 id="pillarTitle">Progreso de los 6 pilares</h2>
-            <p>Estado de hoy y avance frente al objetivo semanal.</p>
-          </div>
-          <button class="small-button" data-go="plan">Editar objetivos</button>
-        </div>
-        <div class="pillar-grid" id="pillarSummaryGrid"></div>
-      </section>
 
     </section>
 
@@ -2421,19 +2586,13 @@
       document.getElementById("todayBtn").addEventListener("click", () => selectDate(todayKey()));
       document.getElementById("nextDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, 1)));
 
-      document.querySelectorAll(".tab").forEach((button) => {
-        button.addEventListener("click", () => {
-          activateTab(button.dataset.tab);
-        });
-      });
-
       document.querySelectorAll("[data-go]").forEach((button) => {
         button.addEventListener("click", () => activateTab(button.dataset.go));
       });
 
-      document.getElementById("mobileMenuBtn").addEventListener("click", toggleMobileMenu);
-      document.querySelectorAll("#mobileMenuPanel [data-go]").forEach((button) => {
-        button.addEventListener("click", closeMobileMenu);
+      document.getElementById("appMenuBtn").addEventListener("click", toggleAppMenu);
+      document.querySelectorAll("#appMenuPanel [data-go]").forEach((button) => {
+        button.addEventListener("click", closeAppMenu);
       });
 
       document.querySelectorAll("[data-area]").forEach((button) => {
@@ -2470,6 +2629,10 @@
       document.getElementById("dashboardAgendaBtn").addEventListener("click", () => {
         activateTab("agenda");
         requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
+      });
+
+      document.getElementById("dashboardPillarsBtn").addEventListener("click", () => {
+        activateTab("areas");
       });
 
       document.getElementById("goCloseBtn").addEventListener("click", () => {
@@ -2792,34 +2955,21 @@
     }
 
     function renderPillarDashboard() {
-      const grid = document.getElementById("pillarSummaryGrid");
+      const grid = document.getElementById("pillarGlanceGrid");
       if (!grid) return;
       grid.innerHTML = "";
       areas.forEach((area) => {
-        const progress = weeklyAreaProgress(area.id);
         const todayPercent = todayAreaPercent(area.id);
-        const status = todayPercent === null
-          ? "Sin evaluar"
-          : todayPercent >= 70
-            ? "Cumplido"
-            : todayPercent >= 40
-              ? "Parcial"
-              : "Necesita atencion";
+        const percent = todayPercent ?? 0;
         const card = document.createElement("button");
         card.type = "button";
-        card.className = "pillar-card";
+        card.className = "pillar-glance";
         card.dataset.pillar = area.id;
         card.innerHTML = `
-          <div class="pillar-card-head">
-            <strong>${area.name}</strong>
-            <span class="pill">${status}</span>
-          </div>
-          <span class="pillar-today">${todayPercent === null ? "Sin registro hoy" : `${todayPercent}% hoy`}</span>
-          <div class="pillar-metric">
-            <strong>${progress.activeDays}/${progress.target} dias</strong>
-            <span>${progress.percent}%</span>
-          </div>
-          <div class="pillar-progress"><span style="width:${progress.percent}%"></span></div>
+          <span class="pillar-glance-label">${area.name}</span>
+          <strong>${percent}%</strong>
+          <small>${todayPercent === null ? "Sin registro" : "Cumplido hoy"}</small>
+          <div class="pillar-glance-bar"><span style="width:${percent}%"></span></div>
         `;
         card.addEventListener("click", () => {
           if (area.id === "alimentacion") {
@@ -3988,16 +4138,9 @@
       const target = document.getElementById(tabId);
       if (!target?.classList.contains("view")) tabId = "inicio";
       const navigationId = tabId === "alimentacion" ? "areas" : tabId;
-      document.querySelectorAll(".tab").forEach((item) => {
-        item.classList.toggle("active", item.dataset.tab === navigationId);
-      });
-      document.querySelectorAll(".mobile-nav [data-go]").forEach((item) => {
+      document.querySelectorAll(".app-menu [data-go]").forEach((item) => {
         item.classList.toggle("active", item.dataset.go === navigationId);
       });
-      document.getElementById("mobileMenuBtn")?.classList.toggle(
-        "active",
-        ["areas", "semana", "plan", "ajustes"].includes(navigationId)
-      );
       document.querySelectorAll(".view").forEach((item) => {
         item.classList.toggle("active", item.id === tabId);
       });
@@ -4010,16 +4153,16 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function toggleMobileMenu() {
-      const panel = document.getElementById("mobileMenuPanel");
-      const button = document.getElementById("mobileMenuBtn");
+    function toggleAppMenu() {
+      const panel = document.getElementById("appMenuPanel");
+      const button = document.getElementById("appMenuBtn");
       const isOpen = panel.classList.toggle("open");
       button.setAttribute("aria-expanded", String(isOpen));
     }
 
-    function closeMobileMenu() {
-      const panel = document.getElementById("mobileMenuPanel");
-      const button = document.getElementById("mobileMenuBtn");
+    function closeAppMenu() {
+      const panel = document.getElementById("appMenuPanel");
+      const button = document.getElementById("appMenuBtn");
       panel.classList.remove("open");
       button.setAttribute("aria-expanded", "false");
     }
