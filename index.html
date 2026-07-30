@@ -1737,6 +1737,7 @@
           </div>
           <div class="actions" style="margin-top: 12px;">
             <button class="btn" id="closeDayBtn">Cerrar dia</button>
+            <button class="btn secondary" id="copySummaryBtn">Copiar resumen para Kiwi</button>
             <button class="btn secondary" id="exportBtn">Exportar balance</button>
           </div>
         </div>
@@ -1863,6 +1864,8 @@
 
   <script>
     const storageKey = "panel-disciplina-personal-v1";
+    const storeSchemaVersion = 4;
+    const backupFormatVersion = 4;
 
     const morningItems = [
       ["agua", "Beber agua", "Arrancar el cuerpo antes que el movil"],
@@ -2214,6 +2217,7 @@
         showToast(message);
       });
 
+      document.getElementById("copySummaryBtn").addEventListener("click", copyDaySummary);
       document.getElementById("exportBtn").addEventListener("click", exportDay);
       document.getElementById("backupBtn").addEventListener("click", exportBackup);
       document.getElementById("restoreInput").addEventListener("change", restoreBackup);
@@ -2306,7 +2310,7 @@
       const activeHabits = areas.reduce((total, area) =>
         total + getAreaHabits(area.id).filter((habit) => habit.active).length, 0);
       document.getElementById("dataSummary").textContent =
-        `Guardados en este navegador: ${dayCount} dias, ${taskCount} tareas y ${activeHabits} habitos activos.`;
+        `Guardados en este navegador: ${dayCount} dias, ${taskCount} tareas y ${activeHabits} habitos activos. Esquema de datos v${state.store.schemaVersion}.`;
     }
 
     function renderChecks(containerId, items, bucket) {
@@ -3134,6 +3138,13 @@
         : mealPercent;
     }
 
+    function pillarStatusText(area, day) {
+      const percent = area.id === "alimentacion"
+        ? nutritionDayPercent(day)
+        : areaPercentForDay(day, area.id);
+      return percent === null ? "Sin evaluar" : `${percent}%`;
+    }
+
     function hasAreaActivity(day, areaId) {
       const habitValues = Object.values(day.areas?.[areaId] || {});
       const hasHabit = habitValues.some((value) => value === "done" || value === "mid");
@@ -3424,8 +3435,20 @@
       return normalized;
     }
 
+    function migrateStore(store) {
+      const migrated = store && typeof store === "object" ? store : {};
+      const sourceVersion = Number.isInteger(migrated.schemaVersion) ? migrated.schemaVersion : 1;
+
+      // Las versiones antiguas se completan despues con normalizeStore.
+      if (sourceVersion < 2 && !migrated.days) migrated.days = {};
+      if (sourceVersion < 3 && !migrated.objectives) migrated.objectives = {};
+      if (sourceVersion < 4 && !migrated.nutrition) migrated.nutrition = {};
+      migrated.schemaVersion = storeSchemaVersion;
+      return migrated;
+    }
+
     function normalizeStore(store) {
-      const normalized = store && typeof store === "object" ? store : {};
+      const normalized = migrateStore(store);
       normalized.days = normalized.days && typeof normalized.days === "object" ? normalized.days : {};
       normalized.lifePlan = normalized.lifePlan && typeof normalized.lifePlan === "object"
         ? normalized.lifePlan
@@ -3552,7 +3575,8 @@
     function exportBackup() {
       const backup = {
         app: "Panel de Disciplina Personal",
-        version: 3,
+        backupFormatVersion,
+        schemaVersion: state.store.schemaVersion,
         exportedAt: new Date().toISOString(),
         data: state.store
       };
@@ -3603,16 +3627,20 @@
       URL.revokeObjectURL(url);
     }
 
-    function exportDay() {
-      const day = getDay();
+    function buildDaySummary(day = getDay()) {
       const score = calculateScore(day);
-      const lines = [
+      const pending = day.tasks.filter((task) => !task.done && !task.dismissed).length;
+      return [
         `Balance personal - ${formatShortDate(state.date)}`,
         "",
         `Semaforo: ${score.label}`,
         `Cumplimiento: ${score.percent}%`,
         `Prioridad: ${day.priority || "-"}`,
         `Siguiente paso: ${day.nextStep || "-"}`,
+        `Tareas: ${score.doneTasks}/${score.totalTasks} completadas${pending ? `, ${pending} pendientes` : ""}`,
+        "",
+        "Pilares:",
+        ...areas.map((area) => `- ${area.name}: ${pillarStatusText(area, day)}`),
         "",
         "Tareas:",
         ...day.tasks.map((task) => `- [${task.done ? "x" : " "}] ${task.text}`),
@@ -3621,9 +3649,31 @@
         ...journalQuestions.map(([id, label]) => `${label}\n${day.journal[id] || "-"}`),
         "",
         `Primer paso de manana: ${day.tomorrowFirst || "-"}`
-      ];
+      ].join("\n");
+    }
+
+    async function copyDaySummary() {
+      const summary = buildDaySummary();
+      try {
+        await navigator.clipboard.writeText(summary);
+        showToast("Resumen copiado para Kiwi");
+      } catch (error) {
+        const fallback = document.createElement("textarea");
+        fallback.value = summary;
+        fallback.setAttribute("readonly", "");
+        fallback.style.position = "fixed";
+        fallback.style.opacity = "0";
+        document.body.appendChild(fallback);
+        fallback.select();
+        document.execCommand("copy");
+        fallback.remove();
+        showToast("Resumen copiado para Kiwi");
+      }
+    }
+
+    function exportDay() {
       downloadText(
-        lines.join("\n"),
+        buildDaySummary(),
         `balance-personal-${state.date}.txt`,
         "text/plain;charset=utf-8"
       );
