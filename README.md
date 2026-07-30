@@ -10,6 +10,10 @@ El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
 
+Al cerrar el dia se puede copiar un resumen listo para compartir con Kiwi. Asi
+la aplicacion puede ser el registro principal y Kiwi puede analizar el resultado
+sin repetir manualmente toda la informacion.
+
 ## Abrir la aplicacion
 
 https://antoniodeni.github.io/panel-disciplina-personal/
@@ -37,7 +41,8 @@ la barra de tareas.
 Los datos se guardan en el almacenamiento local del dispositivo. No se
 publican en GitHub ni se envian a un servidor. Cada movil u ordenador mantiene
 su propia copia. La aplicacion incluye opciones para exportar y restaurar una
-copia de seguridad.
+copia de seguridad. Los datos locales incluyen una version de esquema para
+migrar los cambios futuros sin perder el historial.
 
 ## Publicacion
 
