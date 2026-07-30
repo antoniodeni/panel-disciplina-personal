@@ -1,4 +1,4 @@
-const CACHE_NAME = "panel-disciplina-personal-v13";
+const CACHE_NAME = "panel-disciplina-personal-v14";
 const FILES = [
   "./",
   "./manifest.webmanifest",
@@ -52,4 +52,3 @@ self.addEventListener("fetch", (event) => {
     )
   );
 });
-
