@@ -312,11 +312,10 @@
     }
 
     .tabs {
-      display: flex;
-      width: max-content;
-      max-width: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      width: 100%;
       gap: 3px;
-      flex-wrap: nowrap;
       margin: 16px 0 18px;
       position: sticky;
       top: 8px;
@@ -328,6 +327,69 @@
       background: rgba(255, 255, 255, 0.96);
       box-shadow: 0 4px 16px rgba(23, 33, 27, 0.07);
       backdrop-filter: blur(12px);
+    }
+
+    .dashboard-links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .dashboard-link {
+      min-height: 86px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 0 1px 2px rgba(23, 33, 27, 0.03);
+    }
+
+    .dashboard-link:hover {
+      border-color: #aeb8b0;
+      background: #fbfcfb;
+    }
+
+    .dashboard-link strong,
+    .dashboard-link span {
+      display: block;
+    }
+
+    .dashboard-link strong {
+      font-size: 16px;
+    }
+
+    .dashboard-link span {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .area-nav {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .area-nav button {
+      min-height: 42px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .area-nav button:hover {
+      border-color: var(--green);
+      background: var(--green-2);
+      color: var(--green);
     }
 
     .tab {
@@ -1097,6 +1159,14 @@
       .date-card {
         min-width: 0;
       }
+
+      .dashboard-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .area-nav {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 560px) {
@@ -1150,7 +1220,7 @@
         inset: auto 0 0 0;
         z-index: 30;
         display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         width: 100%;
         max-width: none;
         margin: 0;
@@ -1167,6 +1237,23 @@
         padding: 8px 2px;
         font-size: 11px;
         white-space: nowrap;
+      }
+
+      .tab:nth-child(n + 6) {
+        display: none;
+      }
+
+      .dashboard-links {
+        gap: 8px;
+      }
+
+      .dashboard-link {
+        min-height: 78px;
+        padding: 12px;
+      }
+
+      .area-nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .toast {
@@ -1207,7 +1294,7 @@
     <section class="topbar">
       <div class="brand">
         <h1>Panel de Disciplina Personal</h1>
-        <p>Abre el dia, verifica lo previsto y cierra con balance. No busca perfeccion: busca que vuelvas a cumplir y puedas ver la verdad de tu semana.</p>
+        <p>Organiza el dia, cumple lo previsto y cierra con una vision clara.</p>
       </div>
       <div class="date-card">
         <label for="dayPicker">Dia de trabajo</label>
@@ -1220,50 +1307,10 @@
       </div>
     </section>
 
-    <section class="hero-grid">
-      <div class="panel">
-        <h2 id="dayStateTitle">Estado de hoy</h2>
-        <div class="scoreboard">
-          <div class="metric status" id="dayStatus">
-            <span>Semaforo</span>
-            <strong id="statusLabel">Amarillo</strong>
-            <small id="statusText">Dia en marcha.</small>
-          </div>
-          <div class="metric">
-            <span>Cumplimiento</span>
-            <strong id="scorePercent">0%</strong>
-            <small>Habitos y tareas completadas.</small>
-          </div>
-          <div class="metric">
-            <span>Tareas</span>
-            <strong id="taskScore">0/0</strong>
-            <small>Lo previsto frente a lo hecho.</small>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>Primer paso claro</h2>
-        <div class="focus-box">
-          <div class="field">
-            <label for="priority">Prioridad real del dia</label>
-            <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
-          </div>
-          <div class="field">
-            <label for="nextStep">Siguiente paso de 15 minutos</label>
-            <input id="nextStep" placeholder="Ejemplo: abrir la chuleta y elegir publicacion o mensaje">
-          </div>
-          <div class="actions">
-            <button class="btn" id="badDayBtn">Modo dia malo</button>
-            <button class="btn secondary" id="startTemplateBtn">Planificar manana</button>
-            <button class="btn secondary" id="resetTodayBtn">Limpiar este dia</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <nav class="tabs" aria-label="Secciones">
-      <button class="tab active" data-tab="hoy">Hoy</button>
+      <button class="tab active" data-tab="inicio">Inicio</button>
+      <button class="tab" data-tab="agenda">Agenda</button>
+      <button class="tab" data-tab="habitos">Habitos</button>
       <button class="tab" data-tab="areas">Areas</button>
       <button class="tab" data-tab="cierre">Cierre</button>
       <button class="tab" data-tab="semana">Semana</button>
@@ -1271,7 +1318,82 @@
       <button class="tab" data-tab="ajustes">Ajustes</button>
     </nav>
 
-    <section class="view active" id="hoy">
+    <section class="view active" id="inicio">
+      <div class="hero-grid">
+        <div class="panel">
+          <h2 id="dayStateTitle">Estado de hoy</h2>
+          <div class="scoreboard">
+            <div class="metric status" id="dayStatus">
+              <span>Semaforo</span>
+              <strong id="statusLabel">Amarillo</strong>
+              <small id="statusText">Dia en marcha.</small>
+            </div>
+            <div class="metric">
+              <span>Cumplimiento</span>
+              <strong id="scorePercent">0%</strong>
+              <small>Habitos y tareas completadas.</small>
+            </div>
+            <div class="metric">
+              <span>Tareas</span>
+              <strong id="taskScore">0/0</strong>
+              <small>Lo previsto frente a lo hecho.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Primer paso claro</h2>
+          <div class="focus-box">
+            <div class="field">
+              <label for="priority">Prioridad real del dia</label>
+              <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
+            </div>
+            <div class="field">
+              <label for="nextStep">Siguiente paso de 15 minutos</label>
+              <input id="nextStep" placeholder="Ejemplo: empezar el primer bloque de trabajo">
+            </div>
+            <div class="actions">
+              <button class="btn" id="badDayBtn">Modo dia malo</button>
+              <button class="btn secondary" id="startTemplateBtn">Planificar manana</button>
+              <button class="btn secondary" id="resetTodayBtn">Limpiar este dia</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-links" aria-label="Accesos principales">
+        <button class="dashboard-link" data-go="agenda">
+          <strong>Agenda</strong>
+          <span>Planifica y verifica las tareas del dia.</span>
+        </button>
+        <button class="dashboard-link" data-go="habitos">
+          <strong>Habitos</strong>
+          <span>Completa el inicio y los minimos diarios.</span>
+        </button>
+        <button class="dashboard-link" data-go="areas">
+          <strong>Las 6 areas</strong>
+          <span>Alimentacion, deporte, estres, actitud, habitos y descanso.</span>
+        </button>
+        <button class="dashboard-link" data-go="cierre">
+          <strong>Cierre</strong>
+          <span>Escribe el diario y decide los pendientes.</span>
+        </button>
+        <button class="dashboard-link" data-go="semana">
+          <strong>Semana</strong>
+          <span>Revisa el ritmo y el cumplimiento real.</span>
+        </button>
+        <button class="dashboard-link" data-go="plan">
+          <strong>Plan personal</strong>
+          <span>Define objetivos y configura los habitos.</span>
+        </button>
+        <button class="dashboard-link" data-go="ajustes">
+          <strong>Ajustes</strong>
+          <span>Protege, exporta o restaura tus datos.</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="view" id="agenda">
       <div class="selected-day" id="selectedDayBanner">
         <div>
           <strong id="selectedDayLabel">Estas viendo hoy</strong>
@@ -1280,14 +1402,6 @@
         <time id="selectedDayDate"></time>
       </div>
       <div class="grid">
-        <div class="panel">
-          <h2>Inicio del dia</h2>
-          <div class="daily-command" id="dailyCommand">
-            <strong>Orden del dia</strong>
-            <p>Primero cuerpo y calma. Despues agenda. Despues una tarea real.</p>
-          </div>
-          <div class="check-list" id="morningList"></div>
-        </div>
         <div class="panel" id="agendaPanel">
           <h2 id="agendaTitle">Agenda prevista para hoy</h2>
           <form class="task-form" id="taskForm">
@@ -1298,16 +1412,6 @@
             <button class="btn" type="submit">Anadir</button>
           </form>
           <div class="task-list" id="taskList"></div>
-        </div>
-        <div class="panel minimum-panel" id="minimumPanel">
-          <details id="minimumDetails">
-            <summary>Minimos para salvar el dia</summary>
-            <div class="daily-command">
-              <strong id="minimumModeLabel">Solo cuentan al activar el modo dia malo</strong>
-              <p>Sirven para volver al movimiento cuando el plan normal se ha roto.</p>
-            </div>
-            <div class="check-list" id="minimumList"></div>
-          </details>
         </div>
         <div class="panel">
           <h2>Ideas o fugas para aparcar</h2>
@@ -1320,12 +1424,47 @@
       </div>
     </section>
 
+    <section class="view" id="habitos">
+      <div class="section-intro">
+        <h2>Habitos del dia</h2>
+        <p>Empieza por cuerpo y calma. Usa los minimos solo cuando necesites salvar un dia dificil.</p>
+      </div>
+      <div class="grid">
+        <div class="panel">
+          <h2>Inicio del dia</h2>
+          <div class="daily-command" id="dailyCommand">
+            <strong>Orden del dia</strong>
+            <p>Primero cuerpo y calma. Despues agenda. Despues una tarea real.</p>
+          </div>
+          <div class="check-list" id="morningList"></div>
+        </div>
+        <div class="panel minimum-panel" id="minimumPanel">
+          <details id="minimumDetails">
+            <summary>Minimos para salvar el dia</summary>
+            <div class="daily-command">
+              <strong id="minimumModeLabel">Solo cuentan al activar el modo dia malo</strong>
+              <p>Sirven para volver al movimiento cuando el plan normal se ha roto.</p>
+            </div>
+            <div class="check-list" id="minimumList"></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <section class="view" id="areas">
       <div class="section-intro">
         <h2>Verificacion por areas</h2>
         <p>Marca solo lo que corresponda a este dia. Lo que dejes sin marcar no baja el resultado.</p>
+      </div>
+      <div class="area-nav" aria-label="Elegir area">
+        <button data-area="alimentacion">Alimentacion</button>
+        <button data-area="deporte">Deporte</button>
+        <button data-area="estres">Estres</button>
+        <button data-area="actitud">Actitud</button>
+        <button data-area="habitos">Habitos</button>
+        <button data-area="descanso">Descanso</button>
       </div>
       <div class="grid" id="areasGrid"></div>
     </section>
@@ -1614,6 +1753,7 @@
       renderHabitDayOptions();
       renderAll();
       bindEvents();
+      activateTab(getInitialTab(), false);
     }
 
     function bindEvents() {
@@ -1631,6 +1771,24 @@
         button.addEventListener("click", () => {
           activateTab(button.dataset.tab);
         });
+      });
+
+      document.querySelectorAll("[data-go]").forEach((button) => {
+        button.addEventListener("click", () => activateTab(button.dataset.go));
+      });
+
+      document.querySelectorAll("[data-area]").forEach((button) => {
+        button.addEventListener("click", () => {
+          activateTab("areas");
+          requestAnimationFrame(() => {
+            document.getElementById(`area-${button.dataset.area}`)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+      });
+
+      window.addEventListener("hashchange", () => {
+        activateTab(getInitialTab(), false);
       });
 
       [priority, nextStep, parking, tomorrowFirst].forEach((input) => {
@@ -1688,7 +1846,7 @@
         }
         save();
         renderAll();
-        activateTab("hoy");
+        activateTab("agenda");
         showToast(`Manana preparado: ${formatLongDate(state.date)}`);
         requestAnimationFrame(() => {
           document.getElementById("agendaPanel").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2040,6 +2198,7 @@
       areas.forEach((area) => {
         const card = document.createElement("article");
         card.className = "area-card";
+        card.id = `area-${area.id}`;
         const score = areaScore(area);
         const scoreLabel = score === null ? "Sin datos" : `${score}%`;
         const areaTasks = getDay().tasks.filter((task) => task.area === area.id);
@@ -2638,7 +2797,16 @@
       }
     }
 
-    function activateTab(tabId) {
+    function getInitialTab() {
+      const requested = location.hash.replace("#", "");
+      return document.getElementById(requested)?.classList.contains("view")
+        ? requested
+        : "inicio";
+    }
+
+    function activateTab(tabId, updateHash = true) {
+      const target = document.getElementById(tabId);
+      if (!target?.classList.contains("view")) tabId = "inicio";
       document.querySelectorAll(".tab").forEach((item) => {
         item.classList.toggle("active", item.dataset.tab === tabId);
       });
@@ -2647,6 +2815,10 @@
       });
       if (tabId === "semana") renderWeekly();
       if (tabId === "areas") renderAreas();
+      if (updateHash && location.hash !== `#${tabId}`) {
+        history.pushState(null, "", `#${tabId}`);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function selectDate(dateKey) {
@@ -2739,7 +2911,7 @@
         ensureDay(state.date);
         save();
         renderAll();
-        activateTab("hoy");
+        activateTab("inicio");
         showToast("Copia restaurada correctamente");
       } catch (error) {
         showToast("La copia no es valida");
@@ -2790,3 +2962,4 @@
   </script>
 </body>
 </html>
+
