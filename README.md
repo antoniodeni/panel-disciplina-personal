@@ -3,6 +3,9 @@
 Aplicacion personal para organizar el inicio del dia, la agenda prevista, los
 habitos, las seis areas vitales, el cierre diario y el balance semanal.
 
+La pantalla de inicio resume el estado, la prioridad y el siguiente paso. El
+menu abre cada seccion por separado para evitar una pantalla larga y cargada.
+
 ## Abrir la aplicacion
 
 https://antoniodeni.github.io/panel-disciplina-personal/
@@ -41,3 +44,4 @@ acceso del conector estan limitados a esta aplicacion.
 
 El estado exacto del proyecto y el punto de continuacion estan documentados en
 `ESTADO_PROYECTO.md`.
+
