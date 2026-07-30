@@ -6,6 +6,10 @@ habitos, las seis areas vitales, el cierre diario y el balance semanal.
 La pantalla de inicio resume el estado, la prioridad y el siguiente paso. El
 menu abre cada seccion por separado para evitar una pantalla larga y cargada.
 
+El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
+modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
+comidas previstas, cumplimiento y una alternativa para salvar el dia.
+
 ## Abrir la aplicacion
 
 https://antoniodeni.github.io/panel-disciplina-personal/
