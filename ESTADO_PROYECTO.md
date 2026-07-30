@@ -82,6 +82,7 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 8. Revision visual en escritorio y movil superada sin desbordamiento horizontal.
 9. Navegacion, accesos directos y regreso del navegador comprobados.
 10. Pendiente: validacion de uso diario con Antonio.
+11. Navegacion movil trasladada a la parte superior con menu de secciones completo.
 
 ## Decision de arquitectura
 
