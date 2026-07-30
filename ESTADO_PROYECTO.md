@@ -85,10 +85,10 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 11. Navegacion movil trasladada a la parte superior con menu de secciones completo.
 12. Dashboard de accion reorganizado: estado, foco y tres acciones principales arriba.
 13. Tarjetas de pilares compactadas para mostrar hoy y semana sin texto repetido.
+14. Calendario reducido a una tarjeta de fecha y agenda principal con hora y prioridades.
 
 ## Decision de arquitectura
 
 Las proximas aplicaciones compartiran en el futuro una identidad y una base
 comun de usuarios, permisos, objetivos, tareas y eventos. Cada aplicacion sera
 un modulo independiente. No se tocara Engranaje Sur sin autorizacion expresa.
-
