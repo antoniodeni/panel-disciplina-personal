@@ -8,6 +8,8 @@ Fecha de cierre: 29 de julio de 2026.
   balance semanal, plan y ajustes.
 - Datos guardados localmente en cada navegador.
 - Exportacion y restauracion de copias de seguridad.
+- Esquema de datos versionado y migracion de las copias anteriores.
+- Resumen diario copiable para Kiwi desde el cierre del dia.
 - Adaptacion para movil y ordenador.
 - Aplicacion web instalable y funcionamiento basico sin conexion.
 - Publicacion independiente en GitHub Pages:
@@ -32,8 +34,12 @@ La reorganizacion principal de la interfaz se completo el 30 de julio de 2026:
 5. Prueba completa en PC y movil.
 6. Publicacion de la nueva version.
 
-Tras la revision de uso con Antonio se creara la fase de cuenta personal y
-sincronizacion:
+La aplicacion sera el registro principal diario de Antonio. Durante catorce dias
+se validara el uso real sin ampliar mas modulos. Kiwi recibira el resumen diario
+en modo lectura y no modificara los registros.
+
+Tras esa validacion se creara la fase de cuenta personal, sincronizacion y beta
+privada:
 
 1. Proyecto independiente de Supabase.
 2. Acceso inicial cerrado solo para Antonio.
@@ -41,7 +47,9 @@ sincronizacion:
 4. Migracion segura de los datos locales existentes.
 5. Sincronizacion entre movil y PC.
 6. Recuperacion de acceso y copias de seguridad.
-7. Invitaciones administradas por Antonio en una fase posterior.
+7. Invitaciones administradas por Antonio para amigos probadores.
+8. Roles separados: administrador, usuario de prueba y asesor de solo lectura.
+9. Registro de sugerencias dentro de la beta privada.
 
 ## Motor de progreso
 
@@ -59,9 +67,8 @@ Primera version completada el 30 de julio de 2026:
 10. Migracion de los datos anteriores conservada.
 
 Las pruebas funcionales verifican que los productos, las comidas y sus metricas
-se actualizan correctamente. El siguiente paso es usar Alimentacion con datos
-reales de Antonio, corregir el modelo y despues aplicar el mismo sistema a
-Deporte.
+se actualizan correctamente. El siguiente paso es usar la aplicacion diariamente,
+corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 
 ## Agenda de trabajo del 30 de julio de 2026
 
