@@ -43,6 +43,26 @@ sincronizacion:
 6. Recuperacion de acceso y copias de seguridad.
 7. Invitaciones administradas por Antonio en una fase posterior.
 
+## Motor de progreso
+
+Primera version completada el 30 de julio de 2026:
+
+1. Objetivo, frecuencia semanal y minimo definidos para los seis pilares.
+2. Dashboard con estado diario y progreso semanal por pilar.
+3. Un dia sin registros aparece como "Sin evaluar", no como fracaso.
+4. Alimentacion dispone de un modulo propio.
+5. Preparacion del plan, lista de la compra y compra realizada medibles.
+6. Lista de productos con estado comprado y disponible.
+7. Comidas diarias con resultado cumplido, parcial o no cumplido.
+8. Alternativa minima para salvar el dia.
+9. Metricas de preparacion, disponibilidad, comidas y objetivo semanal.
+10. Migracion de los datos anteriores conservada.
+
+Las pruebas funcionales verifican que los productos, las comidas y sus metricas
+se actualizan correctamente. El siguiente paso es usar Alimentacion con datos
+reales de Antonio, corregir el modelo y despues aplicar el mismo sistema a
+Deporte.
+
 ## Agenda de trabajo del 30 de julio de 2026
 
 1. Copia de la version anterior guardada.
