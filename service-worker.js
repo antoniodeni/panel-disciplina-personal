@@ -1,12 +1,11 @@
-const CACHE_NAME = "panel-disciplina-personal-v17";
+const CACHE_NAME = "panel-disciplina-personal-v18";
 const FILES = [
   "./",
   "./manifest.webmanifest",
   "./icon.svg",
   "./icon-192.png",
   "./icon-512.png",
-  "./apple-touch-icon.png",
-  "./assets/linea-constructiva-logo-192.png"
+  "./apple-touch-icon.png"
 ];
 
 self.addEventListener("install", (event) => {
