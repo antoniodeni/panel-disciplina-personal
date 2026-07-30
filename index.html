@@ -307,12 +307,28 @@
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
-      padding: 13px 14px;
+      margin-bottom: 12px;
+      padding: 15px 16px;
       border: 1px solid #eccb91;
       border-left: 5px solid var(--amber);
       border-radius: 8px;
       background: #fffaf0;
+    }
+
+    .dashboard-alert .eyebrow {
+      color: var(--amber);
+    }
+
+    .dashboard-alert .small-button {
+      min-height: 38px;
+      border-color: var(--green-deep);
+      background: var(--green-deep);
+      color: #fff;
+    }
+
+    .dashboard-alert .small-button:hover {
+      border-color: var(--green);
+      background: var(--green);
     }
 
     .dashboard-alert h3,
@@ -432,12 +448,45 @@
       background: #f8fbf3;
     }
 
+    .dashboard-focus-heading {
+      grid-column: 1 / -1;
+    }
+
+    .dashboard-focus-heading h3,
+    .dashboard-focus-heading p {
+      margin: 0;
+    }
+
+    .dashboard-focus-heading h3 {
+      font-size: 16px;
+    }
+
+    .dashboard-focus-heading p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .dashboard-actions {
       justify-content: flex-start;
+      margin-top: 12px;
     }
 
     .dashboard-secondary-actions {
       margin-top: 8px;
+    }
+
+    .day-tools {
+      margin-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .day-tools summary {
+      padding: 10px 0 2px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .dashboard-agenda {
@@ -2139,20 +2188,20 @@
 
     <section class="view active" id="inicio">
       <div class="panel dashboard-command">
-        <div class="dashboard-heading">
+        <section class="dashboard-alert" id="dashboardAlert" aria-labelledby="dashboardAlertTitle">
           <div>
             <span class="eyebrow">Ahora</span>
-            <h2 id="dayStateTitle">Estado de hoy</h2>
-            <p id="dashboardPrompt">Empieza por decidir una prioridad real y dar el primer paso.</p>
+            <h3 id="dashboardAlertTitle">Define la prioridad de hoy</h3>
+            <p id="dashboardAlertText">Una prioridad clara evita que la agenda decida por ti.</p>
           </div>
-          <span class="pill" id="dashboardDayLabel">Hoy</span>
-        </div>
+          <button class="small-button" id="dashboardAlertAction" type="button">Definir prioridad</button>
+        </section>
 
         <div class="dashboard-overview">
           <div class="metric status" id="dayStatus">
-            <span>Semaforo</span>
+            <span>Semáforo</span>
             <strong id="statusLabel">Sin evaluar</strong>
-            <small id="statusText">El dia aun no tiene resultados registrados.</small>
+            <small id="statusText">El día aún no tiene resultados registrados.</small>
           </div>
           <div class="metric">
             <span>Cumplimiento</span>
@@ -2166,39 +2215,35 @@
           </div>
         </div>
 
-        <section class="dashboard-alert" id="dashboardAlert" aria-labelledby="dashboardAlertTitle">
-          <div>
-            <h3 id="dashboardAlertTitle">Define la prioridad de hoy</h3>
-            <p id="dashboardAlertText">Una prioridad clara evita que la agenda decida por ti.</p>
-          </div>
-          <button class="small-button" id="dashboardAlertAction" type="button">Definir prioridad</button>
-        </section>
-
-        <section class="dashboard-pillars" aria-labelledby="dashboardPillarsTitle">
-          <div class="dashboard-pillars-head">
-            <div>
-              <h3 id="dashboardPillarsTitle">Progreso de los 6 pilares</h3>
-              <p>Porcentaje cumplido hoy. Toca un pilar para ver su detalle.</p>
-            </div>
-            <button class="small-button" id="dashboardPillarsBtn" type="button">Ver detalle</button>
-          </div>
-          <div class="pillar-glance-grid" id="pillarGlanceGrid"></div>
-        </section>
-
         <section class="dashboard-agenda" aria-labelledby="dashboardAgendaTitle">
           <div class="dashboard-agenda-head">
             <div>
               <h3 id="dashboardAgendaTitle">Agenda principal</h3>
-              <p>Hasta tres tareas que hoy no se pueden escapar.</p>
+              <p>Las tres tareas que no se pueden escapar hoy.</p>
             </div>
             <button class="small-button" id="dashboardAgendaBtn" type="button">Editar agenda</button>
           </div>
           <div class="dashboard-agenda-list" id="dashboardAgendaList"></div>
         </section>
 
+        <section class="dashboard-pillars" aria-labelledby="dashboardPillarsTitle">
+          <div class="dashboard-pillars-head">
+            <div>
+              <h3 id="dashboardPillarsTitle">Tus 6 pilares</h3>
+              <p>Toca uno para registrar o revisar lo que falta.</p>
+            </div>
+            <button class="small-button" id="dashboardPillarsBtn" type="button">Ver áreas</button>
+          </div>
+          <div class="pillar-glance-grid" id="pillarGlanceGrid"></div>
+        </section>
+
         <div class="dashboard-focus">
+          <div class="dashboard-focus-heading">
+            <h3>Deja claro el día</h3>
+            <p>Se guarda automáticamente mientras escribes.</p>
+          </div>
           <div class="field">
-            <label for="priority">Prioridad real del dia</label>
+            <label for="priority">Prioridad real del día</label>
             <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
           </div>
           <div class="field">
@@ -2208,15 +2253,17 @@
         </div>
 
         <div class="actions dashboard-actions">
-          <button class="btn" id="startTodayBtn">Empezar rutina</button>
-          <button class="btn secondary" id="goAgendaBtn">Ver agenda</button>
-          <button class="btn secondary" id="goCloseBtn">Cerrar dia</button>
+          <button class="btn" id="startTodayBtn">Abrir rutina</button>
+          <button class="btn secondary" id="goCloseBtn">Ir al cierre del día</button>
         </div>
-        <div class="actions dashboard-secondary-actions">
-          <button class="small-button" id="badDayBtn">Modo dia malo</button>
-          <button class="small-button" id="startTemplateBtn">Planificar mañana</button>
-          <button class="small-button" id="resetTodayBtn">Limpiar este dia</button>
-        </div>
+        <details class="day-tools">
+          <summary>Herramientas del día</summary>
+          <div class="actions dashboard-secondary-actions">
+            <button class="small-button" id="badDayBtn">Modo día malo</button>
+            <button class="small-button" id="startTemplateBtn">Planificar mañana</button>
+            <button class="small-button" id="resetTodayBtn">Limpiar este día</button>
+          </div>
+        </details>
       </div>
 
     </section>
@@ -2712,8 +2759,6 @@
     const parking = document.getElementById("parking");
     const tomorrowFirst = document.getElementById("tomorrowFirst");
     const nutritionRescueAction = document.getElementById("nutritionRescueAction");
-    const dashboardPrompt = document.getElementById("dashboardPrompt");
-    const dashboardDayLabel = document.getElementById("dashboardDayLabel");
     const headerDateMonth = document.getElementById("headerDateMonth");
     const headerDateNumber = document.getElementById("headerDateNumber");
 
@@ -2783,11 +2828,6 @@
           ?.scrollIntoView({ behavior: "smooth", block: "start" }));
       });
 
-      document.getElementById("goAgendaBtn").addEventListener("click", () => {
-        activateTab("agenda");
-        requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
-      });
-
       document.getElementById("dashboardAgendaBtn").addEventListener("click", () => {
         activateTab("agenda");
         requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
@@ -2809,7 +2849,9 @@
             return;
           }
           if (action.dataset.focus) {
-            document.getElementById(action.dataset.focus)?.focus({ preventScroll: true });
+            const element = document.getElementById(action.dataset.focus);
+            element?.scrollIntoView({ behavior: "smooth", block: "center" });
+            element?.focus({ preventScroll: true });
             return;
           }
           if (action.dataset.area && target === "areas") {
@@ -2991,7 +3033,6 @@
       renderSelectedDay();
       renderHeaderDate();
       renderDayMode();
-      renderDashboardCommand();
       renderDashboardAlert();
       renderDashboardAgenda();
       renderCloseState();
@@ -3012,28 +3053,6 @@
       document.getElementById("selectedDayLabel").textContent = `Estas viendo ${relationText}`;
       document.getElementById("selectedDayDate").textContent = formatLongDate(state.date);
       document.getElementById("agendaTitle").textContent = `Agenda prevista para ${relationText}`;
-      document.getElementById("dayStateTitle").textContent = relation === "today"
-        ? "Estado de hoy"
-        : relation === "tomorrow"
-          ? "Plan de mañana"
-          : `Estado del ${formatShortDate(state.date)}`;
-    }
-
-    function renderDashboardCommand() {
-      const day = getDay();
-      const relation = dayRelation(state.date);
-      dashboardDayLabel.textContent = relation === "today"
-        ? "Hoy"
-        : relation === "tomorrow"
-          ? "Mañana"
-          : formatShortDate(state.date);
-      dashboardPrompt.textContent = day.closed
-        ? "El dia esta cerrado. Revisa el resultado o prepara el siguiente paso."
-        : day.badDay
-          ? "Hoy solo importan los minimos: vuelve al movimiento y salva el dia."
-          : day.priority
-            ? "Tu prioridad ya esta definida. Ahora conviertela en una accion concreta."
-            : "Empieza por decidir una prioridad real y dar el primer paso.";
     }
 
     function renderDashboardAlert() {
