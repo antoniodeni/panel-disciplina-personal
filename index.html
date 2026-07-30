@@ -336,6 +336,143 @@
       margin: 18px 0;
     }
 
+    .pillar-section {
+      margin-top: 20px;
+    }
+
+    .pillar-section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .pillar-section-head h2,
+    .pillar-section-head p {
+      margin: 0;
+    }
+
+    .pillar-section-head p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .pillar-card {
+      display: grid;
+      gap: 10px;
+      min-height: 190px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--green);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      text-align: left;
+      box-shadow: var(--shadow);
+    }
+
+    .pillar-card:hover {
+      border-color: #aeb8b0;
+      border-top-color: var(--green);
+      background: #fbfcfb;
+    }
+
+    .pillar-card-head,
+    .pillar-metric {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pillar-card-head strong {
+      font-size: 16px;
+    }
+
+    .pillar-objective,
+    .pillar-minimum {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .pillar-metric strong {
+      font-size: 21px;
+    }
+
+    .pillar-progress {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: var(--soft);
+    }
+
+    .pillar-progress span {
+      display: block;
+      height: 100%;
+      background: var(--green);
+    }
+
+    .nutrition-metrics {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .nutrition-layout {
+      align-items: start;
+    }
+
+    .nutrition-shopping-row,
+    .meal-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 11px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .nutrition-shopping-row label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nutrition-shopping-row input {
+      width: 17px;
+      height: 17px;
+    }
+
+    .nutrition-objective {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-left: 4px solid var(--green);
+      background: var(--green-2);
+    }
+
+    .nutrition-objective strong,
+    .nutrition-objective span {
+      display: block;
+    }
+
+    .nutrition-objective span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .dashboard-link {
       min-height: 86px;
       padding: 14px;
@@ -580,6 +717,10 @@
       grid-template-columns: minmax(0, 1fr) 180px auto;
       gap: 8px;
       margin-bottom: 12px;
+    }
+
+    .simple-form {
+      grid-template-columns: minmax(0, 1fr) auto;
     }
 
     .task-form input,
@@ -1164,6 +1305,14 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .pillar-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nutrition-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .area-nav {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
@@ -1252,6 +1401,29 @@
         padding: 12px;
       }
 
+      .pillar-section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .pillar-grid,
+      .nutrition-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .pillar-card {
+        min-height: 176px;
+      }
+
+      .nutrition-shopping-row,
+      .meal-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .nutrition-shopping-row label {
+        grid-row: 2;
+      }
+
       .area-nav {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1310,7 +1482,7 @@
     <nav class="tabs" aria-label="Secciones">
       <button class="tab active" data-tab="inicio">Inicio</button>
       <button class="tab" data-tab="agenda">Agenda</button>
-      <button class="tab" data-tab="habitos">Habitos</button>
+      <button class="tab" data-tab="habitos">Rutina</button>
       <button class="tab" data-tab="areas">Areas</button>
       <button class="tab" data-tab="cierre">Cierre</button>
       <button class="tab" data-tab="semana">Semana</button>
@@ -1361,18 +1533,25 @@
         </div>
       </div>
 
+      <section class="pillar-section" aria-labelledby="pillarTitle">
+        <div class="pillar-section-head">
+          <div>
+            <h2 id="pillarTitle">Progreso de los 6 pilares</h2>
+            <p>Estado de hoy y avance frente al objetivo semanal.</p>
+          </div>
+          <button class="small-button" data-go="plan">Editar objetivos</button>
+        </div>
+        <div class="pillar-grid" id="pillarSummaryGrid"></div>
+      </section>
+
       <div class="dashboard-links" aria-label="Accesos principales">
         <button class="dashboard-link" data-go="agenda">
           <strong>Agenda</strong>
           <span>Planifica y verifica las tareas del dia.</span>
         </button>
         <button class="dashboard-link" data-go="habitos">
-          <strong>Habitos</strong>
+          <strong>Rutina diaria</strong>
           <span>Completa el inicio y los minimos diarios.</span>
-        </button>
-        <button class="dashboard-link" data-go="areas">
-          <strong>Las 6 areas</strong>
-          <span>Alimentacion, deporte, estres, actitud, habitos y descanso.</span>
         </button>
         <button class="dashboard-link" data-go="cierre">
           <strong>Cierre</strong>
@@ -1426,7 +1605,7 @@
 
     <section class="view" id="habitos">
       <div class="section-intro">
-        <h2>Habitos del dia</h2>
+        <h2>Rutina del dia</h2>
         <p>Empieza por cuerpo y calma. Usa los minimos solo cuando necesites salvar un dia dificil.</p>
       </div>
       <div class="grid">
@@ -1467,6 +1646,75 @@
         <button data-area="descanso">Descanso</button>
       </div>
       <div class="grid" id="areasGrid"></div>
+    </section>
+
+    <section class="view" id="alimentacion">
+      <div class="section-intro">
+        <div class="actions">
+          <button class="small-button" id="nutritionBackBtn">&larr; Volver a las areas</button>
+        </div>
+        <h2 style="margin-top: 12px;">Alimentacion</h2>
+        <p>Prepara el entorno, verifica las comidas y detecta por que se cumple o se rompe el plan.</p>
+      </div>
+
+      <div class="nutrition-objective" id="nutritionObjectiveSummary"></div>
+      <div class="scoreboard nutrition-metrics">
+        <div class="metric">
+          <span>Preparacion</span>
+          <strong id="nutritionReadinessMetric">0%</strong>
+          <small>Plan, lista y compra.</small>
+        </div>
+        <div class="metric">
+          <span>Productos disponibles</span>
+          <strong id="nutritionStockMetric">0/0</strong>
+          <small>Lo necesario que ya esta en casa.</small>
+        </div>
+        <div class="metric">
+          <span>Comidas de hoy</span>
+          <strong id="nutritionMealsMetric">Sin datos</strong>
+          <small>Cumplimiento del plan diario.</small>
+        </div>
+        <div class="metric">
+          <span>Objetivo semanal</span>
+          <strong id="nutritionWeeklyMetric">0/0</strong>
+          <small>Dias cumplidos frente al objetivo.</small>
+        </div>
+      </div>
+
+      <div class="grid nutrition-layout">
+        <div class="panel">
+          <h2>Preparacion</h2>
+          <p class="panel-copy">Comprueba si el plan esta listo antes de depender de la fuerza de voluntad.</p>
+          <div class="check-list" id="nutritionReadinessList"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Compra y frigorifico</h2>
+          <form class="task-form simple-form" id="nutritionShoppingForm">
+            <input id="nutritionShoppingInput" placeholder="Anade un producto necesario">
+            <button class="btn" type="submit">Anadir</button>
+          </form>
+          <div class="check-list" id="nutritionShoppingList"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Comidas previstas para hoy</h2>
+          <form class="task-form simple-form" id="nutritionMealForm">
+            <input id="nutritionMealInput" placeholder="Ejemplo: comida - arroz, pollo y verduras">
+            <button class="btn" type="submit">Anadir</button>
+          </form>
+          <div class="check-list" id="nutritionMealList"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Salvar el dia</h2>
+          <div class="field">
+            <label for="nutritionRescueAction">Alternativa minima disponible</label>
+            <input id="nutritionRescueAction" placeholder="Ejemplo: tortilla, ensalada y fruta">
+          </div>
+          <div class="check-list" id="nutritionRescueCheck" style="margin-top: 12px;"></div>
+        </div>
+      </div>
     </section>
 
     <section class="view" id="cierre">
@@ -1733,6 +1981,45 @@
       ["descanso", "Descanso", "Ejemplo: cerrar pantallas antes y dormir con horario mas estable"]
     ];
 
+    const objectiveDefaults = {
+      alimentacion: {
+        statement: "Preparar y cumplir una alimentacion sostenible",
+        weeklyTarget: 5,
+        minimum: "Hacer una comida sencilla con productos disponibles"
+      },
+      deporte: {
+        statement: "Entrenar y mantener movimiento durante la semana",
+        weeklyTarget: 3,
+        minimum: "Mover el cuerpo durante 10 minutos"
+      },
+      estres: {
+        statement: "Reducir el ruido con respiracion o meditacion",
+        weeklyTarget: 5,
+        minimum: "Respirar conscientemente durante 2 minutos"
+      },
+      actitud: {
+        statement: "Actuar de acuerdo con lo decidido aunque no apetezca",
+        weeklyTarget: 5,
+        minimum: "Hacer una accion pequena pero firme"
+      },
+      habitos: {
+        statement: "Cumplir los habitos clave que estaban previstos",
+        weeklyTarget: 5,
+        minimum: "Completar un habito importante"
+      },
+      descanso: {
+        statement: "Proteger el horario y la calidad del descanso",
+        weeklyTarget: 5,
+        minimum: "Apagar una pantalla y preparar el descanso"
+      }
+    };
+
+    const nutritionReadinessItems = [
+      ["plan", "Plan de comidas preparado", "Saber que vas a comer evita improvisar"],
+      ["list", "Lista de la compra preparada", "Comprar segun el plan y no por impulso"],
+      ["shopping", "Compra realizada", "Tener en casa lo que el objetivo necesita"]
+    ];
+
     const state = {
       store: loadStore(),
       date: todayKey()
@@ -1743,6 +2030,7 @@
     const nextStep = document.getElementById("nextStep");
     const parking = document.getElementById("parking");
     const tomorrowFirst = document.getElementById("tomorrowFirst");
+    const nutritionRescueAction = document.getElementById("nutritionRescueAction");
 
     init();
 
@@ -1779,6 +2067,10 @@
 
       document.querySelectorAll("[data-area]").forEach((button) => {
         button.addEventListener("click", () => {
+          if (button.dataset.area === "alimentacion") {
+            activateTab("alimentacion");
+            return;
+          }
           activateTab("areas");
           requestAnimationFrame(() => {
             document.getElementById(`area-${button.dataset.area}`)
@@ -1789,6 +2081,48 @@
 
       window.addEventListener("hashchange", () => {
         activateTab(getInitialTab(), false);
+      });
+
+      document.getElementById("nutritionBackBtn").addEventListener("click", () => activateTab("areas"));
+
+      document.getElementById("nutritionShoppingForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = document.getElementById("nutritionShoppingInput");
+        const name = input.value.trim();
+        if (!name) return;
+        state.store.nutrition.shoppingItems.push({
+          id: crypto.randomUUID(),
+          name,
+          bought: false,
+          available: false
+        });
+        input.value = "";
+        save();
+        renderNutrition();
+        renderPillarDashboard();
+      });
+
+      document.getElementById("nutritionMealForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = document.getElementById("nutritionMealInput");
+        const name = input.value.trim();
+        if (!name) return;
+        getDay().nutrition.meals.push({
+          id: crypto.randomUUID(),
+          name,
+          status: "none"
+        });
+        input.value = "";
+        save();
+        renderNutrition();
+        renderPillarDashboard();
+        renderWeekly();
+      });
+
+      nutritionRescueAction.addEventListener("input", () => {
+        state.store.nutrition.rescueAction = nutritionRescueAction.value;
+        save();
+        renderPillarDashboard();
       });
 
       [priority, nextStep, parking, tomorrowFirst].forEach((input) => {
@@ -1905,6 +2239,8 @@
       renderCloseState();
       renderDataSummary();
       updateScore();
+      renderPillarDashboard();
+      renderNutrition();
     }
 
     function renderSelectedDay() {
@@ -1982,37 +2318,258 @@
       });
     }
 
+    function renderPillarDashboard() {
+      const grid = document.getElementById("pillarSummaryGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      areas.forEach((area) => {
+        const objective = state.store.objectives[area.id];
+        const progress = weeklyAreaProgress(area.id);
+        const todayPercent = todayAreaPercent(area.id);
+        const status = todayPercent === null
+          ? "Sin evaluar"
+          : todayPercent >= 70
+            ? "Cumplido"
+            : todayPercent >= 40
+              ? "Parcial"
+              : "Necesita atencion";
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "pillar-card";
+        card.dataset.pillar = area.id;
+        card.innerHTML = `
+          <div class="pillar-card-head">
+            <strong>${area.name}</strong>
+            <span class="pill">${status}</span>
+          </div>
+          <span class="pillar-objective"></span>
+          <div class="pillar-metric">
+            <strong>${progress.activeDays}/${progress.target} dias</strong>
+            <span>${progress.percent}%</span>
+          </div>
+          <div class="pillar-progress"><span style="width:${progress.percent}%"></span></div>
+          <span class="pillar-minimum"></span>
+        `;
+        card.querySelector(".pillar-objective").textContent = objective.statement;
+        card.querySelector(".pillar-minimum").textContent = `Salvar el dia: ${objective.minimum}`;
+        card.addEventListener("click", () => {
+          if (area.id === "alimentacion") {
+            activateTab("alimentacion");
+            return;
+          }
+          activateTab("areas");
+          requestAnimationFrame(() => {
+            document.getElementById(`area-${area.id}`)
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function renderNutrition() {
+      const day = getDay();
+      const objective = state.store.objectives.alimentacion;
+      const progress = weeklyAreaProgress("alimentacion");
+      const shoppingItems = state.store.nutrition.shoppingItems;
+      const available = shoppingItems.filter((item) => item.available).length;
+      const preparation = nutritionPreparationPercent(day);
+      const mealPercent = nutritionMealPercent(day);
+
+      const objectiveBox = document.getElementById("nutritionObjectiveSummary");
+      objectiveBox.innerHTML = "<strong></strong><span></span>";
+      objectiveBox.querySelector("strong").textContent = objective.statement;
+      objectiveBox.querySelector("span").textContent =
+        `Objetivo: ${objective.weeklyTarget} dias por semana. Minimo: ${objective.minimum}`;
+
+      document.getElementById("nutritionReadinessMetric").textContent = `${preparation}%`;
+      document.getElementById("nutritionStockMetric").textContent =
+        `${available}/${shoppingItems.length}`;
+      document.getElementById("nutritionMealsMetric").textContent =
+        mealPercent === null ? "Sin datos" : `${mealPercent}%`;
+      document.getElementById("nutritionWeeklyMetric").textContent =
+        `${progress.activeDays}/${progress.target}`;
+      nutritionRescueAction.value = state.store.nutrition.rescueAction;
+
+      renderNutritionReadiness();
+      renderNutritionShopping();
+      renderNutritionMeals();
+
+      const rescue = document.getElementById("nutritionRescueCheck");
+      rescue.innerHTML = "";
+      rescue.appendChild(checkRow(
+        "Accion de rescate realizada",
+        state.store.nutrition.rescueAction || "Define primero una alternativa minima",
+        day.nutrition.rescue,
+        (value) => {
+          day.nutrition.rescue = value;
+          save();
+          renderNutrition();
+          renderPillarDashboard();
+          renderWeekly();
+        },
+        { midLabel: "Rescate parcial" }
+      ));
+    }
+
+    function renderNutritionReadiness() {
+      const list = document.getElementById("nutritionReadinessList");
+      list.innerHTML = "";
+      nutritionReadinessItems.forEach(([id, name, hint]) => {
+        list.appendChild(checkRow(
+          name,
+          hint,
+          getDay().nutrition.readiness[id],
+          (value) => {
+            getDay().nutrition.readiness[id] = value;
+            save();
+            renderNutrition();
+            renderPillarDashboard();
+          }
+        ));
+      });
+    }
+
+    function renderNutritionShopping() {
+      const list = document.getElementById("nutritionShoppingList");
+      const items = state.store.nutrition.shoppingItems;
+      list.innerHTML = "";
+      if (!items.length) {
+        list.innerHTML = '<div class="empty">Anade los productos necesarios para tu plan.</div>';
+        return;
+      }
+      items.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "nutrition-shopping-row";
+        row.innerHTML = `
+          <strong></strong>
+          <label><input type="checkbox" class="bought"> Comprado</label>
+          <label><input type="checkbox" class="available"> Disponible</label>
+          <button class="remove" type="button" aria-label="Eliminar producto">x</button>
+        `;
+        row.querySelector("strong").textContent = item.name;
+        const bought = row.querySelector(".bought");
+        const available = row.querySelector(".available");
+        bought.checked = item.bought;
+        available.checked = item.available;
+        bought.addEventListener("change", () => {
+          item.bought = bought.checked;
+          if (item.bought) item.available = true;
+          save();
+          renderNutrition();
+        });
+        available.addEventListener("change", () => {
+          item.available = available.checked;
+          save();
+          renderNutrition();
+          renderPillarDashboard();
+        });
+        row.querySelector(".remove").addEventListener("click", () => {
+          state.store.nutrition.shoppingItems =
+            state.store.nutrition.shoppingItems.filter((entry) => entry.id !== item.id);
+          save();
+          renderNutrition();
+          renderPillarDashboard();
+        });
+        list.appendChild(row);
+      });
+    }
+
+    function renderNutritionMeals() {
+      const list = document.getElementById("nutritionMealList");
+      const meals = getDay().nutrition.meals;
+      list.innerHTML = "";
+      if (!meals.length) {
+        list.innerHTML = '<div class="empty">Anade las comidas previstas para poder medir el cumplimiento.</div>';
+        return;
+      }
+      meals.forEach((meal) => {
+        const row = document.createElement("div");
+        row.className = "meal-row";
+        const copy = document.createElement("strong");
+        copy.textContent = meal.name;
+        row.appendChild(copy);
+        const states = document.createElement("div");
+        states.appendChild(checkRow(
+          meal.name,
+          "",
+          meal.status,
+          (value) => {
+            meal.status = value;
+            save();
+            renderNutrition();
+            renderPillarDashboard();
+            renderWeekly();
+          },
+          { midLabel: "Comida parcial" }
+        ).querySelector(".state-buttons"));
+        row.appendChild(states);
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove";
+        remove.textContent = "x";
+        remove.setAttribute("aria-label", "Eliminar comida");
+        remove.addEventListener("click", () => {
+          getDay().nutrition.meals =
+            getDay().nutrition.meals.filter((entry) => entry.id !== meal.id);
+          save();
+          renderNutrition();
+          renderPillarDashboard();
+          renderWeekly();
+        });
+        row.appendChild(remove);
+        list.appendChild(row);
+      });
+    }
+
     function renderLifePlan() {
       const grid = document.getElementById("lifePlanGrid");
       if (!grid) return;
-      state.store.lifePlan = state.store.lifePlan || {};
-      state.store.weeklyTargets = state.store.weeklyTargets || {};
       grid.innerHTML = "";
       lifePlanFields.forEach(([id, label, placeholder]) => {
+        const objective = state.store.objectives[id];
         const wrapper = document.createElement("div");
         wrapper.className = "field";
         wrapper.innerHTML = `
-          <label for="life-${id}">${label}</label>
+          <label for="life-${id}">${label}: objetivo</label>
           <textarea id="life-${id}" placeholder="${placeholder}"></textarea>
+          <div class="field" style="margin-top: 8px;">
+            <label for="minimum-${id}">Minimo para salvar el dia</label>
+            <input id="minimum-${id}">
+          </div>
           <div class="target-field">
             <label for="target-${id}">Objetivo de dias por semana</label>
             <input id="target-${id}" type="number" min="1" max="7" inputmode="numeric">
           </div>
         `;
         const textarea = wrapper.querySelector("textarea");
-        const target = wrapper.querySelector("input");
-        textarea.value = state.store.lifePlan[id] || "";
-        target.value = state.store.weeklyTargets[id] || 3;
+        const minimum = wrapper.querySelector(`#minimum-${id}`);
+        const target = wrapper.querySelector(`#target-${id}`);
+        textarea.value = objective.statement;
+        minimum.value = objective.minimum;
+        target.value = objective.weeklyTarget;
         textarea.addEventListener("input", () => {
+          objective.statement = textarea.value;
           state.store.lifePlan[id] = textarea.value;
           save();
+          renderPillarDashboard();
+          if (id === "alimentacion") renderNutrition();
+        });
+        minimum.addEventListener("input", () => {
+          objective.minimum = minimum.value;
+          save();
+          renderPillarDashboard();
+          if (id === "alimentacion") renderNutrition();
         });
         target.addEventListener("change", () => {
           const value = Math.min(7, Math.max(1, Number(target.value) || 1));
+          objective.weeklyTarget = value;
           state.store.weeklyTargets[id] = value;
           target.value = value;
           save();
           renderWeekly();
+          renderPillarDashboard();
+          if (id === "alimentacion") renderNutrition();
         });
         grid.appendChild(wrapper);
       });
@@ -2480,21 +3037,16 @@
       const areaList = document.getElementById("weeklyAreas");
       areaList.innerHTML = "";
       areas.forEach((area) => {
-        const target = state.store.weeklyTargets?.[area.id] || 3;
-        const activeDays = keys.filter((key) => {
-          const day = state.store.days[key];
-          return day ? hasAreaActivity(day, area.id) : false;
-        }).length;
-        const percent = Math.min(100, Math.round((activeDays / target) * 100));
+        const progress = weeklyAreaProgress(area.id);
         const row = document.createElement("div");
         row.className = "weekly-area-row";
         row.innerHTML = `
           <div>
             <strong>${area.name}</strong>
-            <small>${activeDays} de ${target} dias objetivo</small>
+            <small>${progress.activeDays} de ${progress.target} dias cumplidos</small>
           </div>
-          <div class="weekly-progress"><span style="width:${percent}%"></span></div>
-          <span class="pill">${percent}%</span>
+          <div class="weekly-progress"><span style="width:${progress.percent}%"></span></div>
+          <span class="pill">${progress.percent}%</span>
         `;
         areaList.appendChild(row);
       });
@@ -2525,6 +3077,63 @@
         `;
         history.appendChild(row);
       });
+    }
+
+    function weeklyAreaProgress(areaId) {
+      const endKey = state.date > todayKey() ? todayKey() : state.date;
+      const keys = lastSevenKeys(endKey);
+      const target = state.store.objectives?.[areaId]?.weeklyTarget || 3;
+      const activeDays = keys.filter((key) => {
+        const day = state.store.days[key];
+        if (!day) return false;
+        const percent = areaId === "alimentacion"
+          ? nutritionDayPercent(day)
+          : areaPercentForDay(day, areaId);
+        return percent !== null && percent >= 70;
+      }).length;
+      return {
+        activeDays,
+        target,
+        percent: Math.min(100, Math.round((activeDays / target) * 100))
+      };
+    }
+
+    function todayAreaPercent(areaId) {
+      return areaId === "alimentacion"
+        ? nutritionDayPercent(getDay())
+        : areaPercentForDay(getDay(), areaId);
+    }
+
+    function areaPercentForDay(day, areaId) {
+      const values = Object.values(day.areas?.[areaId] || {})
+        .filter((value) => value !== "none");
+      const linkedTasks = (day.tasks || []).filter((task) => task.area === areaId);
+      const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
+      const taskPoints = linkedTasks.filter((task) => task.done).length * 2;
+      const max = (values.length + linkedTasks.length) * 2;
+      if (!max) return null;
+      return Math.round(((habitPoints + taskPoints) / max) * 100);
+    }
+
+    function nutritionPreparationPercent(day) {
+      const values = Object.values(day.nutrition?.readiness || {});
+      const points = values.reduce((sum, value) => sum + valuePoints(value), 0);
+      return values.length ? Math.round((points / (values.length * 2)) * 100) : 0;
+    }
+
+    function nutritionMealPercent(day) {
+      const meals = (day.nutrition?.meals || [])
+        .filter((meal) => meal.status !== "none");
+      if (!meals.length) return null;
+      const points = meals.reduce((sum, meal) => sum + valuePoints(meal.status), 0);
+      return Math.round((points / (meals.length * 2)) * 100);
+    }
+
+    function nutritionDayPercent(day) {
+      const mealPercent = nutritionMealPercent(day);
+      return mealPercent === null
+        ? areaPercentForDay(day, "alimentacion")
+        : mealPercent;
     }
 
     function hasAreaActivity(day, areaId) {
@@ -2595,14 +3204,15 @@
       const taskMax = Math.max(totalTasks * 2, 0);
       const max = habitMax + taskMax;
       const percent = max ? Math.round(((habitPoints + taskPoints) / max) * 100) : 0;
-      if (!max) {
+      const hasRecordedValue = values.some((value) => value !== "none");
+      if (!hasRecordedValue && !totalTasks) {
         return {
           percent: 0,
           doneTasks,
           totalTasks,
-          label: "Sin datos",
+          label: "Sin evaluar",
           color: "",
-          text: "Empieza por definir una prioridad o una tarea."
+          text: "El dia aun no tiene resultados registrados."
         };
       }
       let label = "Rojo";
@@ -2621,14 +3231,9 @@
     }
 
     function areaScore(area) {
-      const values = Object.values(getDay().areas[area.id])
-        .filter((value) => value !== "none");
-      const linkedTasks = getDay().tasks.filter((task) => task.area === area.id);
-      const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
-      const taskPoints = linkedTasks.filter((task) => task.done).length * 2;
-      const max = (values.length + linkedTasks.length) * 2;
-      if (!max) return null;
-      return Math.round(((habitPoints + taskPoints) / max) * 100);
+      return area.id === "alimentacion"
+        ? nutritionDayPercent(getDay())
+        : areaPercentForDay(getDay(), area.id);
     }
 
     function collectValues(bucket, values, onlyTouched = false) {
@@ -2672,7 +3277,12 @@
         minimums: Object.fromEntries(minimumItems.map(([id]) => [id, "none"])),
         areas: areaState,
         tasks: [],
-        journal: Object.fromEntries(journalQuestions.map(([id]) => [id, ""]))
+        journal: Object.fromEntries(journalQuestions.map(([id]) => [id, ""])),
+        nutrition: {
+          readiness: Object.fromEntries(nutritionReadinessItems.map(([id]) => [id, "none"])),
+          meals: [],
+          rescue: "none"
+        }
       };
     }
 
@@ -2695,6 +3305,17 @@
       normalized.areas = normalized.areas || {};
       normalized.journal = normalized.journal || {};
       normalized.tasks = Array.isArray(normalized.tasks) ? normalized.tasks : [];
+      normalized.nutrition = normalized.nutrition && typeof normalized.nutrition === "object"
+        ? normalized.nutrition
+        : {};
+      normalized.nutrition.readiness =
+        normalized.nutrition.readiness && typeof normalized.nutrition.readiness === "object"
+          ? normalized.nutrition.readiness
+          : {};
+      normalized.nutrition.meals = Array.isArray(normalized.nutrition.meals)
+        ? normalized.nutrition.meals
+        : [];
+      normalized.nutrition.rescue = normalized.nutrition.rescue || "none";
 
       morningItems.forEach(([id]) => {
         if (!(id in normalized.morning)) normalized.morning[id] = "none";
@@ -2711,6 +3332,18 @@
       journalQuestions.forEach(([id]) => {
         if (!(id in normalized.journal)) normalized.journal[id] = "";
       });
+      nutritionReadinessItems.forEach(([id]) => {
+        if (!(id in normalized.nutrition.readiness)) {
+          normalized.nutrition.readiness[id] = "none";
+        }
+      });
+      normalized.nutrition.meals = normalized.nutrition.meals.map((meal) => ({
+        id: meal.id || crypto.randomUUID(),
+        name: String(meal.name || "Comida"),
+        status: ["done", "mid", "no", "none"].includes(meal.status)
+          ? meal.status
+          : "none"
+      }));
       normalized.tasks.forEach((task) => {
         if (!("area" in task)) task.area = "";
       });
@@ -2760,6 +3393,39 @@
       return normalized;
     }
 
+    function normalizeObjectives(objectives, lifePlan, weeklyTargets) {
+      const normalized = {};
+      areas.forEach((area) => {
+        const current = objectives?.[area.id] || {};
+        const fallback = objectiveDefaults[area.id];
+        normalized[area.id] = {
+          statement: String(current.statement || lifePlan?.[area.id] || fallback.statement),
+          weeklyTarget: Math.min(
+            7,
+            Math.max(1, Number(current.weeklyTarget || weeklyTargets?.[area.id] || fallback.weeklyTarget))
+          ),
+          minimum: String(current.minimum || fallback.minimum)
+        };
+      });
+      return normalized;
+    }
+
+    function normalizeNutritionStore(nutrition) {
+      const normalized = nutrition && typeof nutrition === "object" ? nutrition : {};
+      normalized.shoppingItems = Array.isArray(normalized.shoppingItems)
+        ? normalized.shoppingItems.map((item) => ({
+            id: item.id || crypto.randomUUID(),
+            name: String(item.name || "Producto"),
+            bought: Boolean(item.bought),
+            available: Boolean(item.available)
+          }))
+        : [];
+      normalized.rescueAction = String(
+        normalized.rescueAction || "Preparar una comida sencilla con lo que haya disponible"
+      );
+      return normalized;
+    }
+
     function normalizeStore(store) {
       const normalized = store && typeof store === "object" ? store : {};
       normalized.days = normalized.days && typeof normalized.days === "object" ? normalized.days : {};
@@ -2769,9 +3435,16 @@
       normalized.weeklyTargets = normalized.weeklyTargets && typeof normalized.weeklyTargets === "object"
         ? normalized.weeklyTargets
         : {};
+      normalized.objectives = normalizeObjectives(
+        normalized.objectives,
+        normalized.lifePlan,
+        normalized.weeklyTargets
+      );
+      normalized.nutrition = normalizeNutritionStore(normalized.nutrition);
       normalized.habitConfig = normalizeHabitConfig(normalized.habitConfig);
       areas.forEach((area) => {
-        if (!normalized.weeklyTargets[area.id]) normalized.weeklyTargets[area.id] = 3;
+        normalized.lifePlan[area.id] = normalized.objectives[area.id].statement;
+        normalized.weeklyTargets[area.id] = normalized.objectives[area.id].weeklyTarget;
       });
       Object.keys(normalized.days).forEach((key) => {
         normalized.days[key] = normalizeDay(normalized.days[key], normalized.habitConfig);
@@ -2807,14 +3480,16 @@
     function activateTab(tabId, updateHash = true) {
       const target = document.getElementById(tabId);
       if (!target?.classList.contains("view")) tabId = "inicio";
+      const navigationId = tabId === "alimentacion" ? "areas" : tabId;
       document.querySelectorAll(".tab").forEach((item) => {
-        item.classList.toggle("active", item.dataset.tab === tabId);
+        item.classList.toggle("active", item.dataset.tab === navigationId);
       });
       document.querySelectorAll(".view").forEach((item) => {
         item.classList.toggle("active", item.id === tabId);
       });
       if (tabId === "semana") renderWeekly();
       if (tabId === "areas") renderAreas();
+      if (tabId === "alimentacion") renderNutrition();
       if (updateHash && location.hash !== `#${tabId}`) {
         history.pushState(null, "", `#${tabId}`);
       }
