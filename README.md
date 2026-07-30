@@ -10,6 +10,11 @@ tres tareas. Cada tarea puede llevar hora y marcarse como principal desde
 Agenda. Debajo quedan la prioridad, el siguiente paso y los accesos para
 empezar la rutina, abrir la agenda o cerrar el dia.
 
+La portada incluye una unica alerta de accion. Si falta una prioridad la pide;
+si ya existe, senala el pilar con menor cumplimiento y propone su minimo. En
+Agenda, las tareas principales se agrupan en Ahora, las demas en Despues y las
+completadas pasan automaticamente a Hecho.
+
 El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
