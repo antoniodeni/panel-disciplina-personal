@@ -83,6 +83,8 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 9. Navegacion, accesos directos y regreso del navegador comprobados.
 10. Pendiente: validacion de uso diario con Antonio.
 11. Navegacion movil trasladada a la parte superior con menu de secciones completo.
+12. Dashboard de accion reorganizado: estado, foco y tres acciones principales arriba.
+13. Tarjetas de pilares compactadas para mostrar hoy y semana sin texto repetido.
 
 ## Decision de arquitectura
 
