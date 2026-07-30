@@ -157,6 +157,61 @@
       margin-bottom: 16px;
     }
 
+    .dashboard-command {
+      margin-bottom: 18px;
+    }
+
+    .dashboard-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .dashboard-heading h2,
+    .dashboard-heading p {
+      margin: 0;
+    }
+
+    .dashboard-heading p {
+      margin-top: 5px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .dashboard-overview {
+      display: grid;
+      grid-template-columns: 1.25fr repeat(2, minmax(0, 0.8fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-focus {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dashboard-actions {
+      justify-content: flex-start;
+    }
+
+    .dashboard-secondary-actions {
+      margin-top: 8px;
+    }
+
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -371,9 +426,9 @@
 
     .pillar-card {
       display: grid;
-      gap: 10px;
-      min-height: 190px;
-      padding: 15px;
+      gap: 8px;
+      min-height: 142px;
+      padding: 13px;
       border: 1px solid var(--line);
       border-top: 3px solid var(--green);
       border-radius: 8px;
@@ -398,7 +453,13 @@
     }
 
     .pillar-card-head strong {
-      font-size: 16px;
+      font-size: 15px;
+    }
+
+    .pillar-card .pill {
+      min-height: 24px;
+      padding: 4px 7px;
+      font-size: 11px;
     }
 
     .pillar-objective,
@@ -406,6 +467,11 @@
       color: var(--muted);
       font-size: 12px;
       line-height: 1.4;
+    }
+
+    .pillar-today {
+      color: var(--muted);
+      font-size: 12px;
     }
 
     .pillar-metric strong {
@@ -1302,6 +1368,10 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .dashboard-overview {
+        grid-template-columns: 1fr repeat(2, minmax(0, 1fr));
+      }
+
       .weekly-stats {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -1350,6 +1420,24 @@
       .weekly-stats,
       .history-row {
         grid-template-columns: 1fr;
+      }
+
+      .dashboard-heading,
+      .dashboard-focus {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-heading {
+        display: grid;
+        gap: 8px;
+      }
+
+      .dashboard-overview {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-overview .metric {
+        min-height: 78px;
       }
 
       .check-row {
@@ -1557,45 +1645,54 @@
     </div>
 
     <section class="view active" id="inicio">
-      <div class="hero-grid">
-        <div class="panel">
-          <h2 id="dayStateTitle">Estado de hoy</h2>
-          <div class="scoreboard">
-            <div class="metric status" id="dayStatus">
-              <span>Semaforo</span>
-              <strong id="statusLabel">Amarillo</strong>
-              <small id="statusText">Dia en marcha.</small>
-            </div>
-            <div class="metric">
-              <span>Cumplimiento</span>
-              <strong id="scorePercent">0%</strong>
-              <small>Habitos y tareas completadas.</small>
-            </div>
-            <div class="metric">
-              <span>Tareas</span>
-              <strong id="taskScore">0/0</strong>
-              <small>Lo previsto frente a lo hecho.</small>
-            </div>
+      <div class="panel dashboard-command">
+        <div class="dashboard-heading">
+          <div>
+            <span class="eyebrow">Ahora</span>
+            <h2 id="dayStateTitle">Estado de hoy</h2>
+            <p id="dashboardPrompt">Empieza por decidir una prioridad real y dar el primer paso.</p>
+          </div>
+          <span class="pill" id="dashboardDayLabel">Hoy</span>
+        </div>
+
+        <div class="dashboard-overview">
+          <div class="metric status" id="dayStatus">
+            <span>Semaforo</span>
+            <strong id="statusLabel">Sin evaluar</strong>
+            <small id="statusText">El dia aun no tiene resultados registrados.</small>
+          </div>
+          <div class="metric">
+            <span>Cumplimiento</span>
+            <strong id="scorePercent">0%</strong>
+            <small>Habitos y tareas.</small>
+          </div>
+          <div class="metric">
+            <span>Tareas</span>
+            <strong id="taskScore">0/0</strong>
+            <small>Lo previsto frente a lo hecho.</small>
           </div>
         </div>
 
-        <div class="panel">
-          <h2>Primer paso claro</h2>
-          <div class="focus-box">
-            <div class="field">
-              <label for="priority">Prioridad real del dia</label>
-              <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
-            </div>
-            <div class="field">
-              <label for="nextStep">Siguiente paso de 15 minutos</label>
-              <input id="nextStep" placeholder="Ejemplo: empezar el primer bloque de trabajo">
-            </div>
-            <div class="actions">
-              <button class="btn" id="badDayBtn">Modo dia malo</button>
-              <button class="btn secondary" id="startTemplateBtn">Planificar manana</button>
-              <button class="btn secondary" id="resetTodayBtn">Limpiar este dia</button>
-            </div>
+        <div class="dashboard-focus">
+          <div class="field">
+            <label for="priority">Prioridad real del dia</label>
+            <input id="priority" placeholder="Ejemplo: terminar una tarea importante">
           </div>
+          <div class="field">
+            <label for="nextStep">Siguiente paso de 15 minutos</label>
+            <input id="nextStep" placeholder="Ejemplo: empezar el primer bloque de trabajo">
+          </div>
+        </div>
+
+        <div class="actions dashboard-actions">
+          <button class="btn" id="startTodayBtn">Empezar rutina</button>
+          <button class="btn secondary" id="goAgendaBtn">Ver agenda</button>
+          <button class="btn secondary" id="goCloseBtn">Cerrar dia</button>
+        </div>
+        <div class="actions dashboard-secondary-actions">
+          <button class="small-button" id="badDayBtn">Modo dia malo</button>
+          <button class="small-button" id="startTemplateBtn">Planificar manana</button>
+          <button class="small-button" id="resetTodayBtn">Limpiar este dia</button>
         </div>
       </div>
 
@@ -1610,32 +1707,6 @@
         <div class="pillar-grid" id="pillarSummaryGrid"></div>
       </section>
 
-      <div class="dashboard-links" aria-label="Accesos principales">
-        <button class="dashboard-link" data-go="agenda">
-          <strong>Agenda</strong>
-          <span>Planifica y verifica las tareas del dia.</span>
-        </button>
-        <button class="dashboard-link" data-go="habitos">
-          <strong>Rutina diaria</strong>
-          <span>Completa el inicio y los minimos diarios.</span>
-        </button>
-        <button class="dashboard-link" data-go="cierre">
-          <strong>Cierre</strong>
-          <span>Escribe el diario y decide los pendientes.</span>
-        </button>
-        <button class="dashboard-link" data-go="semana">
-          <strong>Semana</strong>
-          <span>Revisa el ritmo y el cumplimiento real.</span>
-        </button>
-        <button class="dashboard-link" data-go="plan">
-          <strong>Plan personal</strong>
-          <span>Define objetivos y configura los habitos.</span>
-        </button>
-        <button class="dashboard-link" data-go="ajustes">
-          <strong>Ajustes</strong>
-          <span>Protege, exporta o restaura tus datos.</span>
-        </button>
-      </div>
     </section>
 
     <section class="view" id="agenda">
@@ -2100,6 +2171,8 @@
     const parking = document.getElementById("parking");
     const tomorrowFirst = document.getElementById("tomorrowFirst");
     const nutritionRescueAction = document.getElementById("nutritionRescueAction");
+    const dashboardPrompt = document.getElementById("dashboardPrompt");
+    const dashboardDayLabel = document.getElementById("dashboardDayLabel");
 
     init();
 
@@ -2158,6 +2231,23 @@
       });
 
       document.getElementById("nutritionBackBtn").addEventListener("click", () => activateTab("areas"));
+
+      document.getElementById("startTodayBtn").addEventListener("click", () => {
+        activateTab("habitos");
+        requestAnimationFrame(() => document.getElementById("dailyCommand")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      });
+
+      document.getElementById("goAgendaBtn").addEventListener("click", () => {
+        activateTab("agenda");
+        requestAnimationFrame(() => document.getElementById("taskInput")?.focus({ preventScroll: true }));
+      });
+
+      document.getElementById("goCloseBtn").addEventListener("click", () => {
+        activateTab("cierre");
+        requestAnimationFrame(() => document.getElementById("journalGrid")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      });
 
       document.getElementById("nutritionShoppingForm").addEventListener("submit", (event) => {
         event.preventDefault();
@@ -2311,6 +2401,7 @@
       renderWeekly();
       renderSelectedDay();
       renderDayMode();
+      renderDashboardCommand();
       renderCloseState();
       renderDataSummary();
       updateScore();
@@ -2334,6 +2425,23 @@
         : relation === "tomorrow"
           ? "Plan de manana"
           : `Estado del ${formatShortDate(state.date)}`;
+    }
+
+    function renderDashboardCommand() {
+      const day = getDay();
+      const relation = dayRelation(state.date);
+      dashboardDayLabel.textContent = relation === "today"
+        ? "Hoy"
+        : relation === "tomorrow"
+          ? "Manana"
+          : formatShortDate(state.date);
+      dashboardPrompt.textContent = day.closed
+        ? "El dia esta cerrado. Revisa el resultado o prepara el siguiente paso."
+        : day.badDay
+          ? "Hoy solo importan los minimos: vuelve al movimiento y salva el dia."
+          : day.priority
+            ? "Tu prioridad ya esta definida. Ahora conviertela en una accion concreta."
+            : "Empieza por decidir una prioridad real y dar el primer paso.";
     }
 
     function renderDayMode() {
@@ -2398,7 +2506,6 @@
       if (!grid) return;
       grid.innerHTML = "";
       areas.forEach((area) => {
-        const objective = state.store.objectives[area.id];
         const progress = weeklyAreaProgress(area.id);
         const todayPercent = todayAreaPercent(area.id);
         const status = todayPercent === null
@@ -2417,16 +2524,13 @@
             <strong>${area.name}</strong>
             <span class="pill">${status}</span>
           </div>
-          <span class="pillar-objective"></span>
+          <span class="pillar-today">${todayPercent === null ? "Sin registro hoy" : `${todayPercent}% hoy`}</span>
           <div class="pillar-metric">
             <strong>${progress.activeDays}/${progress.target} dias</strong>
             <span>${progress.percent}%</span>
           </div>
           <div class="pillar-progress"><span style="width:${progress.percent}%"></span></div>
-          <span class="pillar-minimum"></span>
         `;
-        card.querySelector(".pillar-objective").textContent = objective.statement;
-        card.querySelector(".pillar-minimum").textContent = `Salvar el dia: ${objective.minimum}`;
         card.addEventListener("click", () => {
           if (area.id === "alimentacion") {
             activateTab("alimentacion");
