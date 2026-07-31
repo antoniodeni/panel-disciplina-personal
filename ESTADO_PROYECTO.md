@@ -98,6 +98,9 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 22. Progreso historico de pilares corregido para evaluar cada dia con su propia
     frecuencia programada.
 
+24. Cumplimiento y Tareas del dashboard son interactivos y muestran el detalle
+    pendiente con acceso directo a Rutina o Agenda.
+
 ## Decision de arquitectura
 
 Las proximas aplicaciones compartiran en el futuro una identidad y una base
