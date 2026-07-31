@@ -1470,6 +1470,37 @@
       margin-bottom: 16px;
     }
 
+    .balance-intro {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .balance-period-switch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .balance-period-button {
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .balance-period-button.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
     .weekly-layout {
       align-items: start;
     }
@@ -1863,6 +1894,15 @@
       .weekly-stats,
       .history-row {
         grid-template-columns: 1fr;
+      }
+
+      .balance-intro {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .balance-period-switch {
+        align-self: flex-start;
       }
 
       .dashboard-heading,
@@ -2402,9 +2442,15 @@
     </section>
 
     <section class="view" id="semana">
-      <div class="section-intro">
-        <h2>Balance de los ultimos 7 dias</h2>
-        <p id="weeklyPeriod"></p>
+      <div class="section-intro balance-intro">
+        <div>
+          <h2 id="balanceTitle">Balance semanal</h2>
+          <p id="weeklyPeriod"></p>
+        </div>
+        <div class="balance-period-switch" role="tablist" aria-label="Periodo del balance">
+          <button class="balance-period-button active" id="weeklyPeriodBtn" data-balance-period="week" type="button" role="tab" aria-selected="true">7 dias</button>
+          <button class="balance-period-button" id="monthlyPeriodBtn" data-balance-period="month" type="button" role="tab" aria-selected="false">Mes actual</button>
+        </div>
       </div>
       <div class="scoreboard weekly-stats" id="weeklyStats"></div>
       <div class="grid weekly-layout">
@@ -2684,6 +2730,8 @@
       date: todayKey()
     };
 
+    let balancePeriod = "week";
+
     const dayPicker = document.getElementById("dayPicker");
     const priority = document.getElementById("priority");
     const nextStep = document.getElementById("nextStep");
@@ -2726,6 +2774,18 @@
 
       document.querySelectorAll("[data-go]").forEach((button) => {
         button.addEventListener("click", () => activateTab(button.dataset.go));
+      });
+
+      document.querySelectorAll("[data-balance-period]").forEach((button) => {
+        button.addEventListener("click", () => {
+          balancePeriod = button.dataset.balancePeriod;
+          document.querySelectorAll("[data-balance-period]").forEach((item) => {
+            const active = item.dataset.balancePeriod === balancePeriod;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-selected", String(active));
+          });
+          renderWeekly();
+        });
       });
 
       document.getElementById("appMenuBtn").addEventListener("click", toggleAppMenu);
@@ -3755,8 +3815,8 @@
     }
 
     function renderWeekly() {
-      const endKey = state.date > todayKey() ? todayKey() : state.date;
-      const keys = lastSevenKeys(endKey);
+      const window = getBalanceWindow();
+      const { keys, periodDays } = window;
       const recorded = keys
         .map((key) => state.store.days[key])
         .filter(Boolean);
@@ -3766,19 +3826,25 @@
       const closedDays = recorded.filter((day) => day.closed).length;
       const savedDays = recorded.filter((day) => day.badDay && day.closed).length;
       const taskPercent = tasks.length ? Math.round((completedTasks / tasks.length) * 100) : 0;
+      const dayScores = recorded.map((day) => calculateScore(day).percent);
+      const averagePercent = dayScores.length
+        ? Math.round(dayScores.reduce((sum, percent) => sum + percent, 0) / dayScores.length)
+        : 0;
+      const periodName = balancePeriod === "month" ? "Balance mensual" : "Balance semanal";
 
+      document.getElementById("balanceTitle").textContent = periodName;
       document.getElementById("weeklyPeriod").textContent =
         `${formatShortDate(keys[0])} - ${formatShortDate(keys[keys.length - 1])}`;
       document.getElementById("weeklyStats").innerHTML = `
         <div class="metric">
           <span>Dias registrados</span>
-          <strong>${recorded.length}/7</strong>
-          <small>Dias con informacion guardada.</small>
+          <strong>${recorded.length}/${periodDays}</strong>
+          <small>Dias con informacion guardada en este periodo.</small>
         </div>
         <div class="metric">
-          <span>Dias cerrados</span>
-          <strong>${closedDays}</strong>
-          <small>Balances terminados conscientemente.</small>
+          <span>Cumplimiento medio</span>
+          <strong>${averagePercent}%</strong>
+          <small>Media de los dias registrados.</small>
         </div>
         <div class="metric">
           <span>Tareas cumplidas</span>
@@ -3786,16 +3852,16 @@
           <small>${completedTasks} de ${tasks.length}. ${carriedTasks} llegaron trasladadas.</small>
         </div>
         <div class="metric">
-          <span>Dias salvados</span>
-          <strong>${savedDays}</strong>
-          <small>Modo dia malo activado y cerrado.</small>
+          <span>Dias cerrados</span>
+          <strong>${closedDays}/${recorded.length}</strong>
+          <small>${savedDays} dia${savedDays === 1 ? "" : "s"} salvado${savedDays === 1 ? "" : "s"}.</small>
         </div>
       `;
 
       const areaList = document.getElementById("weeklyAreas");
       areaList.innerHTML = "";
       areas.forEach((area) => {
-        const progress = weeklyAreaProgress(area.id);
+        const progress = balanceAreaProgress(area.id, keys);
         const row = document.createElement("div");
         row.className = "weekly-area-row";
         row.innerHTML = `
@@ -3808,20 +3874,20 @@
         `;
         areaList.appendChild(row);
       });
+      renderHistory(keys);
     }
 
-    function renderHistory() {
+    function renderHistory(keys = getBalanceWindow().keys) {
       const history = document.getElementById("historyList");
-      const endKey = state.date > todayKey() ? todayKey() : state.date;
-      const keys = lastSevenKeys(endKey)
+      const recordedKeys = keys
         .filter((key) => state.store.days[key])
         .reverse();
       history.innerHTML = "";
-      if (!keys.length) {
+      if (!recordedKeys.length) {
         history.innerHTML = '<div class="empty">Todavia no hay historial.</div>';
         return;
       }
-      keys.forEach((key) => {
+      recordedKeys.forEach((key) => {
         const snapshot = calculateScore(state.store.days[key]);
         const row = document.createElement("div");
         row.className = "history-row";
@@ -3838,22 +3904,40 @@
     }
 
     function weeklyAreaProgress(areaId) {
-      const endKey = state.date > todayKey() ? todayKey() : state.date;
-      const keys = lastSevenKeys(endKey);
+      return balanceAreaProgress(areaId, getBalanceWindow("week").keys);
+    }
+
+    function balanceAreaProgress(areaId, keys) {
       const target = state.store.objectives?.[areaId]?.weeklyTarget || 3;
       const activeDays = keys.filter((key) => {
         const day = state.store.days[key];
         if (!day) return false;
         const percent = areaId === "alimentacion"
-          ? nutritionDayPercent(day)
-          : areaPercentForDay(day, areaId);
+          ? nutritionDayPercent(day, key)
+          : areaPercentForDay(day, areaId, key);
         return percent !== null && percent >= 70;
       }).length;
+      const periodTarget = balancePeriod === "month"
+        ? Math.max(1, Math.round((target * keys.length) / 7))
+        : target;
       return {
         activeDays,
-        target,
-        percent: Math.min(100, Math.round((activeDays / target) * 100))
+        target: periodTarget,
+        percent: Math.min(100, Math.round((activeDays / periodTarget) * 100))
       };
+    }
+
+    function getBalanceWindow(period = balancePeriod) {
+      const endKey = state.date > todayKey() ? todayKey() : state.date;
+      if (period !== "month") {
+        const keys = lastSevenKeys(endKey);
+        return { keys, periodDays: 7 };
+      }
+      const [year, month] = endKey.split("-").map(Number);
+      const startKey = `${year}-${String(month).padStart(2, "0")}-01`;
+      const keys = [];
+      for (let key = startKey; key <= endKey; key = shiftDate(key, 1)) keys.push(key);
+      return { keys, periodDays: keys.length };
     }
 
     function todayAreaPercent(areaId) {
@@ -3862,9 +3946,9 @@
         : areaPercentForDay(getDay(), areaId);
     }
 
-    function areaPercentForDay(day, areaId) {
+    function areaPercentForDay(day, areaId, dateKey = state.date) {
       const scheduledHabits = getAreaHabits(areaId)
-        .filter((habit) => habit.active && isHabitScheduled(habit, state.date));
+        .filter((habit) => habit.active && isHabitScheduled(habit, dateKey));
       const values = scheduledHabits
         .map((habit) => day.areas?.[areaId]?.[habit.id] || "none");
       const linkedTasks = (day.tasks || [])
@@ -3889,10 +3973,10 @@
       return Math.round((points / (meals.length * 2)) * 100);
     }
 
-    function nutritionDayPercent(day) {
+    function nutritionDayPercent(day, dateKey = state.date) {
       const mealPercent = nutritionMealPercent(day);
       return mealPercent === null
-        ? areaPercentForDay(day, "alimentacion")
+        ? areaPercentForDay(day, "alimentacion", dateKey)
         : mealPercent;
     }
 
