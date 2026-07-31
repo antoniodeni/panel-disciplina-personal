@@ -5,7 +5,7 @@ Fecha de cierre: 29 de julio de 2026.
 ## Terminado
 
 - Aplicacion diaria funcional con inicio, agenda, seis areas, habitos, cierre,
-  balance semanal, plan y ajustes.
+  balances semanal y mensual, plan y ajustes.
 - Datos guardados localmente en cada navegador.
 - Exportacion y restauracion de copias de seguridad.
 - Esquema de datos versionado y migracion de las copias anteriores.
@@ -92,6 +92,11 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 18. Diseño móvil simplificado: cabecera sin saludo, logo visible, calendario compacto y jerarquía verde y naranja.
 19. Inicio ordenado por acción: siguiente paso, estado, agenda, pilares y herramientas secundarias; botones auditados.
 20. Bloque “Ahora” retirado del inicio; el semáforo y los seis pilares ocupan la primera prioridad visual.
+
+21. Balance ampliado con selector de 7 dias y mes actual, cumplimiento medio,
+    dias registrados, tareas, cierres e historial del periodo.
+22. Progreso historico de pilares corregido para evaluar cada dia con su propia
+    frecuencia programada.
 
 ## Decision de arquitectura
 
