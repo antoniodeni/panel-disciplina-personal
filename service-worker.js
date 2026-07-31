@@ -1,7 +1,8 @@
-const CACHE_NAME = "panel-disciplina-personal-v26";
+const CACHE_NAME = "panel-disciplina-personal-v27";
 const FILES = [
   "./",
   "./manifest.webmanifest",
+  "./supabase-config.js",
   "./icon.svg",
   "./icon-192.png",
   "./icon-512.png",
