@@ -1,4 +1,4 @@
-const CACHE_NAME = "panel-disciplina-personal-v24";
+const CACHE_NAME = "panel-disciplina-personal-v25";
 const FILES = [
   "./",
   "./manifest.webmanifest",
