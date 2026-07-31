@@ -1,7 +1,8 @@
 # Panel de Disciplina Personal
 
 Aplicacion personal para organizar el inicio del dia, la agenda prevista, los
-habitos, las seis areas vitales, el cierre diario y el balance semanal.
+habitos, las seis areas vitales, el cierre diario y los balances semanal y
+mensual.
 
 La pantalla de inicio abre con un saludo breve, un calendario compacto y el
 menu de secciones arriba a la izquierda. Muestra primero el semaforo, el
@@ -23,6 +24,10 @@ la paleta toma sus verdes y dorados como acentos.
 El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
+
+La seccion Semana permite cambiar entre el balance de los ultimos 7 dias y el
+balance del mes actual. Ambos muestran dias registrados, cumplimiento medio,
+tareas cumplidas, dias cerrados, ritmo por pilar e historial diario.
 
 Al cerrar el dia se puede copiar un resumen listo para compartir con Kiwi. Asi
 la aplicacion puede ser el registro principal y Kiwi puede analizar el resultado
