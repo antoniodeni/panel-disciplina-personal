@@ -332,7 +332,7 @@
 
     .pillar-glance-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 7px;
     }
 
@@ -2434,6 +2434,7 @@
         <p>Marca solo lo que corresponda a este dia. Lo que dejes sin marcar no baja el resultado.</p>
       </div>
       <div class="area-nav" aria-label="Elegir area">
+        <button data-area="all" class="active">Todas</button>
         <button data-area="alimentacion">Alimentacion</button>
         <button data-area="deporte">Deporte</button>
         <button data-area="estres">Estres</button>
@@ -2832,6 +2833,7 @@
 
     let balancePeriod = "week";
     let dashboardDetailMode = null;
+    let selectedAreaId = null;
 
     const dayPicker = document.getElementById("dayPicker");
     const priority = document.getElementById("priority");
@@ -2874,7 +2876,10 @@
       document.getElementById("nextDayBtn").addEventListener("click", () => selectDate(shiftDate(state.date, 1)));
 
       document.querySelectorAll("[data-go]").forEach((button) => {
-        button.addEventListener("click", () => activateTab(button.dataset.go));
+        button.addEventListener("click", () => {
+          if (button.dataset.go === "areas") selectedAreaId = null;
+          activateTab(button.dataset.go);
+        });
       });
 
       document.querySelectorAll("[data-balance-period]").forEach((button) => {
@@ -2907,15 +2912,12 @@
 
       document.querySelectorAll("[data-area]").forEach((button) => {
         button.addEventListener("click", () => {
+          selectedAreaId = button.dataset.area === "all" ? null : button.dataset.area;
           if (button.dataset.area === "alimentacion") {
             activateTab("alimentacion");
             return;
           }
           activateTab("areas");
-          requestAnimationFrame(() => {
-            document.getElementById(`area-${button.dataset.area}`)
-              ?.scrollIntoView({ behavior: "smooth", block: "start" });
-          });
         });
       });
 
@@ -2923,7 +2925,10 @@
         activateTab(getInitialTab(), false);
       });
 
-      document.getElementById("nutritionBackBtn").addEventListener("click", () => activateTab("areas"));
+      document.getElementById("nutritionBackBtn").addEventListener("click", () => {
+        selectedAreaId = null;
+        activateTab("areas");
+      });
 
       document.getElementById("startTodayBtn").addEventListener("click", () => {
         activateTab("habitos");
@@ -2937,6 +2942,7 @@
       });
 
       document.getElementById("dashboardPillarsBtn").addEventListener("click", () => {
+        selectedAreaId = null;
         activateTab("areas");
       });
 
@@ -3357,6 +3363,7 @@
             activateTab("alimentacion");
             return;
           }
+          selectedAreaId = area.id;
           activateTab("areas");
           requestAnimationFrame(() => {
             document.getElementById(`area-${area.id}`)
@@ -3747,7 +3754,13 @@
     function renderAreas() {
       const grid = document.getElementById("areasGrid");
       grid.innerHTML = "";
-      areas.forEach((area) => {
+      document.querySelectorAll("[data-area]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.area === (selectedAreaId || "all"));
+        button.setAttribute("aria-pressed", String(button.dataset.area === (selectedAreaId || "all")));
+      });
+      areas
+        .filter((area) => !selectedAreaId || area.id === selectedAreaId)
+        .forEach((area) => {
         const card = document.createElement("article");
         card.className = "area-card";
         card.id = `area-${area.id}`;
