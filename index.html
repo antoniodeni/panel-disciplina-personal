@@ -2369,6 +2369,17 @@
         </div>
         <p class="auth-help">¿No tienes acceso? Pide una invitación directamente a Antonio.</p>
       </form>
+      <form class="auth-form" id="passwordUpdateForm" hidden>
+        <label for="authNewPassword">Nueva contraseña
+          <input id="authNewPassword" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <label for="authNewPasswordConfirm">Repite la nueva contraseña
+          <input id="authNewPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+        <div class="auth-actions">
+          <button class="btn" id="authPasswordUpdate" type="submit">Guardar contraseña y entrar</button>
+        </div>
+      </form>
     </div>
   </section>
 
@@ -2995,6 +3006,7 @@
     let selectedAreaId = null;
     let appStarted = false;
     let remoteSyncTimer = null;
+    let isPasswordRecovery = typeof location !== "undefined" && location.hash.includes("type=recovery");
 
     const dayPicker = document.getElementById("dayPicker");
     const priority = document.getElementById("priority");
@@ -3018,8 +3030,18 @@
         showAuthMessage("No se pudo comprobar la sesion. Intentalo de nuevo.", "error");
         return;
       }
-      await handleSession(data.session);
+      if (isPasswordRecovery && data.session) {
+        showPasswordRecovery();
+      } else {
+        await handleSession(data.session);
+      }
       authClient.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY") {
+          isPasswordRecovery = true;
+          window.setTimeout(showPasswordRecovery, 0);
+          return;
+        }
+        if (isPasswordRecovery) return;
         window.setTimeout(() => handleSession(session), 0);
       });
     }
@@ -3028,8 +3050,7 @@
       if (!session?.user) {
         state.user = null;
         state.profile = null;
-        document.getElementById("authShell").hidden = false;
-        document.getElementById("appShell").hidden = true;
+        showLogin();
         return;
       }
 
@@ -3112,6 +3133,57 @@
         });
         showAuthMessage(error ? authErrorMessage(error) : "Te hemos enviado un enlace para cambiar la contraseña.", error ? "error" : "success");
       });
+
+      document.getElementById("passwordUpdateForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const password = document.getElementById("authNewPassword").value;
+        const confirmation = document.getElementById("authNewPasswordConfirm").value;
+        const submit = document.getElementById("authPasswordUpdate");
+        if (password.length < 8) {
+          showAuthMessage("La contraseña debe tener al menos 8 caracteres.", "error");
+          return;
+        }
+        if (password !== confirmation) {
+          showAuthMessage("Las contraseñas no coinciden.", "error");
+          return;
+        }
+        submit.disabled = true;
+        showAuthMessage("Guardando contraseña...", "");
+        try {
+          const { error } = await authClient.auth.updateUser({ password });
+          if (error) throw error;
+          isPasswordRecovery = false;
+          history.replaceState(null, "", `${location.pathname}${location.search}`);
+          const { data } = await authClient.auth.getSession();
+          await handleSession(data.session);
+        } catch (error) {
+          showAuthMessage(authErrorMessage(error), "error");
+        } finally {
+          submit.disabled = false;
+        }
+      });
+    }
+
+    function showLogin() {
+      document.getElementById("authTitle").textContent = "Acceso por invitación";
+      document.getElementById("authDescription").textContent =
+        "Entra con el correo y la contraseña que te ha enviado Antonio.";
+      document.getElementById("authForm").hidden = false;
+      document.getElementById("passwordUpdateForm").hidden = true;
+      document.getElementById("authShell").hidden = false;
+      document.getElementById("appShell").hidden = true;
+    }
+
+    function showPasswordRecovery() {
+      document.getElementById("authTitle").textContent = "Crea tu contraseña";
+      document.getElementById("authDescription").textContent =
+        "Elige una contraseña nueva para acceder a Línea Constructiva.";
+      document.getElementById("authForm").hidden = true;
+      document.getElementById("passwordUpdateForm").hidden = false;
+      document.getElementById("authShell").hidden = false;
+      document.getElementById("appShell").hidden = true;
+      showAuthMessage("", "");
+      document.getElementById("authNewPassword").focus();
     }
 
     function showAuthMessage(message, type) {
