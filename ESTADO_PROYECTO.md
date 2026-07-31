@@ -101,6 +101,9 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 24. Cumplimiento y Tareas del dashboard son interactivos y muestran el detalle
     pendiente con acceso directo a Rutina o Agenda.
 
+25. La vista de areas permite filtrar un solo pilar o volver a ver las seis
+    areas mediante el selector Todas.
+
 ## Decision de arquitectura
 
 Las proximas aplicaciones compartiran en el futuro una identidad y una base
