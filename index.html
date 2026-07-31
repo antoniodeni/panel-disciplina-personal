@@ -3137,8 +3137,8 @@
         card.dataset.pillar = area.id;
         card.innerHTML = `
           <span class="pillar-glance-label">${area.name}</span>
-          <strong>${percent}%</strong>
-          <small>${todayPercent === null ? "Sin registro" : "Cumplido hoy"}</small>
+          <strong>${todayPercent === null ? "-" : `${percent}%`}</strong>
+          <small>${todayPercent === null ? "Sin evaluar" : "Cumplido hoy"}</small>
           <div class="pillar-glance-bar"><span style="width:${percent}%"></span></div>
         `;
         card.addEventListener("click", () => {
@@ -3171,7 +3171,8 @@
       objectiveBox.querySelector("span").textContent =
         `Objetivo: ${objective.weeklyTarget} dias por semana. Minimo: ${objective.minimum}`;
 
-      document.getElementById("nutritionReadinessMetric").textContent = `${preparation}%`;
+      document.getElementById("nutritionReadinessMetric").textContent =
+        preparation === null ? "Sin datos" : `${preparation}%`;
       document.getElementById("nutritionStockMetric").textContent =
         `${available}/${shoppingItems.length}`;
       document.getElementById("nutritionMealsMetric").textContent =
@@ -3953,6 +3954,7 @@
         .map((habit) => day.areas?.[areaId]?.[habit.id] || "none");
       const linkedTasks = (day.tasks || [])
         .filter((task) => task.area === areaId && !task.dismissed && !task.carriedTo);
+      if (!values.some((value) => value !== "none") && !linkedTasks.length) return null;
       const habitPoints = values.reduce((sum, value) => sum + valuePoints(value), 0);
       const taskPoints = linkedTasks.filter((task) => task.done).length * 2;
       const max = (values.length + linkedTasks.length) * 2;
@@ -3962,13 +3964,15 @@
 
     function nutritionPreparationPercent(day) {
       const values = Object.values(day.nutrition?.readiness || {});
+      if (!values.some((value) => value !== "none")) return null;
       const points = values.reduce((sum, value) => sum + valuePoints(value), 0);
-      return values.length ? Math.round((points / (values.length * 2)) * 100) : 0;
+      return values.length ? Math.round((points / (values.length * 2)) * 100) : null;
     }
 
     function nutritionMealPercent(day) {
       const meals = day.nutrition?.meals || [];
       if (!meals.length) return null;
+      if (!meals.some((meal) => meal.status !== "none")) return null;
       const points = meals.reduce((sum, meal) => sum + valuePoints(meal.status), 0);
       return Math.round((points / (meals.length * 2)) * 100);
     }
