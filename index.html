@@ -551,6 +551,94 @@
       min-height: 96px;
     }
 
+    .dashboard-metric {
+      width: 100%;
+      color: var(--ink);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .dashboard-metric:hover {
+      border-color: var(--green);
+      background: #f3f8ef;
+    }
+
+    .dashboard-metric:focus-visible {
+      outline: 3px solid rgba(49, 95, 143, 0.2);
+      outline-offset: 2px;
+    }
+
+    .dashboard-detail {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 12px;
+      padding: 14px;
+      border: 1px solid #c4d9b5;
+      border-left: 4px solid var(--amber);
+      border-radius: 8px;
+      background: #fffdf8;
+    }
+
+    .dashboard-detail[hidden] {
+      display: none;
+    }
+
+    .dashboard-detail-head,
+    .dashboard-detail-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .dashboard-detail-head h3,
+    .dashboard-detail-head p {
+      margin: 0;
+    }
+
+    .dashboard-detail-head p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dashboard-detail-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .dashboard-detail-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .dashboard-detail-group > strong {
+      font-size: 13px;
+    }
+
+    .dashboard-detail-row {
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .dashboard-detail-row span:first-child {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard-detail-status {
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
     .metric span {
       display: block;
       color: var(--muted);
@@ -2174,17 +2262,29 @@
             <strong id="statusLabel">Sin evaluar</strong>
             <small id="statusText">El día aún no tiene resultados registrados.</small>
           </div>
-          <div class="metric">
+          <button class="metric dashboard-metric" id="dashboardScoreMetric" type="button" aria-controls="dashboardMetricDetails" aria-expanded="false">
             <span>Cumplimiento</span>
             <strong id="scorePercent">0%</strong>
             <small>Rutina y agenda.</small>
-          </div>
-          <div class="metric">
+          </button>
+          <button class="metric dashboard-metric" id="dashboardTaskMetric" type="button" aria-controls="dashboardMetricDetails" aria-expanded="false">
             <span>Tareas</span>
             <strong id="taskScore">0/0</strong>
             <small>Lo previsto frente a lo hecho.</small>
-          </div>
+          </button>
         </div>
+
+        <section class="dashboard-detail" id="dashboardMetricDetails" hidden aria-live="polite" aria-labelledby="dashboardMetricDetailsTitle">
+          <div class="dashboard-detail-head">
+            <div>
+              <h3 id="dashboardMetricDetailsTitle"></h3>
+              <p id="dashboardMetricDetailsText"></p>
+            </div>
+            <button class="small-button" id="dashboardMetricDetailsClose" type="button">Cerrar</button>
+          </div>
+          <div class="dashboard-detail-list" id="dashboardMetricDetailsList"></div>
+          <div class="actions" id="dashboardMetricDetailsActions"></div>
+        </section>
 
         <section class="dashboard-pillars" aria-labelledby="dashboardPillarsTitle">
           <div class="dashboard-pillars-head">
@@ -2731,6 +2831,7 @@
     };
 
     let balancePeriod = "week";
+    let dashboardDetailMode = null;
 
     const dayPicker = document.getElementById("dayPicker");
     const priority = document.getElementById("priority");
@@ -2786,6 +2887,17 @@
           });
           renderWeekly();
         });
+      });
+
+      document.getElementById("dashboardScoreMetric").addEventListener("click", () => {
+        toggleDashboardMetricDetails("score");
+      });
+      document.getElementById("dashboardTaskMetric").addEventListener("click", () => {
+        toggleDashboardMetricDetails("tasks");
+      });
+      document.getElementById("dashboardMetricDetailsClose").addEventListener("click", () => {
+        dashboardDetailMode = null;
+        renderDashboardMetricDetails();
       });
 
       document.getElementById("appMenuBtn").addEventListener("click", toggleAppMenu);
@@ -3004,10 +3116,107 @@
       renderCloseState();
       renderDataSummary();
       updateScore();
+      renderDashboardMetricDetails();
       renderPillarDashboard();
       renderNutrition();
     }
 
+    function toggleDashboardMetricDetails(mode) {
+      dashboardDetailMode = dashboardDetailMode === mode ? null : mode;
+      renderDashboardMetricDetails();
+      if (dashboardDetailMode) {
+        requestAnimationFrame(() => document.getElementById("dashboardMetricDetails")
+          ?.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+      }
+    }
+
+    function renderDashboardMetricDetails() {
+      const panel = document.getElementById("dashboardMetricDetails");
+      const list = document.getElementById("dashboardMetricDetailsList");
+      const actions = document.getElementById("dashboardMetricDetailsActions");
+      const title = document.getElementById("dashboardMetricDetailsTitle");
+      const text = document.getElementById("dashboardMetricDetailsText");
+      const scoreButton = document.getElementById("dashboardScoreMetric");
+      const taskButton = document.getElementById("dashboardTaskMetric");
+      if (!panel || !list || !actions || !title || !text) return;
+
+      const isOpen = Boolean(dashboardDetailMode);
+      panel.hidden = !isOpen;
+      scoreButton?.setAttribute("aria-expanded", String(dashboardDetailMode === "score"));
+      taskButton?.setAttribute("aria-expanded", String(dashboardDetailMode === "tasks"));
+      if (!isOpen) return;
+
+      const day = getDay();
+      const statusLabels = { none: "Pendiente", mid: "A medias", no: "No hecho", done: "Hecho" };
+      const pendingTasks = day.tasks.filter((task) => !task.done && !task.dismissed && !task.carriedTo);
+      list.innerHTML = "";
+      actions.innerHTML = "";
+
+      const addGroup = (groupTitle, entries) => {
+        if (!entries.length) return;
+        const group = document.createElement("div");
+        group.className = "dashboard-detail-group";
+        const heading = document.createElement("strong");
+        heading.textContent = groupTitle;
+        group.appendChild(heading);
+        entries.forEach((entry) => {
+          const row = document.createElement("div");
+          row.className = "dashboard-detail-row";
+          const name = document.createElement("span");
+          name.textContent = entry.name;
+          const status = document.createElement("span");
+          status.className = "dashboard-detail-status";
+          status.textContent = entry.status;
+          row.append(name, status);
+          group.appendChild(row);
+        });
+        list.appendChild(group);
+      };
+
+      const addAction = (label, tabId, scrollId) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "btn secondary";
+        button.textContent = label;
+        button.addEventListener("click", () => {
+          activateTab(tabId);
+          if (scrollId) requestAnimationFrame(() => document.getElementById(scrollId)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" }));
+        });
+        actions.appendChild(button);
+      };
+
+      if (dashboardDetailMode === "score") {
+        const bucket = day.badDay ? "minimums" : "morning";
+        const items = day.badDay ? minimumItems : morningItems;
+        const pendingRoutine = items
+          .filter(([id]) => day[bucket][id] !== "done")
+          .map(([id, name]) => ({ name, status: statusLabels[day[bucket][id]] || "Pendiente" }));
+        title.textContent = "Que queda para completar hoy";
+        text.textContent = day.badDay
+          ? "Estas viendo los minimos activos para salvar el dia."
+          : "Estas viendo la rutina y las tareas que todavia cuentan.";
+        addGroup(day.badDay ? "Minimos pendientes" : "Rutina pendiente", pendingRoutine);
+        addGroup("Tareas pendientes", pendingTasks.map((task) => ({ name: task.text, status: "Pendiente" })));
+        addAction("Abrir rutina", "habitos", "dailyCommand");
+      } else {
+        title.textContent = "Tareas pendientes";
+        text.textContent = pendingTasks.length
+          ? `${pendingTasks.length} tarea${pendingTasks.length === 1 ? "" : "s"} por resolver.`
+          : "No hay tareas pendientes en la agenda.";
+        addGroup("Agenda abierta", pendingTasks.map((task) => ({ name: task.text, status: "Pendiente" })));
+        addAction("Abrir agenda", "agenda", "agendaPanel");
+      }
+
+      if (!list.children.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = dashboardDetailMode === "score"
+          ? "No queda nada pendiente en la rutina ni en la agenda."
+          : "No hay tareas pendientes en la agenda.";
+        list.appendChild(empty);
+      }
+    }
     function renderSelectedDay() {
       const relation = dayRelation(state.date);
       const relationText = relation === "today"
@@ -3062,6 +3271,7 @@
           renderCloseState();
           renderAreas();
           updateScore();
+          renderDashboardMetricDetails();
         });
         list.appendChild(row);
       });
@@ -3120,6 +3330,7 @@
           save();
           renderChecks(containerId, items, bucket);
           updateScore();
+          renderDashboardMetricDetails();
         }));
       });
     }
@@ -3627,6 +3838,7 @@
           renderCloseState();
           renderAreas();
           updateScore();
+          renderDashboardMetricDetails();
         });
         row.querySelector(".task-primary").addEventListener("click", () => {
           task.important = !task.important;
@@ -3647,6 +3859,7 @@
           renderCloseState();
           renderAreas();
           updateScore();
+          renderDashboardMetricDetails();
         });
         const destination = task.done ? lists.done : task.important ? lists.now : lists.later;
         destination.appendChild(row);
