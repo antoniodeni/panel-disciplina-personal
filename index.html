@@ -332,7 +332,7 @@
 
     .pillar-glance-grid {
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 7px;
     }
 
@@ -980,7 +980,7 @@
 
     .area-nav {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 6px;
       margin-bottom: 14px;
     }
@@ -1000,6 +1000,12 @@
       border-color: var(--green);
       background: var(--green-2);
       color: var(--green);
+    }
+
+    .area-nav button.active {
+      border-color: var(--green-deep);
+      background: var(--green-deep);
+      color: #fff;
     }
 
     .tab {
