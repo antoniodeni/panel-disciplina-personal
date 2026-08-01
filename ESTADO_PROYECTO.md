@@ -173,6 +173,11 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
     accion. El bloque detecta si faltan datos y lleva al registro; cuando la
     energia fisica es baja recomienda protegerla antes de seguir añadiendo
     exigencia. Pruebas de logica, estructura y compilacion superadas.
+35. Punto de pausa del sabado 1 de agosto de 2026, 22:47. La app queda
+    publicada y guardada con el dashboard personal, las seis areas accionables,
+    balances semanal y mensual, Alimentacion especializada, acceso privado y
+    sincronizacion entre dispositivos. Proximo paso acordado: recurrencia de
+    habitos y recordatorios inteligentes. No tocar Engranaje Sur.
 
 ## Decision de arquitectura
 
