@@ -1848,6 +1848,83 @@
       align-items: start;
     }
 
+    .balance-recommendation {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 16px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--gold);
+      border-radius: 8px;
+      background: #fffef8;
+      box-shadow: var(--shadow);
+    }
+
+    .balance-recommendation-copy {
+      min-width: 0;
+    }
+
+    .balance-recommendation-copy h2 {
+      margin: 3px 0 6px;
+      font-size: 21px;
+    }
+
+    .balance-recommendation-copy p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .balance-recommendation-eyebrow {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .balance-recommendation-evidence {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin-top: 12px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .balance-recommendation-action {
+      display: grid;
+      gap: 8px;
+      width: min(100%, 280px);
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .balance-recommendation-action strong {
+      font-size: 13px;
+    }
+
+    .balance-recommendation-action span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .balance-recommendation-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 3px;
+    }
+
+    .balance-recommendation-buttons .btn {
+      min-height: 36px;
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+
     .weekly-area-list {
       display: grid;
       gap: 12px;
@@ -2256,6 +2333,16 @@
       .balance-intro {
         align-items: stretch;
         flex-direction: column;
+      }
+
+      .balance-recommendation {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .balance-recommendation-action {
+        width: 100%;
       }
 
       .balance-period-switch {
@@ -2920,6 +3007,25 @@
         </div>
       </div>
       <div class="scoreboard weekly-stats" id="weeklyStats"></div>
+      <section class="balance-recommendation" id="weeklyRecommendation" aria-live="polite">
+        <div class="balance-recommendation-copy">
+          <span class="balance-recommendation-eyebrow">Siguiente ajuste</span>
+          <h2 id="weeklyRecommendationTitle">Analizando tu periodo</h2>
+          <p id="weeklyRecommendationText">La recomendación aparecerá cuando haya datos suficientes.</p>
+          <div class="balance-recommendation-evidence">
+            <span id="weeklyRecommendationEvidence"></span>
+            <span id="weeklyRecommendationConfidence"></span>
+          </div>
+        </div>
+        <div class="balance-recommendation-action">
+          <strong>Acción mínima recomendada</strong>
+          <span id="weeklyRecommendationActionText">Registra al menos dos dias para obtener una propuesta.</span>
+          <div class="balance-recommendation-buttons">
+            <button class="btn" id="weeklyRecommendationAdd" type="button" hidden>Añadir a mañana</button>
+            <button class="btn secondary" id="weeklyRecommendationOpen" type="button" hidden>Revisar pilar</button>
+          </div>
+        </div>
+      </section>
       <div class="grid weekly-layout">
         <div class="panel">
           <h2>Ritmo por areas</h2>
@@ -3150,6 +3256,15 @@
       unexpected: "Imprevisto",
       other: "Otro"
     };
+    const checkinReasonAdvice = {
+      time: "Protege un hueco corto y concreto antes de llenar el resto del día.",
+      forgot: "Deja la acción visible en la agenda y marcada como principal.",
+      energy: "Usa la versión mínima: mantener la cadena importa más que la intensidad.",
+      health: "Reduce la exigencia y conserva solo una acción segura y realista.",
+      plan: "Baja el plan hasta que pueda cumplirse en un dia normal.",
+      unexpected: "Prepara una alternativa corta que sobreviva a los imprevistos.",
+      other: "Observa el contexto y prueba un cambio pequeño durante varios días."
+    };
     const dayOptions = [
       [1, "L"],
       [2, "M"],
@@ -3216,6 +3331,7 @@
     };
 
     let balancePeriod = "week";
+    let currentBalanceRecommendation = null;
     let dashboardDetailMode = null;
     let selectedAreaId = null;
     let appStarted = false;
@@ -3473,6 +3589,17 @@
           });
           renderWeekly();
         });
+      });
+
+      document.getElementById("weeklyRecommendationAdd").addEventListener("click", () => {
+        if (currentBalanceRecommendation?.ready) {
+          addBalanceRecommendationToTomorrow(currentBalanceRecommendation);
+        }
+      });
+      document.getElementById("weeklyRecommendationOpen").addEventListener("click", () => {
+        if (currentBalanceRecommendation?.ready) {
+          openBalanceRecommendationArea(currentBalanceRecommendation.areaId);
+        }
       });
 
       document.getElementById("dashboardScoreMetric").addEventListener("click", () => {
@@ -4637,7 +4764,7 @@
         });
       }
       task.carriedTo = tomorrowKey;
-      save();
+      save([state.date, tomorrowKey]);
       renderPendingTasks();
       renderCloseState();
       renderWeekly();
@@ -4714,6 +4841,8 @@
         </div>
       `;
 
+      renderBalanceRecommendation(keys, recorded, mainReason);
+
       const areaList = document.getElementById("weeklyAreas");
       areaList.innerHTML = "";
       areas.forEach((area) => {
@@ -4731,6 +4860,102 @@
         areaList.appendChild(row);
       });
       renderHistory(keys);
+    }
+
+    function buildBalanceRecommendation(keys, recorded, mainReason = mostCommonCheckinReason(recorded)) {
+      if (recorded.length < 2) {
+        return {
+          ready: false,
+          title: "Aún necesitamos un poco más de información",
+          text: "Registra y cierra al menos dos días para que la recomendación no dependa de una sola jornada.",
+          evidence: `${recorded.length} día${recorded.length === 1 ? "" : "s"} registrado${recorded.length === 1 ? "" : "s"}`,
+          confidence: "Análisis pendiente",
+          action: "Registra al menos dos dias para obtener una propuesta."
+        };
+      }
+
+      const ranking = areas
+        .map((area) => ({ area, progress: balanceAreaProgress(area.id, keys) }))
+        .sort((first, second) => {
+          if (first.progress.percent !== second.progress.percent) {
+            return first.progress.percent - second.progress.percent;
+          }
+          const firstGap = first.progress.target - first.progress.activeDays;
+          const secondGap = second.progress.target - second.progress.activeDays;
+          return secondGap - firstGap;
+        });
+      const weakest = ranking[0];
+      const objective = state.store.objectives?.[weakest.area.id] || objectiveDefaults[weakest.area.id];
+      const missingDays = Math.max(0, weakest.progress.target - weakest.progress.activeDays);
+      const allGoalsMet = ranking.every(({ progress }) => progress.percent >= 100);
+      const reasonText = mainReason
+        ? `El freno más repetido ha sido ${mainReason.label.toLowerCase()}. ${checkinReasonAdvice[mainReason.id] || ""}`
+        : "Todavía no hay un freno repetido; mantendremos el cambio pequeño para poder medirlo.";
+      const confidence = recorded.length >= 6
+        ? "Lectura sólida"
+        : recorded.length >= 4
+          ? "Lectura útil"
+          : "Lectura inicial";
+
+      return {
+        ready: true,
+        areaId: weakest.area.id,
+        title: allGoalsMet
+          ? `Mantener el avance en ${weakest.area.name}`
+          : `Prioridad del siguiente período: ${weakest.area.name}`,
+        text: allGoalsMet
+          ? `${reasonText} Todos los objetivos del período están cubiertos; ahora interesa repetir sin subir la exigencia.`
+          : `${reasonText} Concentrar el ajuste en un solo pilar facilita comprobar si funciona.`,
+        evidence: allGoalsMet
+          ? `${weakest.progress.activeDays} de ${weakest.progress.target} dias objetivo`
+          : `${weakest.progress.activeDays} de ${weakest.progress.target} dias; faltan ${missingDays}`,
+        confidence: `${confidence}: ${recorded.length} dias registrados`,
+        action: objective.minimum,
+        objective: objective.statement
+      };
+    }
+
+    function renderBalanceRecommendation(keys, recorded, mainReason) {
+      const recommendation = buildBalanceRecommendation(keys, recorded, mainReason);
+      currentBalanceRecommendation = recommendation;
+      document.getElementById("weeklyRecommendationTitle").textContent = recommendation.title;
+      document.getElementById("weeklyRecommendationText").textContent = recommendation.text;
+      document.getElementById("weeklyRecommendationEvidence").textContent = recommendation.evidence;
+      document.getElementById("weeklyRecommendationConfidence").textContent = recommendation.confidence;
+      document.getElementById("weeklyRecommendationActionText").textContent = recommendation.action;
+      document.getElementById("weeklyRecommendationAdd").hidden = !recommendation.ready;
+      document.getElementById("weeklyRecommendationOpen").hidden = !recommendation.ready;
+    }
+
+    function addBalanceRecommendationToTomorrow(recommendation) {
+      const tomorrowKey = shiftDate(todayKey(), 1);
+      ensureDay(tomorrowKey);
+      const tomorrow = state.store.days[tomorrowKey];
+      const normalizedAction = recommendation.action.trim().toLocaleLowerCase("es");
+      const alreadyPlanned = tomorrow.tasks.some((task) =>
+        task.text.trim().toLocaleLowerCase("es") === normalizedAction && !task.dismissed);
+      if (!alreadyPlanned) {
+        tomorrow.tasks.push({
+          id: crypto.randomUUID(),
+          text: recommendation.action,
+          done: false,
+          area: recommendation.areaId,
+          time: "",
+          important: true
+        });
+      }
+      if (!tomorrow.priority) tomorrow.priority = recommendation.objective;
+      save(tomorrowKey);
+      showToast(alreadyPlanned ? "La accion ya estaba en la agenda de mañana" : "Accion añadida a la agenda de mañana");
+    }
+
+    function openBalanceRecommendationArea(areaId) {
+      selectedAreaId = areaId;
+      if (areaId === "alimentacion") {
+        activateTab("alimentacion");
+        return;
+      }
+      activateTab("areas");
     }
 
     function renderHistory(keys = getBalanceWindow().keys) {
@@ -5375,11 +5600,14 @@
       }
     }
 
-    function save() {
+    function save(changedDates = state.date) {
       try {
         const updatedAt = new Date().toISOString();
         state.store.updatedAt = updatedAt;
-        if (state.store.days[state.date]) state.store.days[state.date].updatedAt = updatedAt;
+        const dates = Array.isArray(changedDates) ? changedDates : [changedDates];
+        dates.forEach((dateKey) => {
+          if (dateKey && state.store.days[dateKey]) state.store.days[dateKey].updatedAt = updatedAt;
+        });
         hasUnsyncedChanges = true;
         persistLocalStore();
         setSyncStatus(
