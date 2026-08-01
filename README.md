@@ -29,6 +29,9 @@ La seccion Balances permite cambiar entre los ultimos 7 dias y el mes actual.
 Solo cuenta como registrado un dia que contiene actividad real. Los balances
 muestran rutina y agenda, tareas activas, cierres, ritmo por pilar e historial.
 Tambien resumen animo, energia, descanso percibido y el freno mas repetido.
+Con al menos dos dias registrados, el balance señala un unico pilar prioritario,
+explica en que datos se basa y propone una accion minima. Esa accion se puede
+añadir como tarea principal a la agenda de mañana con un toque.
 
 El cierre diario incluye una medicion breve de animo, energia, descanso y
 principal dificultad. Su objetivo no es juzgar el dia, sino descubrir con el
