@@ -1,12 +1,15 @@
 # Estado del proyecto
 
-Fecha de cierre: 29 de julio de 2026.
+Fecha de cierre: 1 de agosto de 2026.
 
 ## Terminado
 
 - Aplicacion diaria funcional con inicio, agenda, seis areas, habitos, cierre,
   balances semanal y mensual, plan y ajustes.
-- Datos guardados localmente en cada navegador.
+- Acceso privado con Supabase y datos separados por cuenta.
+- Sincronizacion entre dispositivos con estado visible, reintento al recuperar
+  Internet y combinacion conservadora de dias locales y remotos.
+- Importacion unica de los datos guardados antes de crear la cuenta.
 - Exportacion y restauracion de copias de seguridad.
 - Esquema de datos versionado y migracion de las copias anteriores.
 - Resumen diario copiable para Kiwi desde el cierre del dia.
@@ -14,15 +17,34 @@ Fecha de cierre: 29 de julio de 2026.
 - Aplicacion web instalable y funcionamiento basico sin conexion.
 - Publicacion independiente en GitHub Pages:
   https://antoniodeni.github.io/panel-disciplina-personal/
+- Registro diario de animo, energia, descanso percibido y principal freno.
+- Balances que excluyen dias vacios y tareas descartadas o trasladadas.
+- Alimentacion medida mediante habitos, preparacion y comidas combinadas.
 
 ## Limitaciones actuales
 
-- No hay cuenta de usuario.
-- Los datos del movil y del PC no se sincronizan.
-- Borrar los datos del navegador puede eliminar la informacion local.
-- El sitio y el repositorio son publicos.
+- La primera cuenta administradora esta activa, pero falta establecer y probar
+  su contrasena cuando Supabase vuelva a permitir el correo de recuperacion.
+- El correo gratuito de Supabase tiene un limite bajo. No se invitaran amigos
+  hasta configurar SMTP propio y probar el recorrido completo.
+- Falta probar aislamiento, revocacion y recuperacion con una segunda cuenta.
+- La sincronizacion usa un documento por usuario y resolucion por fecha. Es
+  suficiente para la prueba personal, pero una beta mayor debera separar los
+  registros por tablas y eventos.
+- El sitio y el repositorio siguen siendo publicos, aunque los datos personales
+  y el acceso a la aplicacion estan protegidos.
 
 ## Siguiente paso acordado
+
+Usar primero la aplicacion con la cuenta de Antonio en PC y movil. El siguiente
+trabajo externo es configurar SMTP propio, crear una segunda cuenta de prueba y
+verificar acceso, aislamiento, revocacion y recuperacion antes de abrir la beta.
+
+Durante al menos siete dias se validara el ciclo diario sin añadir dietas con
+IA, agentes, musica, notificaciones ni automatizaciones. Los cambios se
+decidiran a partir de fallos y datos reales de uso.
+
+## Historial anterior
 
 La reorganizacion principal de la interfaz se completo el 30 de julio de 2026:
 
@@ -92,17 +114,44 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
 18. Diseño móvil simplificado: cabecera sin saludo, logo visible, calendario compacto y jerarquía verde y naranja.
 19. Inicio ordenado por acción: siguiente paso, estado, agenda, pilares y herramientas secundarias; botones auditados.
 20. Bloque “Ahora” retirado del inicio; el semáforo y los seis pilares ocupan la primera prioridad visual.
-
 21. Balance ampliado con selector de 7 dias y mes actual, cumplimiento medio,
     dias registrados, tareas, cierres e historial del periodo.
 22. Progreso historico de pilares corregido para evaluar cada dia con su propia
     frecuencia programada.
-
+23. Pilares sin acciones registradas muestran “Sin evaluar”; los porcentajes
+    parciales solo aparecen cuando existe una accion marcada.
 24. Cumplimiento y Tareas del dashboard son interactivos y muestran el detalle
     pendiente con acceso directo a Rutina o Agenda.
-
 25. La vista de areas permite filtrar un solo pilar o volver a ver las seis
     areas mediante el selector Todas.
+26. La beta privada queda definida con invitaciones por correo, contrasena
+    elegida por cada usuario, datos aislados por `user_id` y administracion de
+    accesos por Antonio. La integracion real queda pendiente de crear el
+    proyecto de backend y migrar los datos locales con pruebas de aislamiento.
+27. Proyecto Supabase creado para Linea Constructiva. La app local ya incluye
+    puerta de acceso, solicitud de cuenta, recuperacion de contrasena, cierre de
+    sesion y almacenamiento local separado por usuario. Pendiente: ejecutar el
+    esquema SQL, activar la primera cuenta administradora, verificar sincronizacion
+    y publicar solo despues de probar dos cuentas aisladas.
+28. Flujo de beta privada simplificado: se retiro el registro abierto de la app
+    publica. Solo entran cuentas creadas y activadas por Antonio; se mantiene la
+    recuperacion de contrasena. La version publica fue actualizada y verificada.
+29. Recuperacion de contrasena completada: los enlaces de Supabase abren una
+    pantalla para elegir y confirmar una nueva clave antes de entrar en la app.
+    Pruebas de logica, estructura y compilacion superadas.
+30. Punto de pausa: la cuenta administradora ya existe y esta activa, pero la
+    creacion de su contrasena esta detenida por el limite temporal de correos
+    del proveedor gratuito de Supabase. Al retomar: esperar a que se libere el
+    limite, solicitar una sola recuperacion, crear la contrasena y comprobar
+    acceso desde PC y movil. Antes de beta con amigos: configurar SMTP propio
+    y crear un panel sencillo de administracion de usuarios.
+31. Mejora del 1 de agosto: datos antiguos importados a la cuenta, sincronizacion
+    visible con reintento, proteccion frente a cachear respuestas de Supabase,
+    dias vacios fuera de balances, tareas activas bien contabilizadas,
+    Alimentacion combinada, registro subjetivo diario, menu agrupado y enlaces
+    de invitacion preparados para que cada usuario elija su contrasena. Pruebas
+    de logica, estructura, compilacion y revision visual movil/escritorio
+    superadas. Pendiente externo: contrasena de Antonio y SMTP propio.
 
 ## Decision de arquitectura
 
