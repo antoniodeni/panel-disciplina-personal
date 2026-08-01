@@ -162,6 +162,12 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
     registrados y el freno mas repetido, y permite añadir la version minima a
     la agenda de mañana. El guardado entre dias tambien actualiza correctamente
     las fechas modificadas para proteger la sincronizacion.
+33. Las seis areas pasan de ser solo una lista de verificaciones a modulos de
+    accion: cada una muestra foco del dia, primer paso, minimo de rescate,
+    avance semanal y acceso al balance. Los cinco pilares generales pueden
+    añadir su minimo como tarea principal sin duplicados; Alimentacion abre su
+    plan especializado. Tambien se fijo que el objetivo semanal no dependa del
+    periodo mensual que este abierto en la vista de balances.
 
 ## Decision de arquitectura
 
