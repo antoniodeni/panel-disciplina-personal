@@ -30,6 +30,11 @@ y su ritmo semanal. En Deporte, Estres, Actitud, Habitos y Descanso se puede
 añadir ese minimo directamente a la agenda principal; Alimentacion abre su
 modulo de preparacion, compra y comidas.
 
+El dashboard incluye tambien una lectura personal compacta: animo, estado
+fisico a partir de energia y descanso, carga de tareas y siguiente accion. Si
+faltan datos, lleva al registro; si el estado fisico es bajo, recomienda
+proteger energia y usar el minimo antes de añadir mas carga.
+
 La seccion Balances permite cambiar entre los ultimos 7 dias y el mes actual.
 Solo cuenta como registrado un dia que contiene actividad real. Los balances
 muestran rutina y agenda, tareas activas, cierres, ritmo por pilar e historial.
