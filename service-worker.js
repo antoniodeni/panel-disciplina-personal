@@ -1,4 +1,4 @@
-const CACHE_NAME = "panel-disciplina-personal-v27";
+const CACHE_NAME = "panel-disciplina-personal-v28";
 const FILES = [
   "./",
   "./manifest.webmanifest",
@@ -27,6 +27,10 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const requestUrl = new URL(event.request.url);
+
+  // Los datos de cuenta y cualquier recurso externo nunca se guardan en esta cache.
+  if (requestUrl.origin !== self.location.origin) return;
 
   if (event.request.mode === "navigate") {
     event.respondWith(
