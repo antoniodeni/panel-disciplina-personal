@@ -1392,6 +1392,67 @@
       padding: 10px;
     }
 
+    .area-guidance {
+      display: grid;
+      gap: 7px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fcfdf9;
+    }
+
+    .area-guidance-head,
+    .area-guidance-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .area-guidance-head strong {
+      font-size: 13px;
+    }
+
+    .area-weekly-progress {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .area-focus {
+      margin: 0;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .area-starter {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .area-guidance-bar {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 3px;
+      background: var(--soft);
+    }
+
+    .area-guidance-bar span {
+      display: block;
+      height: 100%;
+      background: var(--green);
+    }
+
+    .area-guidance-actions {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .area-guidance-actions .secondary {
+      background: #fff;
+    }
+
     .task-form {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -3317,6 +3378,45 @@
       }
     };
 
+    const areaGuidance = {
+      alimentacion: {
+        focus: "Deja preparado el entorno que hace posible comer mejor.",
+        rescue: "Preparar una comida sencilla con lo que haya disponible",
+        starter: "Comprueba que tienes una comida real y los productos basicos antes de improvisar.",
+        review: "Revisa si fallo la compra, la preparacion o la decision del momento."
+      },
+      deporte: {
+        focus: "Mover el cuerpo con una sesion que puedas cumplir hoy.",
+        rescue: "Mover el cuerpo durante 10 minutos",
+        starter: "Empieza con movilidad, un paseo fuerte o una vuelta con tus pesas.",
+        review: "Distingue si el freno fue tiempo, energia o un plan demasiado exigente."
+      },
+      estres: {
+        focus: "Bajar el ruido antes de reaccionar o escapar del momento.",
+        rescue: "Hacer 5 respiraciones lentas",
+        starter: "Inhala 4 segundos y exhala 6 durante cinco ciclos, sin buscar hacerlo perfecto.",
+        review: "Anota cuando aparece el bucle y que accion te ayuda a cortarlo."
+      },
+      actitud: {
+        focus: "Elegir una accion firme aunque hoy no apetezca.",
+        rescue: "Escribir una frase honesta y hacer una accion pequena",
+        starter: "Di la verdad sobre el momento y decide el siguiente paso que si depende de ti.",
+        review: "Compara lo que dijiste que harias con la accion que finalmente hiciste."
+      },
+      habitos: {
+        focus: "Proteger un bloque real y respetar la agenda que has elegido.",
+        rescue: "Trabajar 15 minutos sin cambiar de frente",
+        starter: "Aparta el movil y termina un bloque antes de abrir otra herramienta o tarea.",
+        review: "Reduce la agenda si acumulas tareas trasladadas varios dias seguidos."
+      },
+      descanso: {
+        focus: "Preparar la recuperacion antes de estar completamente agotado.",
+        rescue: "Apagar una pantalla y bajar el ritmo durante 15 minutos",
+        starter: "Empieza el cierre antes de la ultima hora: menos pantalla, menos estimulo y cama preparada.",
+        review: "Mira la relacion entre descanso, energia y cumplimiento al dia siguiente."
+      }
+    };
+
     const nutritionReadinessItems = [
       ["plan", "Plan de comidas preparado", "Saber que vas a comer evita improvisar"],
       ["list", "Lista de la compra preparada", "Comprar segun el plan y no por impulso"],
@@ -4503,6 +4603,8 @@
         const taskSummary = areaTasks.length
           ? `Tareas vinculadas: ${completedAreaTasks}/${areaTasks.length}`
           : "Sin tareas vinculadas";
+        const guidance = areaGuidance[area.id] || {};
+        const weekly = weeklyAreaProgress(area.id);
         card.innerHTML = `
           <div class="area-head">
             <div class="area-head-copy">
@@ -4511,8 +4613,39 @@
             </div>
             <span class="pill">${scoreLabel}</span>
           </div>
+          <div class="area-guidance">
+            <div class="area-guidance-head">
+              <strong>Plan de hoy</strong>
+              <span class="area-weekly-progress"></span>
+            </div>
+            <p class="area-focus"></p>
+            <small class="area-starter"></small>
+            <div class="area-guidance-bar"><span></span></div>
+            <div class="area-guidance-actions">
+              <button type="button" class="small-button area-action"></button>
+              <button type="button" class="small-button secondary area-review">Ver balance</button>
+            </div>
+          </div>
           <div class="area-body check-list"></div>
         `;
+        card.querySelector(".area-focus").textContent = guidance.focus || objectiveDefaults[area.id].statement;
+        card.querySelector(".area-starter").textContent = guidance.starter || objectiveDefaults[area.id].minimum;
+        card.querySelector(".area-weekly-progress").textContent =
+          `Semana: ${weekly.activeDays}/${weekly.target}`;
+        card.querySelector(".area-guidance-bar span").style.width = `${weekly.percent}%`;
+        const areaAction = card.querySelector(".area-action");
+        areaAction.textContent = area.id === "alimentacion" ? "Abrir plan" : "Añadir minimo a agenda";
+        areaAction.addEventListener("click", () => {
+          if (area.id === "alimentacion") {
+            selectedAreaId = null;
+            activateTab("alimentacion");
+            return;
+          }
+          addAreaRescueTask(area.id);
+        });
+        card.querySelector(".area-review").addEventListener("click", () => {
+          activateTab("semana");
+        });
         const body = card.querySelector(".area-body");
         if (!scheduledHabits.length) {
           body.innerHTML = '<div class="empty">Hoy no hay habitos programados en esta area.</div>';
@@ -4528,6 +4661,42 @@
         });
           grid.appendChild(card);
         });
+    }
+
+    function addAreaRescueTask(areaId) {
+      const guidance = areaGuidance[areaId];
+      if (!guidance) return;
+      const day = getDay();
+      const action = areaRescueText(areaId);
+      if (!action) return;
+      const normalizedAction = action.toLocaleLowerCase("es");
+      const alreadyPlanned = day.tasks.some((task) =>
+        task.area === areaId && !task.done && !task.dismissed && !task.carriedTo &&
+        String(task.text || "").trim().toLocaleLowerCase("es") === normalizedAction
+      );
+      if (!alreadyPlanned) {
+        day.tasks.push({
+          id: crypto.randomUUID(),
+          text: action,
+          done: false,
+          area: areaId,
+          time: "",
+          important: true
+        });
+      }
+      save();
+      renderTasks();
+      renderDashboardAgenda();
+      renderPendingTasks();
+      renderCloseState();
+      renderAreas();
+      updateScore();
+      showToast(alreadyPlanned ? "Ese minimo ya esta en tu agenda" : "Minimo añadido a la agenda principal");
+    }
+
+    function areaRescueText(areaId) {
+      const guidance = areaGuidance[areaId];
+      return String(guidance?.rescue || state.store.objectives?.[areaId]?.minimum || "").trim();
     }
 
     function renderTasks() {
@@ -4985,10 +5154,10 @@
     }
 
     function weeklyAreaProgress(areaId) {
-      return balanceAreaProgress(areaId, getBalanceWindow("week").keys);
+      return balanceAreaProgress(areaId, getBalanceWindow("week").keys, "week");
     }
 
-    function balanceAreaProgress(areaId, keys) {
+    function balanceAreaProgress(areaId, keys, period = balancePeriod) {
       const target = state.store.objectives?.[areaId]?.weeklyTarget || 3;
       const activeDays = keys.filter((key) => {
         const day = state.store.days[key];
@@ -4998,7 +5167,7 @@
           : areaPercentForDay(day, areaId, key);
         return percent !== null && percent >= 70;
       }).length;
-      const periodTarget = balancePeriod === "month"
+      const periodTarget = period === "month"
         ? Math.max(1, Math.round((target * keys.length) / 7))
         : target;
       return {
