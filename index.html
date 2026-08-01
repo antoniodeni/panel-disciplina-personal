@@ -4696,7 +4696,7 @@
 
     function areaRescueText(areaId) {
       const guidance = areaGuidance[areaId];
-      return String(guidance?.rescue || state.store.objectives?.[areaId]?.minimum || "").trim();
+      return String(state.store.objectives?.[areaId]?.minimum || guidance?.rescue || "").trim();
     }
 
     function renderTasks() {
