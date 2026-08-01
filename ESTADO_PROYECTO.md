@@ -20,11 +20,14 @@ Fecha de cierre: 1 de agosto de 2026.
 - Registro diario de animo, energia, descanso percibido y principal freno.
 - Balances que excluyen dias vacios y tareas descartadas o trasladadas.
 - Alimentacion medida mediante habitos, preparacion y comidas combinadas.
+- Balance semanal y mensual con recomendacion accionable: detecta el pilar mas
+  atrasado, considera el freno repetido y propone su version minima.
+- La recomendacion puede convertirse en una tarea principal para la agenda del
+  dia siguiente sin duplicarla.
 
 ## Limitaciones actuales
 
-- La primera cuenta administradora esta activa, pero falta establecer y probar
-  su contrasena cuando Supabase vuelva a permitir el correo de recuperacion.
+- La cuenta administradora esta activa y el acceso esta probado en PC y movil.
 - El correo gratuito de Supabase tiene un limite bajo. No se invitaran amigos
   hasta configurar SMTP propio y probar el recorrido completo.
 - Falta probar aislamiento, revocacion y recuperacion con una segunda cuenta.
@@ -36,8 +39,9 @@ Fecha de cierre: 1 de agosto de 2026.
 
 ## Siguiente paso acordado
 
-Usar primero la aplicacion con la cuenta de Antonio en PC y movil. El siguiente
-trabajo externo es configurar SMTP propio, crear una segunda cuenta de prueba y
+Usar la aplicacion con la cuenta de Antonio en PC y movil y comprobar durante
+una semana si la recomendacion propone ajustes utiles. El siguiente trabajo
+externo es configurar SMTP propio, crear una segunda cuenta de prueba y
 verificar acceso, aislamiento, revocacion y recuperacion antes de abrir la beta.
 
 Durante al menos siete dias se validara el ciclo diario sin añadir dietas con
@@ -151,7 +155,13 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
     Alimentacion combinada, registro subjetivo diario, menu agrupado y enlaces
     de invitacion preparados para que cada usuario elija su contrasena. Pruebas
     de logica, estructura, compilacion y revision visual movil/escritorio
-    superadas. Pendiente externo: contrasena de Antonio y SMTP propio.
+    superadas. La contraseña de Antonio y el acceso en PC y movil ya estan
+    comprobados; queda pendiente el SMTP propio y una segunda cuenta de prueba.
+32. Motor de revision accionable: el balance identifica el pilar con mayor
+    distancia respecto a su objetivo, explica la lectura con los dias
+    registrados y el freno mas repetido, y permite añadir la version minima a
+    la agenda de mañana. El guardado entre dias tambien actualiza correctamente
+    las fechas modificadas para proteger la sincronizacion.
 
 ## Decision de arquitectura
 
