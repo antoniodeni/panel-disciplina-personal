@@ -168,6 +168,11 @@ corregir el flujo segun el uso real y despues decidir que modulo merece crecer.
     añadir su minimo como tarea principal sin duplicados; Alimentacion abre su
     plan especializado. Tambien se fijo que el objetivo semanal no dependa del
     periodo mensual que este abierto en la vista de balances.
+34. El dashboard incorpora una lectura personal visible al abrir: animo,
+    estado fisico combinando energia y descanso, carga de tareas y siguiente
+    accion. El bloque detecta si faltan datos y lleva al registro; cuando la
+    energia fisica es baja recomienda protegerla antes de seguir añadiendo
+    exigencia. Pruebas de logica, estructura y compilacion superadas.
 
 ## Decision de arquitectura
 
