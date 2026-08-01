@@ -649,6 +649,83 @@
       box-shadow: var(--shadow);
     }
 
+    .dashboard-personal-status {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid #c4d9b5;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: #f8fbf3;
+    }
+
+    .dashboard-personal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .dashboard-personal-head h3,
+    .dashboard-personal-head p {
+      margin: 0;
+    }
+
+    .dashboard-personal-head p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dashboard-personal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .personal-status-item {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .personal-status-item span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .personal-status-item strong {
+      overflow: hidden;
+      font-size: 16px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .personal-status-item small,
+    .dashboard-personal-next span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .dashboard-personal-next {
+      display: grid;
+      gap: 3px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .dashboard-personal-next strong {
+      color: var(--blue);
+      font-size: 13px;
+    }
+
     .dashboard-agenda-head {
       display: flex;
       align-items: center;
@@ -2739,6 +2816,37 @@
           </button>
         </div>
 
+        <section class="dashboard-personal-status" id="dashboardPersonalStatus" aria-labelledby="dashboardPersonalStatusTitle">
+          <div class="dashboard-personal-head">
+            <div>
+              <h3 id="dashboardPersonalStatusTitle">Estado personal</h3>
+              <p>Una lectura rápida de cómo llegas hoy y qué conviene proteger.</p>
+            </div>
+            <button class="small-button" id="dashboardPersonalStatusBtn" type="button">Registrar estado</button>
+          </div>
+          <div class="dashboard-personal-grid">
+            <div class="personal-status-item">
+              <span>Ánimo</span>
+              <strong id="dashboardMoodValue">Sin registrar</strong>
+              <small id="dashboardMoodDetail">Falta una medida</small>
+            </div>
+            <div class="personal-status-item">
+              <span>Estado físico</span>
+              <strong id="dashboardPhysicalValue">Sin registrar</strong>
+              <small id="dashboardPhysicalDetail">Energía y descanso</small>
+            </div>
+            <div class="personal-status-item">
+              <span>Carga abierta</span>
+              <strong id="dashboardLoadValue">Ligera</strong>
+              <small id="dashboardLoadDetail">Sin tareas pendientes</small>
+            </div>
+          </div>
+          <div class="dashboard-personal-next">
+            <strong id="dashboardNextActionTitle">Siguiente lectura</strong>
+            <span id="dashboardNextActionText">Registra tu estado para que el panel pueda orientarte.</span>
+          </div>
+        </section>
+
         <section class="dashboard-detail" id="dashboardMetricDetails" hidden aria-live="polite" aria-labelledby="dashboardMetricDetailsTitle">
           <div class="dashboard-detail-head">
             <div>
@@ -3760,6 +3868,12 @@
         activateTab("areas");
       });
 
+      document.getElementById("dashboardPersonalStatusBtn").addEventListener("click", () => {
+        activateTab("cierre");
+        requestAnimationFrame(() => document.getElementById("dailyCheckinTitle")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      });
+
       document.getElementById("goCloseBtn").addEventListener("click", () => {
         activateTab("cierre");
         requestAnimationFrame(() => document.getElementById("journalGrid")
@@ -3955,6 +4069,7 @@
       renderCloseState();
       renderDataSummary();
       updateScore();
+      renderPersonalStatus();
       renderDashboardMetricDetails();
       renderPillarDashboard();
       renderNutrition();
@@ -4055,6 +4170,88 @@
           : "No hay tareas pendientes en la agenda.";
         list.appendChild(empty);
       }
+    }
+
+    const personalScaleLabels = {
+      mood: ["", "Muy bajo", "Bajo", "Normal", "Bueno", "Muy bueno"],
+      energy: ["", "Muy baja", "Baja", "Normal", "Buena", "Muy buena"],
+      sleep: ["", "Muy malo", "Malo", "Normal", "Bueno", "Muy bueno"]
+    };
+
+    function personalScaleLabel(value, scale) {
+      const numeric = Number(value);
+      return personalScaleLabels[scale]?.[numeric] || "Sin registrar";
+    }
+
+    function personalStateSnapshot(day) {
+      const checkin = day.checkin || {};
+      const mood = personalScaleLabel(checkin.mood, "mood");
+      const energy = personalScaleLabel(checkin.energy, "energy");
+      const sleep = personalScaleLabel(checkin.sleep, "sleep");
+      const physicalValues = [Number(checkin.energy), Number(checkin.sleep)]
+        .filter((value) => value >= 1 && value <= 5);
+      const physicalAverage = physicalValues.length
+        ? physicalValues.reduce((sum, value) => sum + value, 0) / physicalValues.length
+        : null;
+      const physicalLabel = physicalAverage === null
+        ? "Sin registrar"
+        : physicalAverage >= 4
+          ? "Fuerte"
+          : physicalAverage >= 3
+            ? "Estable"
+            : "Bajo";
+      const openTasks = (day.tasks || [])
+        .filter((task) => !task.done && !task.dismissed && !task.carriedTo);
+      const loadLabel = openTasks.length === 0
+        ? "Ligera"
+        : openTasks.length <= 2
+          ? "Controlable"
+          : "Alta";
+      const missingCheckin = !checkin.mood || !checkin.energy || !checkin.sleep;
+      let nextActionTitle = "Siguiente lectura";
+      let nextActionText = "Registra ánimo, energía y descanso para que el panel pueda orientarte.";
+      if (!missingCheckin) {
+        nextActionTitle = physicalAverage !== null && physicalAverage < 3
+          ? "Protege tu energía"
+          : openTasks.length > 2
+            ? "Reduce la carga"
+            : "Mantén el foco";
+        nextActionText = physicalAverage !== null && physicalAverage < 3
+          ? "Usa el mínimo del día y evita llenar la agenda con más compromisos."
+          : openTasks.length > 2
+            ? "Elige una tarea principal y aparca el resto para no dispersarte."
+            : "Completa la siguiente acción prevista antes de abrir otro frente.";
+      }
+      return {
+        mood,
+        moodDetail: checkin.mood ? `Nivel ${checkin.mood}/5` : "Falta una medida",
+        physicalLabel,
+        physicalDetail: physicalValues.length
+          ? `Energía ${energy} · descanso ${sleep}`
+          : "Energía y descanso",
+        loadLabel,
+        loadDetail: openTasks.length
+          ? `${openTasks.length} tarea${openTasks.length === 1 ? "" : "s"} pendiente${openTasks.length === 1 ? "" : "s"}`
+          : "Sin tareas pendientes",
+        nextActionTitle,
+        nextActionText,
+        checkinComplete: !missingCheckin
+      };
+    }
+
+    function renderPersonalStatus() {
+      const snapshot = personalStateSnapshot(getDay());
+      document.getElementById("dashboardMoodValue").textContent = snapshot.mood;
+      document.getElementById("dashboardMoodDetail").textContent = snapshot.moodDetail;
+      document.getElementById("dashboardPhysicalValue").textContent = snapshot.physicalLabel;
+      document.getElementById("dashboardPhysicalDetail").textContent = snapshot.physicalDetail;
+      document.getElementById("dashboardLoadValue").textContent = snapshot.loadLabel;
+      document.getElementById("dashboardLoadDetail").textContent = snapshot.loadDetail;
+      document.getElementById("dashboardNextActionTitle").textContent = snapshot.nextActionTitle;
+      document.getElementById("dashboardNextActionText").textContent = snapshot.nextActionText;
+      document.getElementById("dashboardPersonalStatusBtn").textContent = snapshot.checkinComplete
+        ? "Actualizar estado"
+        : "Registrar estado";
     }
 
     function renderSelectedDay() {
