@@ -25,9 +25,18 @@ El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
 
-La seccion Semana permite cambiar entre el balance de los ultimos 7 dias y el
-balance del mes actual. Ambos muestran dias registrados, cumplimiento medio,
-tareas cumplidas, dias cerrados, ritmo por pilar e historial diario.
+La seccion Balances permite cambiar entre los ultimos 7 dias y el mes actual.
+Solo cuenta como registrado un dia que contiene actividad real. Los balances
+muestran rutina y agenda, tareas activas, cierres, ritmo por pilar e historial.
+Tambien resumen animo, energia, descanso percibido y el freno mas repetido.
+
+El cierre diario incluye una medicion breve de animo, energia, descanso y
+principal dificultad. Su objetivo no es juzgar el dia, sino descubrir con el
+uso que condiciones ayudan o dificultan el cumplimiento.
+
+El indicador situado bajo Menu muestra si los cambios estan guardados,
+sincronizandose o pendientes por falta de conexion. Al recuperar Internet la
+aplicacion vuelve a intentar el guardado automaticamente.
 
 Al cerrar el dia se puede copiar un resumen listo para compartir con Kiwi. Asi
 la aplicacion puede ser el registro principal y Kiwi puede analizar el resultado
@@ -40,9 +49,9 @@ https://antoniodeni.github.io/panel-disciplina-personal/
 ## Instalar en el movil
 
 - Android: abrir el enlace en Chrome y elegir **Instalar aplicacion** o
-  **AÃ±adir a pantalla de inicio**.
+  **Añadir a pantalla de inicio**.
 - iPhone: abrir el enlace en Safari, pulsar **Compartir** y elegir
-  **AÃ±adir a pantalla de inicio**.
+  **Añadir a pantalla de inicio**.
 
 ## Instalar en el PC
 
@@ -57,11 +66,17 @@ la barra de tareas.
 
 ## Privacidad y datos
 
-Los datos se guardan en el almacenamiento local del dispositivo. No se
-publican en GitHub ni se envian a un servidor. Cada movil u ordenador mantiene
-su propia copia. La aplicacion incluye opciones para exportar y restaurar una
-copia de seguridad. Los datos locales incluyen una version de esquema para
-migrar los cambios futuros sin perder el historial.
+GitHub no almacena datos personales. Cada cuenta autorizada guarda sus datos
+en un espacio propio de Supabase y mantiene una copia local en su dispositivo.
+Las reglas de acceso impiden que una cuenta lea los registros de otra. La
+aplicacion importa una sola vez los datos locales anteriores, combina los dias
+guardados desde distintos dispositivos y permite exportar y restaurar una copia
+de seguridad.
+
+La beta sigue cerrada. Un enlace reenviado no permite crear una cuenta. Antonio
+invita cada correo autorizado y la persona elige su propia contrasena desde el
+enlace recibido. Antes de invitar a amigos debe configurarse un servicio SMTP
+propio para que los correos sean fiables.
 
 ## Publicacion
 
