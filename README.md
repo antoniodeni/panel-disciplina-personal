@@ -25,6 +25,11 @@ El dashboard muestra el estado y el objetivo semanal de los seis pilares. El
 modulo de Alimentacion permite medir preparacion, compra, productos disponibles,
 comidas previstas, cumplimiento y una alternativa para salvar el dia.
 
+Cada pilar incluye ahora un plan de hoy, un foco practico, un minimo de rescate
+y su ritmo semanal. En Deporte, Estres, Actitud, Habitos y Descanso se puede
+añadir ese minimo directamente a la agenda principal; Alimentacion abre su
+modulo de preparacion, compra y comidas.
+
 La seccion Balances permite cambiar entre los ultimos 7 dias y el mes actual.
 Solo cuenta como registrado un dia que contiene actividad real. Los balances
 muestran rutina y agenda, tareas activas, cierres, ritmo por pilar e historial.
