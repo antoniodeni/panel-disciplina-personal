@@ -3756,14 +3756,33 @@ e lo que alimenta el bucle",
     }
 
     function bindAuthEvents() {
-      document.getElementById("authForm").addEventListener("submit", async (event) => {
+      const authForm = document.getElementById("authForm");
+      const authEmail = document.getElementById("authEmail");
+      const authPassword = document.getElementById("authPassword");
+      authForm.addEventListener("invalid", (event) => {
         event.preventDefault();
-        const email = document.getElementById("authEmail").value.trim();
-        const password = document.getElementById("authPassword").value;
+        showAuthMessage(
+          event.target === authEmail
+            ? "Escribe tu correo autorizado."
+            : "Escribe tu contrasena.",
+          "error"
+        );
+        event.target.focus();
+      }, true);
+      authForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = authEmail.value.trim();
+        const password = authPassword.value;
+        if (!email || !password) {
+          showAuthMessage(!email ? "Escribe tu correo autorizado." : "Escribe tu contrasena.", "error");
+          (!email ? authEmail : authPassword).focus();
+          return;
+        }
         const submit = document.getElementById("authSubmit");
         submit.disabled = true;
         showAuthMessage("Comprobando acceso...", "");
         try {
+          if (!authClient) throw new Error("No se pudo cargar el servicio de acceso. Recarga la pagina.");
           const { error } = await authClient.auth.signInWithPassword({ email, password });
           if (error) throw error;
         } catch (error) {
@@ -3774,7 +3793,7 @@ e lo que alimenta el bucle",
       });
 
       document.getElementById("authReset").addEventListener("click", async () => {
-        const email = document.getElementById("authEmail").value.trim();
+        const email = authEmail.value.trim();
         if (!email) {
           showAuthMessage("Escribe primero tu correo.", "error");
           return;
@@ -3783,6 +3802,14 @@ e lo que alimenta el bucle",
           redirectTo: `${location.origin}${location.pathname}`
         });
         showAuthMessage(error ? authErrorMessage(error) : "Te hemos enviado un enlace para cambiar la contraseña.", error ? "error" : "success");
+      });
+
+      [authEmail, authPassword].forEach((input) => {
+        input.addEventListener("input", () => {
+          if (document.getElementById("authStatus").classList.contains("error")) {
+            showAuthMessage("", "");
+          }
+        });
       });
 
       document.getElementById("passwordUpdateForm").addEventListener("submit", async (event) => {
@@ -3853,6 +3880,9 @@ e lo que alimenta el bucle",
         return "Se ha alcanzado el límite temporal de correos. Espera aproximadamente una hora y vuelve a intentarlo una sola vez.";
       }
       if (normalized.includes("too many requests")) return "Se han hecho demasiados intentos. Espera unos minutos antes de volver a intentarlo.";
+      if (normalized.includes("failed to fetch") || normalized.includes("networkerror") || normalized.includes("network error")) {
+        return "No se puede conectar con el servicio de acceso. Comprueba Internet y recarga la pagina.";
+      }
       return message || "No se pudo completar la operacion.";
     }
 
@@ -3887,7 +3917,8 @@ e lo que alimenta el bucle",
           balancePeriod = button.dataset.balancePeriod;
           document.querySelectorAll("[data-balance-period]").forEach((item) => {
             const active = item.dataset.balancePeriod === balancePeriod;
-            item.classList.toggle("active", active);
+            item.classList.toggle("activ
+e", active);
             item.setAttribute("aria-selected", String(active));
           });
           renderWeekly();
@@ -3917,8 +3948,7 @@ e lo que alimenta el bucle",
       });
 
       document.getElementById("appMenuBtn").addEventListener("click", toggleAppMenu);
-      document.getElementById("syncStatusBtn").
-addEventListener("click", () => {
+      document.getElementById("syncStatusBtn").addEventListener("click", () => {
         void syncRemoteStore(true);
       });
       document.getElementById("signOutBtn").addEventListener("click", () => {
@@ -4323,7 +4353,8 @@ addEventListener("click", () => {
           : "Alta";
       const missingCheckin = !checkin.mood || !checkin.energy || !checkin.sleep;
       let nextActionTitle = "Siguiente lectura";
-      let nextActionText = "Registra ánimo, energía y descanso para que el panel pueda orientarte.";
+      let nextActionText = "Registra ánimo, en
+ergía y descanso para que el panel pueda orientarte.";
       if (!missingCheckin) {
         nextActionTitle = physicalAverage !== null && physicalAverage < 3
           ? "Protege tu energía"
@@ -4350,8 +4381,7 @@ addEventListener("click", () => {
         nextActionTitle,
         nextActionText,
         checkinComplete: !missingCheckin
-    
-  };
+      };
     }
 
     function renderPersonalStatus() {
@@ -4746,7 +4776,8 @@ addEventListener("click", () => {
       const meals = getDay().nutrition.meals;
       list.innerHTML = "";
       if (!meals.length) {
-        list.innerHTML = '<div class="empty">Añade las comidas previstas para poder medir el cumplimiento.</div>';
+     
+   list.innerHTML = '<div class="empty">Añade las comidas previstas para poder medir el cumplimiento.</div>';
         return;
       }
       meals.forEach((meal) => {
@@ -4783,8 +4814,7 @@ addEventListener("click", () => {
     }
 
     function renderLifePlan() {
-      const grid = document.getElementBy
-Id("lifePlanGrid");
+      const grid = document.getElementById("lifePlanGrid");
       if (!grid) return;
       grid.innerHTML = "";
       lifePlanFields.forEach(([id, label, placeholder]) => {
@@ -5175,7 +5205,8 @@ Id("lifePlanGrid");
           save();
           renderTasks();
           renderDashboardAgenda();
-          renderPendingTasks();
+      
+    renderPendingTasks();
           renderCloseState();
           renderAreas();
           updateScore();
@@ -5207,8 +5238,7 @@ Id("lifePlanGrid");
       });
 
       const emptyMessages = {
-        now: "Marca como Principal la tarea que toca ha
-cer ahora.",
+        now: "Marca como Principal la tarea que toca hacer ahora.",
         later: "No hay tareas pendientes para despues.",
         done: "Todavia no has cerrado ninguna tarea."
       };
@@ -5596,7 +5626,8 @@ cer ahora.",
           ? nutritionDayPercent(day, key)
           : areaPercentForDay(day, areaId, key);
         return percent !== null && percent >= 70;
-      }).length;
+      }).length
+;
       const periodTarget = period === "month"
         ? Math.max(1, Math.round((target * keys.length) / 7))
         : target;
@@ -5629,8 +5660,7 @@ cer ahora.",
     function areaPercentForDay(day, areaId, dateKey = state.date) {
       const scheduledHabits = getAreaHabits(areaId)
         .filter((habit) => habit.active && isHabitScheduled(habit, dateKey));
-      const values 
-= scheduledHabits
+      const values = scheduledHabits
         .map((habit) => day.areas?.[areaId]?.[habit.id] || "none");
       const linkedTasks = (day.tasks || [])
         .filter((task) => task.area === areaId && !task.dismissed && !task.carriedTo);
@@ -6040,27 +6070,4 @@ cer ahora.",
 
     function migrateStore(store) {
       const migrated = store && typeof store === "object" ? store : {};
-      const sourceVersion = Number.isInteger(migrated.schemaVersion) ? migrated.schemaVersion : 1;
-
-      // Las versiones antiguas se completan despues con normalizeStore.
-      if (sourceVersion < 2 && !migrated.days) migrated.days = {};
-      if (sourceVersion < 3 && !migrated.objectives) migrated.objectives = {};
-      if (sourceVersion < 4 && !migrated.nutrition) migrated.nutrition = {};
-      if (sourceVersion < 5 && !migrated.updatedAt) migrated.updatedAt = null;
-      if (sourceVersion < 6 && !migrated.settings) migrated.settings = {};
-      migrated.schemaVersion = storeSchemaVersion;
-      return migrated;
-    }
-
-    function normalizeStore(store) {
-      const normalized = migrateStore(store);
-      normalized.updatedAt = normalized.updatedAt || null;
-      normalized.days = normalized.days && typeof normalized.days === "object" ? normalized.days : {};
-      normalized.lifePlan = normalized.lifePlan && typeof normalized.lifePlan === "object"
-        ? normalized.lifePlan
-        : {};
-      normalized.weeklyTargets = normalized.weeklyTargets && typeof normalized.weeklyTargets === "object"
-        ? normalized.weeklyTargets
-        : {};
-      normalized.objectives = normalizeObjectives(
-        no
+   
