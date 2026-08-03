@@ -4253,7 +4253,7 @@
       if (!isOpen) return;
 
       const day = getDay();
-      const statusLabels = { none: "Pendiente", mid: "A medías", no: "No hecho", done: "Hecho" };
+      const statusLabels = { none: "Pendiente", mid: "A medias", no: "No hecho", done: "Hecho" };
       const pendingTasks = day.tasks.filter((task) => !task.done && !task.dismissed && !task.carriedTo);
       list.innerHTML = "";
       actions.innerHTML = "";
@@ -6149,7 +6149,7 @@
       const migrated = store && typeof store === "object" ? store : {};
       const sourceVersion = Number.isInteger(migrated.schemaVersion) ? migrated.schemaVersion : 1;
 
-      // Las versiones antiguas se completan despues con normalizeStore.
+      // Las versiones antiguas se completan después con normalizeStore.
       if (sourceVersion < 2 && !migrated.days) migrated.days = {};
       if (sourceVersion < 3 && !migrated.objectives) migrated.objectives = {};
       if (sourceVersion < 4 && !migrated.nutrition) migrated.nutrition = {};
