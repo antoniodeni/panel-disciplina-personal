@@ -1,4 +1,4 @@
-const CACHE_NAME = "panel-disciplina-personal-v36";
+const CACHE_NAME = "panel-disciplina-personal-v37";
 const FILES = [
   "./",
   "./manifest.webmanifest",
@@ -33,14 +33,15 @@ self.addEventListener("fetch", (event) => {
   if (requestUrl.origin !== self.location.origin) return;
 
   if (event.request.mode === "navigate") {
+    const cacheKey = requestUrl.pathname.endsWith("/index.html") ? "./index.html" : "./";
     event.respondWith(
       fetch(event.request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put("./", copy));
+          caches.open(CACHE_NAME).then((cache) => cache.put(cacheKey, copy));
           return response;
         })
-        .catch(() => caches.match("./"))
+        .catch(() => caches.match(cacheKey).then((cached) => cached || caches.match("./index.html") || caches.match("./")))
     );
     return;
   }
