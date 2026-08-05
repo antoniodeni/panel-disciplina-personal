@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#173b2b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <title>Dinero claro</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Panel de dinero personal</p>
+          <h1>Dinero claro</h1>
+          <p class="intro">Registra lo importante y decide con datos.</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="button button-primary" id="focus-form" type="button">+ AÃ±adir movimiento</button>
+          <button class="button button-secondary" id="focus-movements" type="button">Movimientos</button>
+          <button class="button button-secondary" id="export-data" type="button">Exportar</button>
+        </div>
+      </header>
+
+      <section class="period-bar" aria-label="Periodo seleccionado">
+        <div>
+          <span class="section-kicker">Resumen</span>
+          <strong id="period-label">Este mes</strong>
+        </div>
+        <label class="month-control">
+          <span>Ver mes</span>
+          <input id="month-filter" type="month" />
+        </label>
+      </section>
+
+      <section class="summary-grid" aria-label="Resumen financiero">
+        <span id="available-value" hidden>0,00 â‚¬</span>
+        <article class="summary-card summary-card-action" data-summary-filter="income" role="button" tabindex="0" aria-label="Ver ingresos del mes">
+          <span class="summary-label">Ingresos del mes</span>
+          <strong id="income-value">0,00 â‚¬</strong>
+          <span class="summary-help" id="income-count">0 movimientos Â· Pulsa para verlos</span>
+        </article>
+        <article class="summary-card summary-card-action" data-summary-filter="expense" role="button" tabindex="0" aria-label="Ver gastos del mes">
+          <span class="summary-label">Gastos del mes</span>
+          <strong id="expense-value">0,00 â‚¬</strong>
+          <span class="summary-help" id="expense-count">0 movimientos Â· Pulsa para verlos</span>
+        </article>
+        <article class="summary-card summary-card-forecast" id="balance-card">
+          <span class="summary-label">Balance del mes</span>
+          <strong id="balance-value">0,00 EUR</strong>
+          <span class="summary-help" id="balance-help">Ingresos menos gastos.</span>
+        </article>
+      </section>
+
+      <section class="decision-panel" aria-live="polite">
+        <div class="decision-icon" aria-hidden="true">â†’</div>
+        <div>
+          <span class="section-kicker">Siguiente decisiÃ³n</span>
+          <h2 id="decision-title">Empieza por registrar un movimiento</h2>
+          <p id="decision-copy">Con un primer ingreso o gasto tendremos una lectura real de tu mes.</p>
+        </div>
+      </section>
+
+      <section class="reports-grid" aria-label="Resumenes de gastos">
+        <article class="report-card">
+          <div class="report-heading">
+            <div>
+              <span class="section-kicker">Balance semanal</span>
+              <h2 id="weekly-label">Semana actual</h2>
+            </div>
+            <span class="report-symbol">7d</span>
+          </div>
+          <strong class="report-total" id="weekly-expense">0,00 EUR</strong>
+          <p id="weekly-copy">Sin gastos registrados esta semana.</p>
+          <div class="report-detail"><span>Balance neto</span><strong id="weekly-balance">0,00 EUR</strong></div>
+          <div class="report-detail"><span>Principal</span><strong id="weekly-top">Sin datos</strong></div>
+        </article>
+        <article class="report-card">
+          <div class="report-heading">
+            <div>
+              <span class="section-kicker">Balance mensual</span>
+              <h2 id="monthly-label">Este mes</h2>
+            </div>
+            <span class="report-symbol">30d</span>
+          </div>
+          <strong class="report-total" id="monthly-expense">0,00 EUR</strong>
+          <p id="monthly-copy">Sin gastos registrados este mes.</p>
+          <div class="report-detail"><span>Balance neto</span><strong id="monthly-balance">0,00 EUR</strong></div>
+          <div class="report-detail"><span>Principal</span><strong id="monthly-top">Sin datos</strong></div>
+        </article>
+      </section>
+
+      <div class="content-grid">
+        <section class="panel form-panel" id="movement-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">Registro</span>
+              <h2 id="form-title">AÃ±adir movimiento</h2>
+            </div>
+            <button class="icon-button hidden" id="cancel-edit" type="button" aria-label="Cancelar ediciÃ³n">Ã—</button>
+          </div>
+          <form id="movement-form">
+            <input id="editing-id" type="hidden" />
+            <div class="segmented-control" role="group" aria-label="Tipo de movimiento">
+              <label><input type="radio" name="kind" value="expense" checked /> <span>Gasto</span></label>
+              <label><input type="radio" name="kind" value="income" /> <span>Ingreso</span></label>
+            </div>
+            <div class="form-grid">
+              <label class="field field-wide">
+                <span>Importe</span>
+                <div class="amount-input"><span>â‚¬</span><input id="amount" name="amount" inputmode="decimal" placeholder="0,00" required /></div>
+              </label>
+              <label class="field">
+                <span>Fecha (opcional)</span>
+                <input id="date" name="date" type="date" />
+                <small class="field-help">Si la dejas vacÃ­a, se usarÃ¡ hoy.</small>
+              </label>
+              <label class="field field-wide">
+                <span>CategorÃ­a</span>
+                <select id="category" name="category" required>
+                  <option value="Alimentacion">Alimentacion</option>
+                  <option value="Vivienda">Vivienda</option>
+                  <option value="Transporte">Transporte</option>
+                  <option value="Salud">Salud</option>
+                  <option value="Ocio">Ocio</option>
+                  <option value="Compras">Compras</option>
+                  <option value="Servicios">Servicios</option>
+                  <option value="Otros gastos">Otros gastos</option>
+                  <option value="NÃ³mina">NÃ³mina</option>
+                  <option value="PrestaciÃ³n">PrestaciÃ³n</option>
+                  <option value="Freelance">Freelance</option>
+                  <option value="Ventas">Ventas</option>
+                  <option value="Transferencia recibida">Transferencia recibida</option>
+                  <option value="DevoluciÃ³n">DevoluciÃ³n</option>
+                  <option value="Otros ingresos">Otros ingresos</option>
+                </select>
+              </label>
+              <label class="field field-wide">
+                <span>Cuenta</span>
+                <select id="account" name="account" required>
+                  <option value="Cuenta personal">Cuenta personal</option>
+                </select>
+                <small class="field-help">Cuenta unica del MVP.</small>
+              </label>
+              <label class="field field-wide">
+                <span>DescripciÃ³n</span>
+                <input id="description" name="description" maxlength="80" placeholder="Ejemplo: compra semanal" />
+              </label>
+            </div>
+            <p class="form-error" id="form-error" role="alert"></p>
+            <button class="button button-primary button-full" id="save-movement" type="submit">Guardar movimiento</button>
+          </form>
+          <p class="save-note" id="save-note">Se guarda en este dispositivo mientras validamos el flujo.</p>
+        </section>
+
+        <section class="panel transactions-panel" id="transactions-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="section-kicker">Consulta</span>
+              <h2>Movimientos</h2>
+            </div>
+            <div class="activity-tools">
+              <span class="count-badge" id="transaction-count">0</span>
+              <div class="movement-filters" role="group" aria-label="Filtrar movimientos">
+                <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">Todos</button>
+                <button class="filter-button" type="button" data-filter="expense" aria-pressed="false">Gastos</button>
+                <button class="filter-button" type="button" data-filter="income" aria-pressed="false">Ingresos</button>
+              </div>
+            </div>
+          </div>
+          <div class="transactions-list" id="transactions-list"></div>
+        </section>
+      </div>
+
+      <section class="panel foundations-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="section-kicker">Base del sistema</span>
+            <h2>Tu configuraciÃ³n</h2>
+          </div>
+          <button class="button button-danger-quiet" id="reset-data" type="button">Borrar datos locales</button>
+        </div>
+        <div class="foundation-grid">
+          <div><span class="summary-label">Cuenta activa</span><strong>Cuenta personal</strong><small>La unica cuenta del MVP. Mas adelante podremos anadir otras.</small></div>
+          <div><span class="summary-label">Moneda</span><strong>Euro (â‚¬)</strong><small>Los importes se calculan en cÃ©ntimos.</small></div>
+          <div><span class="summary-label">Siguiente mÃ³dulo</span><strong>Presupuestos</strong><small>Se aÃ±adirÃ¡ cuando el registro sea fiable.</small></div>
+        </div>
+      </section>
+
+      <footer class="footer-note">VersiÃ³n local de prueba Â· Tus datos no salen de este navegador.</footer>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./finance.js?v=8"></script>
+    <script src="./app.js?v=8"></script>
+    <script>
+      if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+      }
+    </script>
+    <script>
+      (() => {
+        const form = document.querySelector('#movement-form');
+        if (!form) return;
+
+        const today = () => {
+          const date = new Date();
+          return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        };
+        const euro = (minor) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format((Number(minor) || 0) / 100);
+        const amount = (value) => {
+          const normalized = String(value).trim().replace(',', '.');
+          if (!/^\d+(\.\d{1,2})?$/.test(normalized)) return null;
+          const [whole, decimals = ''] = normalized.split('.');
+          return Number(whole) * 100 + Number(decimals.padEnd(2, '0'));
+        };
+        const monthOf = (date) => String(date || '').slice(0, 7);
+        let editingId = '';
+        let fallbackFilter = 'all';
+        const readStored = () => JSON.parse(localStorage.getItem('dinero-claro-v1') || 'null') || {};
+        const escape = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+        const selectedMonth = () => document.querySelector('#month-filter').value || monthOf(today());
+        const renderFallback = () => {
+          const stored = readStored();
+          const transactions = Array.isArray(stored.transactions) ? stored.transactions : [];
+          const month = selectedMonth();
+          const period = transactions.filter((item) => monthOf(item.date) === month);
+          const shown = fallbackFilter === 'all' ? period : period.filter((item) => item.kind === fallbackFilter);
+          const incomeMinor = period.filter((item) => item.kind === 'income').reduce((sum, item) => sum + (Number(item.amountMinor) || 0), 0);
+          const expenseMinor = period.filter((item) => item.kind === 'expense').reduce((sum, item) => sum + (Number(item.amountMinor) || 0), 0);
+          const availableMinor = transactions.reduce((sum, item) => sum + (item.kind === 'income' ? 1 : -1) * (Number(item.amountMinor) || 0), 0);
+          const monthLabel = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(`${month}-15T12:00:00`));
+          document.querySelector('#period-label').textContent = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
+          document.querySelector('#available-value').textContent = euro(availableMinor);
+          document.querySelector('#income-value').textContent = euro(incomeMinor);
+          document.querySelector('#expense-value').textContent = euro(expenseMinor);
+          document.querySelector('#balance-value').textContent = euro(incomeMinor - expenseMinor);
+          document.querySelector('#income-count').textContent = `${period.filter((item) => item.kind === 'income').length} movimientos`;
+          document.querySelector('#expense-count').textContent = `${period.filter((item) => item.kind === 'expense').length} movimientos`;
+          document.querySelector('#monthly-expense').textContent = euro(expenseMinor);
+          document.querySelector('#monthly-balance').textContent = euro(incomeMinor - expenseMinor);
+          document.querySelector('#transaction-count').textContent = String(shown.length);
+          const list = document.querySelector('#transactions-list');
+          if (!shown.length) {
+            list.innerHTML = '<div class="empty-state"><strong>No hay movimientos que mostrar</strong><p>Registra un ingreso o gasto para verlo aqui.</p></div>';
+            return;
+          }
+          list.innerHTML = shown.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map((item) => `
+            <article class="transaction-row" data-id="${escape(item.id)}">
+              <div class="transaction-mark ${item.kind}" aria-hidden="true">${item.kind === 'income' ? '+' : '-'}</div>
+              <div class="transaction-main"><strong>${escape(item.description || item.category)}</strong><span>${escape(item.category)} Â· ${escape(item.account)} Â· ${escape(item.date)}</span></div>
+              <strong class="transaction-amount ${item.kind}">${item.kind === 'income' ? '+' : '-'}${euro(item.amountMinor)}</strong>
+              <div class="transaction-actions"><button class="text-button" data-action="edit" type="button">Editar</button><button class="text-button text-button-danger" data-action="delete" type="button">Borrar</button></div>
+            </article>`).join('');
+          list.querySelectorAll('[data-action="edit"]').forEach((button) => button.addEventListener('click', () => {
+            const item = transactions.find((transaction) => transaction.id === button.closest('[data-id]').dataset.id);
+            if (!item) return;
+            editingId = item.id;
+            document.querySelector(`input[name="kind"][value="${item.kind}"]`).checked = true;
+            document.querySelector('#amount').value = (Number(item.amountMinor) / 100).toFixed(2).replace('.', ',');
+            document.querySelector('#date').value = item.date || today();
+            document.querySelector('#category').value = item.category;
+            document.querySelector('#account').value = item.account || 'Cuenta personal';
+            document.querySelector('#description').value = item.description || '';
+            document.querySelector('#form-title').textContent = 'Editar movimiento';
+            document.querySelector('#cancel-edit').classList.remove('hidden');
+            document.querySelector('#movement-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }));
+          list.querySelectorAll('[data-action="delete"]').forEach((button) => button.addEventListener('click', () => {
+            const id = button.closest('[data-id]').dataset.id;
+            const next = transactions.filter((item) => item.id !== id);
+            localStorage.setItem('dinero-claro-v1', JSON.stringify({ ...stored, transactions: next, accounts: ['Cuenta personal'] }));
+            renderFallback();
+          }));
+        };
+
+        form.addEventListener('submit', (event) => {
+          if (globalThis.__dineroAppReady) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          const amountMinor = amount(document.querySelector('#amount').value);
+          const error = document.querySelector('#form-error');
+          if (!amountMinor || amountMinor <= 0) {
+            error.textContent = 'Escribe un importe positivo con hasta dos decimales.';
+            return;
+          }
+
+          const transaction = {
+            id: editingId || `fallback-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            kind: document.querySelector('input[name="kind"]:checked')?.value || 'expense',
+            amountMinor,
+            date: document.querySelector('#date').value || today(),
+            category: document.querySelector('#category').value || 'Otros gastos',
+            account: document.querySelector('#account').value || 'Cuenta personal',
+            description: document.querySelector('#description').value.trim(),
+            createdAt: new Date().toISOString()
+          };
+
+          try {
+            const stored = readStored();
+            const transactions = Array.isArray(stored.transactions) ? stored.transactions : [];
+            const nextTransactions = editingId
+              ? transactions.map((item) => item.id === editingId ? { ...item, ...transaction, updatedAt: new Date().toISOString() } : item)
+              : [...transactions, transaction];
+            localStorage.setItem('dinero-claro-v1', JSON.stringify({
+              ...stored,
+              transactions: nextTransactions,
+              accounts: ['Cuenta personal']
+            }));
+            editingId = '';
+            document.querySelector('#form-error').textContent = '';
+            document.querySelector('#form-title').textContent = 'AÃ±adir movimiento';
+            document.querySelector('#cancel-edit').classList.add('hidden');
+            document.querySelector('#toast').textContent = 'Movimiento guardado';
+            document.querySelector('#toast').classList.add('visible');
+            form.reset();
+            document.querySelector('#date').value = today();
+            renderFallback();
+          } catch {
+            error.textContent = 'No se pudo guardar en este navegador.';
+          }
+        }, true);
+
+        if (!globalThis.__dineroAppReady) {
+          document.querySelectorAll('[data-filter]').forEach((button) => button.addEventListener('click', () => {
+            fallbackFilter = button.dataset.filter;
+            document.querySelectorAll('[data-filter]').forEach((filterButton) => {
+              const active = filterButton === button;
+              filterButton.classList.toggle('active', active);
+              filterButton.setAttribute('aria-pressed', String(active));
+            });
+            renderFallback();
+          }));
+          document.querySelector('#focus-movements').addEventListener('click', () => document.querySelector('#transactions-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }));
+          document.querySelectorAll('[data-summary-filter]').forEach((card) => card.addEventListener('click', () => {
+            fallbackFilter = card.dataset.summaryFilter;
+            document.querySelectorAll('[data-filter]').forEach((filterButton) => {
+              const active = filterButton.dataset.filter === fallbackFilter;
+              filterButton.classList.toggle('active', active);
+              filterButton.setAttribute('aria-pressed', String(active));
+            });
+            renderFallback();
+            document.querySelector('#transactions-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }));
+          document.querySelector('#month-filter').addEventListener('change', renderFallback);
+          document.querySelector('#cancel-edit').addEventListener('click', () => {
+            editingId = '';
+            form.reset();
+            document.querySelector('#date').value = today();
+            document.querySelector('#form-title').textContent = 'AÃ±adir movimiento';
+            document.querySelector('#cancel-edit').classList.add('hidden');
+          });
+          renderFallback();
+        }
+      })();
+    </script>
+  </body>
+</html>
+
