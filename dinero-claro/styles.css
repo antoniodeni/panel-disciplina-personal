@@ -35,7 +35,11 @@ h2 { margin-bottom: 0; font-size: 1.15rem; letter-spacing: -0.02em; }
 .button-full { width: 100%; }
 .period-bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); box-shadow: var(--shadow); }
 .period-bar strong { font-size: 1.1rem; }
-.month-control { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+.month-control { display: grid; justify-items: end; gap: 6px; color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+.month-control-actions { display: flex; align-items: center; gap: 5px; }
+.month-control small { max-width: 320px; color: var(--muted); font-size: 0.7rem; font-weight: 500; text-align: right; }
+.month-button { min-height: 36px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); color: var(--green-2); padding: 0 9px; font-size: 0.78rem; font-weight: 900; }
+.month-button:hover { border-color: var(--green-2); background: var(--mint); }
 input, select { width: 100%; min-height: 44px; border: 1px solid #cdd8cf; border-radius: 8px; background: white; color: var(--ink); padding: 0 12px; outline: none; }
 input:focus, select:focus, button:focus-visible { border-color: var(--green-2); outline: 3px solid rgba(46, 107, 73, 0.18); outline-offset: 1px; }
 .month-control input { width: 148px; min-height: 36px; }
@@ -136,8 +140,10 @@ input:focus, select:focus, button:focus-visible { border-color: var(--green-2); 
 }
 @media (max-width: 520px) {
   .period-bar { align-items: flex-start; flex-direction: column; }
-  .month-control { width: 100%; justify-content: space-between; }
-  .month-control input { width: 170px; }
+  .month-control { width: 100%; justify-items: stretch; }
+  .month-control-actions { width: 100%; }
+  .month-control-actions input { flex: 1; width: auto; min-width: 0; }
+  .month-control small { max-width: none; text-align: left; }
   .summary-card { min-height: 125px; padding: 14px; }
   .summary-card strong { font-size: 1.45rem; }
   .summary-help { font-size: 0.72rem; }
