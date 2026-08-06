@@ -1,10 +1,10 @@
-const CACHE_NAME = 'dinero-claro-shell-v2';
+const CACHE_NAME = 'dinero-claro-shell-v3';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
-  './finance.js?v=9',
-  './app.js?v=9',
+  './finance.js?v=10',
+  './app.js?v=10',
   './manifest.webmanifest',
   './icon.svg'
 ];
