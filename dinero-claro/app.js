@@ -37,6 +37,9 @@ let transactionFilter = 'all';
 
 const elements = {
   monthFilter: document.querySelector('#month-filter'),
+  previousMonth: document.querySelector('#previous-month'),
+  currentMonth: document.querySelector('#current-month'),
+  nextMonth: document.querySelector('#next-month'),
   periodLabel: document.querySelector('#period-label'),
   available: document.querySelector('#available-value'),
   income: document.querySelector('#income-value'),
@@ -90,6 +93,13 @@ elements.monthFilter.addEventListener('change', () => {
   selectedMonth = elements.monthFilter.value || currentMonth();
   render();
 });
+elements.previousMonth.addEventListener('click', () => changeSelectedMonth(-1));
+elements.currentMonth.addEventListener('click', () => {
+  selectedMonth = currentMonth();
+  elements.monthFilter.value = selectedMonth;
+  render();
+});
+elements.nextMonth.addEventListener('click', () => changeSelectedMonth(1));
 
 elements.form.addEventListener('submit', handleSubmit);
 elements.cancelEdit.addEventListener('click', resetForm);
@@ -214,6 +224,7 @@ function handleSubmit(event) {
 }
 
 function render() {
+  elements.monthFilter.value = selectedMonth;
   const summary = calculateSummary(state.transactions, selectedMonth, state.startingBalanceMinor);
   const weeklyReport = calculateWeeklyReport(state.transactions);
   const monthlyReport = calculateMonthlyReport(state.transactions, selectedMonth);
@@ -233,6 +244,14 @@ function render() {
   renderDecision(summary);
   renderReports(weeklyReport, monthlyReport, monthLabel);
   renderTransactions(summary.periodTransactions);
+}
+
+function changeSelectedMonth(offset) {
+  const [year, month] = selectedMonth.split('-').map(Number);
+  const next = new Date(year, month - 1 + offset, 15);
+  selectedMonth = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`;
+  elements.monthFilter.value = selectedMonth;
+  render();
 }
 
 function renderReports(weeklyReport, monthlyReport, monthLabel) {
