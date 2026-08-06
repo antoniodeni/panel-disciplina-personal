@@ -19,13 +19,13 @@
           <p class="intro">Registra lo importante y decide con datos.</p>
         </div>
         <div class="topbar-actions">
-          <button class="button button-primary" id="focus-form" type="button">+ AÃ±adir movimiento</button>
+          <button class="button button-primary" id="focus-form" type="button">+ Añadir movimiento</button>
           <button class="button button-secondary" id="focus-movements" type="button">Movimientos</button>
           <button class="button button-secondary" id="export-data" type="button">Exportar</button>
         </div>
       </header>
 
-      <section class="period-bar" aria-label="Periodo seleccionado">
+      <section class="period-bar" aria-label="Período seleccionado">
         <div>
           <span class="section-kicker">Resumen</span>
           <strong id="period-label">Este mes</strong>
@@ -37,16 +37,16 @@
       </section>
 
       <section class="summary-grid" aria-label="Resumen financiero">
-        <span id="available-value" hidden>0,00 â‚¬</span>
+        <span id="available-value" hidden>0,00 €</span>
         <article class="summary-card summary-card-action" data-summary-filter="income" role="button" tabindex="0" aria-label="Ver ingresos del mes">
           <span class="summary-label">Ingresos del mes</span>
-          <strong id="income-value">0,00 â‚¬</strong>
-          <span class="summary-help" id="income-count">0 movimientos Â· Pulsa para verlos</span>
+          <strong id="income-value">0,00 €</strong>
+          <span class="summary-help" id="income-count">0 movimientos · Pulsa para verlos</span>
         </article>
         <article class="summary-card summary-card-action" data-summary-filter="expense" role="button" tabindex="0" aria-label="Ver gastos del mes">
           <span class="summary-label">Gastos del mes</span>
-          <strong id="expense-value">0,00 â‚¬</strong>
-          <span class="summary-help" id="expense-count">0 movimientos Â· Pulsa para verlos</span>
+          <strong id="expense-value">0,00 €</strong>
+          <span class="summary-help" id="expense-count">0 movimientos · Pulsa para verlos</span>
         </article>
         <article class="summary-card summary-card-forecast" id="balance-card">
           <span class="summary-label">Balance del mes</span>
@@ -56,15 +56,15 @@
       </section>
 
       <section class="decision-panel" aria-live="polite">
-        <div class="decision-icon" aria-hidden="true">â†’</div>
+        <div class="decision-icon" aria-hidden="true">→</div>
         <div>
-          <span class="section-kicker">Siguiente decisiÃ³n</span>
+          <span class="section-kicker">Siguiente decisión</span>
           <h2 id="decision-title">Empieza por registrar un movimiento</h2>
           <p id="decision-copy">Con un primer ingreso o gasto tendremos una lectura real de tu mes.</p>
         </div>
       </section>
 
-      <section class="reports-grid" aria-label="Resumenes de gastos">
+      <section class="reports-grid" aria-label="Resúmenes de gastos">
         <article class="report-card">
           <div class="report-heading">
             <div>
@@ -98,9 +98,9 @@
           <div class="panel-heading">
             <div>
               <span class="section-kicker">Registro</span>
-              <h2 id="form-title">AÃ±adir movimiento</h2>
+              <h2 id="form-title">Añadir movimiento</h2>
             </div>
-            <button class="icon-button hidden" id="cancel-edit" type="button" aria-label="Cancelar ediciÃ³n">Ã—</button>
+            <button class="icon-button hidden" id="cancel-edit" type="button" aria-label="Cancelar edición">×</button>
           </div>
           <form id="movement-form">
             <input id="editing-id" type="hidden" />
@@ -111,17 +111,17 @@
             <div class="form-grid">
               <label class="field field-wide">
                 <span>Importe</span>
-                <div class="amount-input"><span>â‚¬</span><input id="amount" name="amount" inputmode="decimal" placeholder="0,00" required /></div>
+                <div class="amount-input"><span>€</span><input id="amount" name="amount" inputmode="decimal" placeholder="0,00" required /></div>
               </label>
               <label class="field">
                 <span>Fecha (opcional)</span>
                 <input id="date" name="date" type="date" />
-                <small class="field-help">Si la dejas vacÃ­a, se usarÃ¡ hoy.</small>
+                <small class="field-help">Si la dejas vacía, se usará hoy.</small>
               </label>
               <label class="field field-wide">
-                <span>CategorÃ­a</span>
+                <span>Categoría</span>
                 <select id="category" name="category" required>
-                  <option value="Alimentacion">Alimentacion</option>
+                  <option value="Alimentación">Alimentación</option>
                   <option value="Vivienda">Vivienda</option>
                   <option value="Transporte">Transporte</option>
                   <option value="Salud">Salud</option>
@@ -129,12 +129,12 @@
                   <option value="Compras">Compras</option>
                   <option value="Servicios">Servicios</option>
                   <option value="Otros gastos">Otros gastos</option>
-                  <option value="NÃ³mina">NÃ³mina</option>
-                  <option value="PrestaciÃ³n">PrestaciÃ³n</option>
+                  <option value="Nómina">Nómina</option>
+                  <option value="Prestación">Prestación</option>
                   <option value="Freelance">Freelance</option>
                   <option value="Ventas">Ventas</option>
                   <option value="Transferencia recibida">Transferencia recibida</option>
-                  <option value="DevoluciÃ³n">DevoluciÃ³n</option>
+                  <option value="Devolución">Devolución</option>
                   <option value="Otros ingresos">Otros ingresos</option>
                 </select>
               </label>
@@ -143,10 +143,10 @@
                 <select id="account" name="account" required>
                   <option value="Cuenta personal">Cuenta personal</option>
                 </select>
-                <small class="field-help">Cuenta unica del MVP.</small>
+                <small class="field-help">Cuenta única del MVP.</small>
               </label>
               <label class="field field-wide">
-                <span>DescripciÃ³n</span>
+                <span>Descripción</span>
                 <input id="description" name="description" maxlength="80" placeholder="Ejemplo: compra semanal" />
               </label>
             </div>
@@ -179,22 +179,22 @@
         <div class="panel-heading">
           <div>
             <span class="section-kicker">Base del sistema</span>
-            <h2>Tu configuraciÃ³n</h2>
+            <h2>Tu configuración</h2>
           </div>
           <button class="button button-danger-quiet" id="reset-data" type="button">Borrar datos locales</button>
         </div>
         <div class="foundation-grid">
-          <div><span class="summary-label">Cuenta activa</span><strong>Cuenta personal</strong><small>La unica cuenta del MVP. Mas adelante podremos anadir otras.</small></div>
-          <div><span class="summary-label">Moneda</span><strong>Euro (â‚¬)</strong><small>Los importes se calculan en cÃ©ntimos.</small></div>
-          <div><span class="summary-label">Siguiente mÃ³dulo</span><strong>Presupuestos</strong><small>Se aÃ±adirÃ¡ cuando el registro sea fiable.</small></div>
+          <div><span class="summary-label">Cuenta activa</span><strong>Cuenta personal</strong><small>La única cuenta del MVP. Más adelante podremos añadir otras.</small></div>
+          <div><span class="summary-label">Moneda</span><strong>Euro (€)</strong><small>Los importes se calculan en céntimos.</small></div>
+          <div><span class="summary-label">Siguiente módulo</span><strong>Presupuestos</strong><small>Se añadirá cuando el registro sea fiable.</small></div>
         </div>
       </section>
 
-      <footer class="footer-note">VersiÃ³n local de prueba Â· Tus datos no salen de este navegador.</footer>
+      <footer class="footer-note">Versión local de prueba · Tus datos no salen de este navegador.</footer>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./finance.js?v=8"></script>
-    <script src="./app.js?v=8"></script>
+    <script src="./finance.js?v=9"></script>
+    <script src="./app.js?v=9"></script>
     <script>
       if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
@@ -244,13 +244,13 @@
           document.querySelector('#transaction-count').textContent = String(shown.length);
           const list = document.querySelector('#transactions-list');
           if (!shown.length) {
-            list.innerHTML = '<div class="empty-state"><strong>No hay movimientos que mostrar</strong><p>Registra un ingreso o gasto para verlo aqui.</p></div>';
+            list.innerHTML = '<div class="empty-state"><strong>No hay movimientos que mostrar</strong><p>Registra un ingreso o gasto para verlo aquí.</p></div>';
             return;
           }
           list.innerHTML = shown.slice().sort((a, b) => String(b.date).localeCompare(String(a.date))).map((item) => `
             <article class="transaction-row" data-id="${escape(item.id)}">
               <div class="transaction-mark ${item.kind}" aria-hidden="true">${item.kind === 'income' ? '+' : '-'}</div>
-              <div class="transaction-main"><strong>${escape(item.description || item.category)}</strong><span>${escape(item.category)} Â· ${escape(item.account)} Â· ${escape(item.date)}</span></div>
+              <div class="transaction-main"><strong>${escape(item.description || item.category)}</strong><span>${escape(item.category)} · ${escape(item.account)} · ${escape(item.date)}</span></div>
               <strong class="transaction-amount ${item.kind}">${item.kind === 'income' ? '+' : '-'}${euro(item.amountMinor)}</strong>
               <div class="transaction-actions"><button class="text-button" data-action="edit" type="button">Editar</button><button class="text-button text-button-danger" data-action="delete" type="button">Borrar</button></div>
             </article>`).join('');
@@ -312,7 +312,7 @@
             }));
             editingId = '';
             document.querySelector('#form-error').textContent = '';
-            document.querySelector('#form-title').textContent = 'AÃ±adir movimiento';
+            document.querySelector('#form-title').textContent = 'Añadir movimiento';
             document.querySelector('#cancel-edit').classList.add('hidden');
             document.querySelector('#toast').textContent = 'Movimiento guardado';
             document.querySelector('#toast').classList.add('visible');
@@ -350,7 +350,7 @@
             editingId = '';
             form.reset();
             document.querySelector('#date').value = today();
-            document.querySelector('#form-title').textContent = 'AÃ±adir movimiento';
+            document.querySelector('#form-title').textContent = 'Añadir movimiento';
             document.querySelector('#cancel-edit').classList.add('hidden');
           });
           renderFallback();
