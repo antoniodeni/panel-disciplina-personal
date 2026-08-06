@@ -187,7 +187,11 @@
             <span class="section-kicker">Base del sistema</span>
             <h2>Tu configuración</h2>
           </div>
-          <button class="button button-danger-quiet" id="reset-data" type="button">Borrar datos locales</button>
+          <div class="foundation-actions">
+            <button class="button button-secondary" id="import-data" type="button">Importar copia</button>
+            <input id="import-file" class="hidden" type="file" accept="application/json,.json" />
+            <button class="button button-danger-quiet" id="reset-data" type="button">Borrar datos locales</button>
+          </div>
         </div>
         <div class="foundation-grid">
           <div><span class="summary-label">Cuenta activa</span><strong>Cuenta personal</strong><small>La única cuenta del MVP. Más adelante podremos añadir otras.</small></div>
@@ -199,8 +203,8 @@
       <footer class="footer-note">Versión local de prueba · Tus datos no salen de este navegador.</footer>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./finance.js?v=10"></script>
-    <script src="./app.js?v=10"></script>
+    <script src="./finance.js?v=11"></script>
+    <script src="./app.js?v=11"></script>
     <script>
       if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
@@ -369,6 +373,30 @@
           document.querySelector('#next-month').addEventListener('click', () => {
             document.querySelector('#month-filter').value = shiftMonth(selectedMonth(), 1);
             renderFallback();
+          });
+          document.querySelector('#import-data').addEventListener('click', () => document.querySelector('#import-file').click());
+          document.querySelector('#import-file').addEventListener('change', async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            try {
+              const parsed = JSON.parse(await file.text());
+              const imported = parsed.data || parsed;
+              if (!Array.isArray(imported.transactions)) throw new Error('invalid backup');
+              if (!window.confirm('La importación sustituirá los movimientos actuales. ¿Continuar?')) return;
+              localStorage.setItem('dinero-claro-v1', JSON.stringify({
+                ...imported,
+                accounts: ['Cuenta personal'],
+                transactions: imported.transactions
+              }));
+              renderFallback();
+              document.querySelector('#toast').textContent = 'Copia importada correctamente';
+              document.querySelector('#toast').classList.add('visible');
+            } catch {
+              document.querySelector('#toast').textContent = 'No se pudo importar la copia';
+              document.querySelector('#toast').classList.add('visible');
+            } finally {
+              event.target.value = '';
+            }
           });
           document.querySelector('#cancel-edit').addEventListener('click', () => {
             editingId = '';
