@@ -1,5 +1,5 @@
 const DEFAULT_EXPENSE_CATEGORIES = [
-  'AlimentaciÃ³n',
+  'Alimentación',
   'Vivienda',
   'Transporte',
   'Salud',
@@ -7,18 +7,18 @@ const DEFAULT_EXPENSE_CATEGORIES = [
   'Compras',
   'Servicios',
   'Suscripciones',
-  'EducaciÃ³n',
+  'Educación',
   'Deudas',
   'Otros gastos'
 ];
 
 const DEFAULT_INCOME_CATEGORIES = [
-  'NÃ³mina',
-  'PrestaciÃ³n',
+  'Nómina',
+  'Prestación',
   'Freelance',
   'Ventas',
   'Transferencia recibida',
-  'DevoluciÃ³n',
+  'Devolución',
   'Otros ingresos'
 ];
 
@@ -57,9 +57,9 @@ function validateTransaction(input, categories = DEFAULT_CATEGORIES, accounts = 
   const date = String(input.date || todayIso());
   if (!amountMinor || amountMinor <= 0) return { ok: false, error: 'Escribe un importe positivo con hasta dos decimales.' };
   if (!['income', 'expense'].includes(input.kind)) return { ok: false, error: 'Elige si es un gasto o un ingreso.' };
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { ok: false, error: 'Selecciona una fecha vÃ¡lida.' };
-  if (!categories.includes(input.category)) return { ok: false, error: 'Selecciona una categorÃ­a vÃ¡lida.' };
-  if (!accounts.includes(input.account)) return { ok: false, error: 'Selecciona una cuenta vÃ¡lida.' };
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { ok: false, error: 'Selecciona una fecha válida.' };
+  if (!categories.includes(input.category)) return { ok: false, error: 'Selecciona una categoría válida.' };
+  if (!accounts.includes(input.account)) return { ok: false, error: 'Selecciona una cuenta válida.' };
   return {
     ok: true,
     value: {
