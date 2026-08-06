@@ -75,6 +75,8 @@ const elements = {
   monthlyCopy: document.querySelector('#monthly-copy'),
   monthlyTop: document.querySelector('#monthly-top'),
   transactionsPanel: document.querySelector('#transactions-panel'),
+  importData: document.querySelector('#import-data'),
+  importFile: document.querySelector('#import-file'),
   movementFilters: [...document.querySelectorAll('[data-filter]')],
   summaryCards: [...document.querySelectorAll('[data-summary-filter]')]
 };
@@ -129,6 +131,8 @@ elements.summaryCards.forEach((card) => {
   });
 });
 document.querySelector('#export-data').addEventListener('click', exportData);
+elements.importData.addEventListener('click', () => elements.importFile.click());
+elements.importFile.addEventListener('change', importData);
 document.querySelector('#reset-data').addEventListener('click', resetData);
 
 render();
@@ -364,6 +368,56 @@ function exportData() {
   link.click();
   URL.revokeObjectURL(url);
   showToast('Copia exportada');
+}
+
+async function importData(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  try {
+    const parsed = JSON.parse(await file.text());
+    const imported = parsed.data || parsed;
+    if (!Array.isArray(imported.transactions)) throw new Error('invalid backup');
+
+    const categories = Array.isArray(imported.categories) && imported.categories.length
+      ? imported.categories
+      : DEFAULT_CATEGORIES;
+    const transactions = imported.transactions.map((transaction) => {
+      const amount = Number(transaction.amountMinor);
+      if (!Number.isFinite(amount) || amount <= 0) throw new Error('invalid amount');
+      const result = validateTransaction({
+        kind: transaction.kind,
+        amount: (amount / 100).toFixed(2),
+        date: transaction.date,
+        category: transaction.category,
+        account: DEFAULT_ACCOUNTS[0],
+        description: transaction.description
+      }, categories, DEFAULT_ACCOUNTS);
+      if (!result.ok) throw new Error(result.error);
+      return {
+        id: String(transaction.id || makeId()),
+        ...result.value,
+        createdAt: transaction.createdAt || new Date().toISOString(),
+        updatedAt: transaction.updatedAt || new Date().toISOString()
+      };
+    });
+
+    if (!window.confirm('La importación sustituirá los movimientos actuales. ¿Continuar?')) return;
+    state = {
+      ...createInitialState(),
+      categories,
+      transactions
+    };
+    selectedMonth = currentMonth();
+    elements.monthFilter.value = selectedMonth;
+    if (!saveState()) throw new Error('save failed');
+    resetForm();
+    render();
+    showToast('Copia importada correctamente');
+  } catch {
+    showToast('No se pudo importar la copia');
+  } finally {
+    event.target.value = '';
+  }
 }
 
 function resetData() {
