@@ -227,7 +227,7 @@ function render() {
   elements.balanceCard.classList.remove('balance-positive', 'balance-negative', 'balance-neutral');
   const balanceClass = balanceMinor > 0 ? 'balance-positive' : balanceMinor < 0 ? 'balance-negative' : 'balance-neutral';
   elements.balanceCard.classList.add(balanceClass);
-  elements.balanceHelp.textContent = balanceMinor > 0 ? 'Hay mÃ¡s ingresos que gastos.' : balanceMinor < 0 ? 'Hay mÃ¡s gastos que ingresos.' : 'Ingresos y gastos estÃ¡n igualados.';
+  elements.balanceHelp.textContent = balanceMinor > 0 ? 'Hay más ingresos que gastos.' : balanceMinor < 0 ? 'Hay más gastos que ingresos.' : 'Ingresos y gastos están igualados.';
   elements.incomeCount.textContent = `${summary.incomeCount} ${summary.incomeCount === 1 ? 'movimiento' : 'movimientos'}`;
   elements.expenseCount.textContent = `${summary.expenseCount} ${summary.expenseCount === 1 ? 'movimiento' : 'movimientos'}`;
   renderDecision(summary);
@@ -240,12 +240,12 @@ function renderReports(weeklyReport, monthlyReport, monthLabel) {
   elements.weeklyExpense.textContent = formatEuro(weeklyReport.expenseMinor);
   elements.weeklyBalance.textContent = formatEuro(weeklyReport.incomeMinor - weeklyReport.expenseMinor);
   elements.weeklyCopy.textContent = weeklyReport.expenseCount ? `${weeklyReport.expenseCount} ${weeklyReport.expenseCount === 1 ? 'gasto registrado' : 'gastos registrados'} esta semana.` : 'Sin gastos registrados esta semana.';
-  elements.weeklyTop.textContent = weeklyReport.topCategory ? `${weeklyReport.topCategory} Â· ${formatEuro(weeklyReport.topCategoryMinor)}` : 'Sin datos';
+  elements.weeklyTop.textContent = weeklyReport.topCategory ? `${weeklyReport.topCategory} · ${formatEuro(weeklyReport.topCategoryMinor)}` : 'Sin datos';
   elements.monthlyLabel.textContent = monthLabel;
   elements.monthlyExpense.textContent = formatEuro(monthlyReport.expenseMinor);
   elements.monthlyBalance.textContent = formatEuro(monthlyReport.incomeMinor - monthlyReport.expenseMinor);
   elements.monthlyCopy.textContent = monthlyReport.expenseCount ? `${monthlyReport.expenseCount} ${monthlyReport.expenseCount === 1 ? 'gasto registrado' : 'gastos registrados'} este mes.` : 'Sin gastos registrados este mes.';
-  elements.monthlyTop.textContent = monthlyReport.topCategory ? `${monthlyReport.topCategory} Â· ${formatEuro(monthlyReport.topCategoryMinor)}` : 'Sin datos';
+  elements.monthlyTop.textContent = monthlyReport.topCategory ? `${monthlyReport.topCategory} · ${formatEuro(monthlyReport.topCategoryMinor)}` : 'Sin datos';
 }
 
 function renderDecision(summary) {
@@ -257,12 +257,12 @@ function renderDecision(summary) {
   }
   if (summary.expenseMinor > summary.incomeMinor && summary.incomeMinor > 0) {
     elements.decisionTitle.textContent = 'Tus gastos superan tus ingresos este mes';
-    elements.decisionCopy.textContent = 'Revisa los movimientos y decide quÃ© gasto puedes ajustar antes de cerrar el mes.';
+    elements.decisionCopy.textContent = 'Revisa los movimientos y decide qué gasto puedes ajustar antes de cerrar el mes.';
     return;
   }
   if (summary.availableMinor < 0) {
-    elements.decisionTitle.textContent = 'El disponible estÃ¡ en negativo';
-    elements.decisionCopy.textContent = 'Comprueba los Ãºltimos gastos y registra cualquier ingreso pendiente.';
+    elements.decisionTitle.textContent = 'El disponible está en negativo';
+    elements.decisionCopy.textContent = 'Comprueba los últimos gastos y registra cualquier ingreso pendiente.';
     return;
   }
   elements.decisionTitle.textContent = 'Sigue registrando lo importante';
@@ -274,7 +274,7 @@ function renderTransactions(transactions) {
   const sorted = [...filtered].sort((a, b) => b.date.localeCompare(a.date));
   elements.count.textContent = String(sorted.length);
   if (!sorted.length) {
-    elements.list.innerHTML = '<div class="empty-state"><strong>AÃºn no hay movimientos</strong><p>Registra tu primer ingreso o gasto para empezar a ver el estado del mes.</p><button class="button button-secondary" data-action="focus-form" type="button">AÃ±adir el primero</button></div>';
+    elements.list.innerHTML = '<div class="empty-state"><strong>Aún no hay movimientos</strong><p>Registra tu primer ingreso o gasto para empezar a ver el estado del mes.</p><button class="button button-secondary" data-action="focus-form" type="button">Añadir el primero</button></div>';
     elements.list.querySelector('[data-action="focus-form"]').addEventListener('click', () => elements.amount.focus());
     return;
   }
@@ -286,10 +286,10 @@ function transactionRow(transaction) {
   row.className = 'transaction-row';
   const sign = transaction.kind === 'income' ? '+' : '-';
   row.innerHTML = `
-    <div class="transaction-mark ${transaction.kind}" aria-hidden="true">${transaction.kind === 'income' ? 'â†‘' : 'â†“'}</div>
+    <div class="transaction-mark ${transaction.kind}" aria-hidden="true">${transaction.kind === 'income' ? '↑' : '↓'}</div>
     <div class="transaction-main">
       <strong>${escapeHtml(transaction.description || transaction.category)}</strong>
-      <span>${escapeHtml(transaction.category)} Â· ${escapeHtml(transaction.account)} Â· ${formatDate(transaction.date)}</span>
+      <span>${escapeHtml(transaction.category)} · ${escapeHtml(transaction.account)} · ${formatDate(transaction.date)}</span>
     </div>
     <strong class="transaction-amount ${transaction.kind}">${sign}${formatEuro(transaction.amountMinor)}</strong>
     <div class="transaction-actions">
@@ -320,7 +320,7 @@ function startEdit(id) {
 function resetForm() {
   elements.form.reset();
   elements.editingId.value = '';
-  elements.formTitle.textContent = 'AÃ±adir movimiento';
+  elements.formTitle.textContent = 'Añadir movimiento';
   elements.cancelEdit.classList.add('hidden');
   elements.date.value = todayIso();
   populateCategorySelect('expense');
@@ -329,7 +329,7 @@ function resetForm() {
 
 function deleteTransaction(id) {
   const transaction = state.transactions.find((item) => item.id === id);
-  if (!transaction || !window.confirm('Â¿Borrar este movimiento?')) return;
+  if (!transaction || !window.confirm('¿Borrar este movimiento?')) return;
   state.transactions = state.transactions.filter((item) => item.id !== id);
   saveState();
   showToast('Movimiento borrado');
@@ -348,7 +348,7 @@ function exportData() {
 }
 
 function resetData() {
-  if (!state.transactions.length || window.confirm('Se borrarÃ¡n todos los movimientos guardados en este navegador. Â¿Continuar?')) {
+  if (!state.transactions.length || window.confirm('Se borrarán todos los movimientos guardados en este navegador. ¿Continuar?')) {
     state = createInitialState();
     saveState();
     resetForm();
