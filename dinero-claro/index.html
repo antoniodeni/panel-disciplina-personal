@@ -30,10 +30,16 @@
           <span class="section-kicker">Resumen</span>
           <strong id="period-label">Este mes</strong>
         </div>
-        <label class="month-control">
-          <span>Ver mes</span>
-          <input id="month-filter" type="month" />
-        </label>
+        <div class="month-control">
+          <span>Mes visible</span>
+          <div class="month-control-actions">
+            <button class="month-button" id="previous-month" type="button" aria-label="Ver mes anterior">←</button>
+            <input id="month-filter" type="month" aria-label="Seleccionar mes" />
+            <button class="month-button" id="current-month" type="button">Hoy</button>
+            <button class="month-button" id="next-month" type="button" aria-label="Ver mes siguiente">→</button>
+          </div>
+          <small>El mes actual se abre por defecto. Usa estos controles para consultar tu historial.</small>
+        </div>
       </section>
 
       <section class="summary-grid" aria-label="Resumen financiero">
@@ -153,7 +159,7 @@
             <p class="form-error" id="form-error" role="alert"></p>
             <button class="button button-primary button-full" id="save-movement" type="submit">Guardar movimiento</button>
           </form>
-          <p class="save-note" id="save-note">Se guarda en este dispositivo mientras validamos el flujo.</p>
+          <p class="save-note" id="save-note">Cada movimiento se guarda en este dispositivo y permanece al volver a abrir la app.</p>
         </section>
 
         <section class="panel transactions-panel" id="transactions-panel">
@@ -193,8 +199,8 @@
       <footer class="footer-note">Versión local de prueba · Tus datos no salen de este navegador.</footer>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./finance.js?v=9"></script>
-    <script src="./app.js?v=9"></script>
+    <script src="./finance.js?v=10"></script>
+    <script src="./app.js?v=10"></script>
     <script>
       if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
@@ -222,6 +228,11 @@
         const readStored = () => JSON.parse(localStorage.getItem('dinero-claro-v1') || 'null') || {};
         const escape = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
         const selectedMonth = () => document.querySelector('#month-filter').value || monthOf(today());
+        const shiftMonth = (month, offset) => {
+          const [year, monthNumber] = month.split('-').map(Number);
+          const next = new Date(year, monthNumber - 1 + offset, 15);
+          return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`;
+        };
         const renderFallback = () => {
           const stored = readStored();
           const transactions = Array.isArray(stored.transactions) ? stored.transactions : [];
@@ -232,6 +243,7 @@
           const expenseMinor = period.filter((item) => item.kind === 'expense').reduce((sum, item) => sum + (Number(item.amountMinor) || 0), 0);
           const availableMinor = transactions.reduce((sum, item) => sum + (item.kind === 'income' ? 1 : -1) * (Number(item.amountMinor) || 0), 0);
           const monthLabel = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(new Date(`${month}-15T12:00:00`));
+          document.querySelector('#month-filter').value = month;
           document.querySelector('#period-label').textContent = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
           document.querySelector('#available-value').textContent = euro(availableMinor);
           document.querySelector('#income-value').textContent = euro(incomeMinor);
@@ -346,6 +358,18 @@
             document.querySelector('#transactions-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
           }));
           document.querySelector('#month-filter').addEventListener('change', renderFallback);
+          document.querySelector('#previous-month').addEventListener('click', () => {
+            document.querySelector('#month-filter').value = shiftMonth(selectedMonth(), -1);
+            renderFallback();
+          });
+          document.querySelector('#current-month').addEventListener('click', () => {
+            document.querySelector('#month-filter').value = monthOf(today());
+            renderFallback();
+          });
+          document.querySelector('#next-month').addEventListener('click', () => {
+            document.querySelector('#month-filter').value = shiftMonth(selectedMonth(), 1);
+            renderFallback();
+          });
           document.querySelector('#cancel-edit').addEventListener('click', () => {
             editingId = '';
             form.reset();
