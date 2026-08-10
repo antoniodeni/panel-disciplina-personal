@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#173b2b" />
+  <title>Centro de Conocimiento</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand-copy"><span class="eyebrow">Memoria operativa</span><h1>Centro de Conocimiento</h1><p>Guarda lo que aprendemos y vuelve a encontrarlo cuando lo necesites.</p></div>
+      <div class="top-actions"><a class="button button-primary" href="../hub-trabajo-personal/index.html">Hub de trabajo</a><button class="button button-secondary" id="import-data" type="button">Importar</button><button class="button button-secondary" id="export-data" type="button">Exportar</button></div>
+      <input id="import-file" type="file" accept="application/json,.json" hidden />
+    </header>
+
+    <section class="stats-grid" aria-label="Resumen"><article class="stat-card"><span>Notas</span><strong id="notes-count">0</strong><small>Guardadas</small></article><article class="stat-card"><span>Proyectos</span><strong id="projects-count">0</strong><small>En marcha o en espera</small></article><article class="stat-card"><span>Fijadas</span><strong id="pinned-count">0</strong><small>Importantes</small></article><article class="stat-card"><span>Procedimientos</span><strong id="procedures-count">0</strong><small>Para reutilizar</small></article></section>
+
+    <section class="workspace-grid">
+      <section class="panel editor-panel">
+        <div class="panel-heading"><div><span class="eyebrow">Registro</span><h2 id="form-title">Nueva nota</h2></div><button class="icon-button hidden" id="cancel-edit" type="button" aria-label="Cancelar edici&oacute;n">&times;</button></div>
+        <form id="note-form" novalidate>
+          <input id="editing-id" type="hidden" />
+          <label class="field"><span>T&iacute;tulo *</span><input id="note-title" required maxlength="160" placeholder="Ejemplo: C&oacute;mo publicar una app en GitHub Pages" /></label>
+          <div class="form-grid"><label class="field"><span>Tipo</span><select id="note-type"></select></label><label class="field"><span>&Aacute;rea</span><select id="note-area"></select></label></div>
+          <label class="field"><span>Contenido *</span><textarea id="note-content" required maxlength="10000" rows="10" placeholder="Escribe los pasos, contexto o decisi&oacute;n..."></textarea></label>
+          <div class="form-grid"><label class="field"><span>Pr&oacute;xima acci&oacute;n <small>(opcional)</small></span><input id="note-next-action" maxlength="240" placeholder="Ejemplo: probar el siguiente paso" /></label><label class="field"><span>Estado</span><select id="note-status"></select></label></div>
+          <label class="field"><span>Fecha de revisi&oacute;n <small>(opcional)</small></span><input id="note-review-date" type="date" /></label>
+          <label class="field"><span>Etiquetas separadas por comas</span><input id="note-tags" maxlength="400" placeholder="github, publicaci&oacute;n, apps" /></label>
+          <label class="check-field"><input id="note-pinned" type="checkbox" /><span>Fijar esta nota</span></label>
+          <p class="form-error" id="form-error" role="alert"></p>
+          <button class="button button-primary save-button" id="save-note" type="submit">Guardar nota</button>
+        </form>
+        <p class="storage-status" id="storage-status" role="status"></p>
+      </section>
+
+      <section class="panel library-panel">
+        <div class="panel-heading"><div><span class="eyebrow">Biblioteca</span><h2>Notas guardadas</h2></div><span class="counter" id="visible-count">0</span></div>
+        <div class="filter-grid"><label class="field"><span>Buscar</span><input id="note-search" type="search" placeholder="T&iacute;tulo, contenido o etiqueta" /></label><label class="field"><span>Tipo</span><select id="type-filter"><option value="all">Todos</option></select></label><label class="field"><span>&Aacute;rea</span><select id="area-filter"><option value="all">Todas</option></select></label></div>
+        <div id="note-list" class="note-list"></div>
+      </section>
+    </section>
+    <p class="privacy-note">Las notas se guardan en este navegador. Usa Exportar para guardar una copia.</p>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <script src="./knowledge.js?v=3"></script>
+  <script src="./app.js?v=3"></script>
+  <script>if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));</script>
+</body>
+</html>
+
