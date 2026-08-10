@@ -1,3 +1,4 @@
+(() => {
 const DEFAULT_EXPENSE_CATEGORIES = [
   'Alimentación',
   'Vivienda',
@@ -162,4 +163,5 @@ globalThis.DineroFinance = {
   calculateMonthlyReport,
   makeId
 };
+})();
 
