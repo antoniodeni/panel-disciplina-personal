@@ -1,0 +1,13 @@
+{
+  "name": "Centro de Conocimiento",
+  "short_name": "Conocimiento",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f1",
+  "theme_color": "#173b2b",
+  "description": "Memoria operativa personal para guardar procedimientos, decisiones y aprendizajes.",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+
