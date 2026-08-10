@@ -19,6 +19,7 @@
           <p class="intro">Registra lo importante y decide con datos.</p>
         </div>
         <div class="topbar-actions">
+          <a class="button button-secondary" href="https://antoniodeni.github.io/panel-disciplina-personal/">Línea Constructiva</a>
           <button class="button button-primary" id="focus-form" type="button">+ Añadir movimiento</button>
           <button class="button button-secondary" id="focus-movements" type="button">Movimientos</button>
           <button class="button button-secondary" id="export-data" type="button">Exportar</button>
@@ -108,7 +109,7 @@
             </div>
             <button class="icon-button hidden" id="cancel-edit" type="button" aria-label="Cancelar edición">×</button>
           </div>
-          <form id="movement-form">
+          <form id="movement-form" novalidate>
             <input id="editing-id" type="hidden" />
             <div class="segmented-control" role="group" aria-label="Tipo de movimiento">
               <label><input type="radio" name="kind" value="expense" checked /> <span>Gasto</span></label>
@@ -203,8 +204,8 @@
       <footer class="footer-note">Versión local de prueba · Tus datos no salen de este navegador.</footer>
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./finance.js?v=11"></script>
-    <script src="./app.js?v=11"></script>
+    <script src="./finance.js?v=12"></script>
+    <script src="./app.js?v=12"></script>
     <script>
       if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
         window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
