@@ -1,0 +1,40 @@
+:root { color-scheme: light; --ink: #173b2b; --muted: #607267; --line: #d6e0d5; --soft: #edf4eb; --paper: #fff; --gold: #c58b00; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; color: var(--ink); background: #f3f6f1; }
+button, input { font: inherit; }
+.app-shell { width: min(1120px, 100%); margin: 0 auto; padding: 24px; }
+.topbar { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-top: 5px solid var(--gold); border-radius: 10px; box-shadow: 0 12px 28px rgba(23, 59, 43, .06); }
+.topbar h1 { margin: 5px 0 8px; font-size: clamp(1.7rem, 4vw, 2.6rem); }
+.topbar p { margin: 0; color: var(--muted); }
+.eyebrow { display: block; color: #4e7852; font-size: .74rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+.date-badge { padding: 12px 15px; color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 7px; font-weight: 800; text-transform: capitalize; white-space: nowrap; }
+.panel, .app-card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 25px rgba(23, 59, 43, .04); }
+.focus-panel { margin: 18px 0 28px; padding: 22px; border-left: 4px solid var(--gold); }
+.panel-heading, .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+h2, h3 { margin: 4px 0 0; }
+h2 { font-size: 1.35rem; }
+.save-state, .section-note { color: var(--muted); font-size: .8rem; }
+.focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: block; margin-top: 17px; }
+.field > span { display: block; margin-bottom: 6px; color: #53685a; font-size: .82rem; font-weight: 800; }
+input { width: 100%; padding: 12px; color: var(--ink); background: #fbfdfb; border: 1px solid #cbd8c9; border-radius: 7px; outline: none; }
+input:focus { border-color: #5a8959; box-shadow: 0 0 0 3px rgba(90, 137, 89, .14); }
+.apps-section { padding: 0 2px; }
+.apps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.app-card { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center; padding: 18px; border-top: 4px solid #5a8959; }
+.app-money { border-top-color: var(--gold); }
+.app-knowledge { border-top-color: #66809a; }
+.app-icon { display: grid; width: 52px; height: 52px; place-items: center; color: #fff; background: var(--ink); border-radius: 10px; font-size: .9rem; font-weight: 900; }
+.app-money .app-icon { background: #9b7200; }
+.app-knowledge .app-icon { background: #486985; }
+.app-copy { min-width: 0; }
+.app-copy h3 { overflow-wrap: anywhere; }
+.app-copy p { margin: 7px 0 0; color: var(--muted); font-size: .87rem; line-height: 1.4; }
+.button { grid-column: 1 / -1; display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 9px 14px; color: #fff; background: var(--ink); border: 1px solid var(--ink); border-radius: 7px; font-weight: 800; text-decoration: none; transition: transform .15s ease, background .15s ease; }
+.button:hover { background: #25563f; transform: translateY(-1px); }
+.privacy-note { margin: 19px 2px; color: var(--muted); font-size: .82rem; line-height: 1.4; text-align: center; }
+.toast { position: fixed; right: 22px; bottom: 22px; z-index: 4; padding: 12px 16px; color: #fff; background: var(--ink); border-radius: 7px; opacity: 0; pointer-events: none; transform: translateY(10px); transition: opacity .2s ease, transform .2s ease; }
+.toast.visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 800px) { .app-shell { padding: 14px; } .topbar { align-items: stretch; flex-direction: column; padding: 18px; } .date-badge { align-self: flex-start; } .apps-grid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .focus-panel { padding: 16px; } .focus-grid { grid-template-columns: 1fr; gap: 0; } .panel-heading, .section-heading { align-items: flex-start; flex-direction: column; } .app-card { grid-template-columns: auto 1fr; padding: 15px; } }
+
