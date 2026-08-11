@@ -48,7 +48,15 @@ function knowledgeOverview() {
   const notes = Array.isArray(source.notes) ? source.notes : [];
   const active = notes.filter((note) => note.status === 'active').length;
   const pinned = notes.filter((note) => note.pinned).length;
-  return { count: notes.length, active, pinned };
+  const withAction = notes.filter((note) => String(note.nextAction || '').trim());
+  withAction.sort((left, right) => {
+    const pinnedFirst = Number(Boolean(right.pinned)) - Number(Boolean(left.pinned));
+    if (pinnedFirst) return pinnedFirst;
+    const activeFirst = Number(right.status === 'active') - Number(left.status === 'active');
+    if (activeFirst) return activeFirst;
+    return String(right.updatedAt || '').localeCompare(String(left.updatedAt || ''));
+  });
+  return { count: notes.length, active, pinned, next: withAction[0] || null };
 }
 function renderOverview() {
   const money = moneyOverview();
@@ -63,6 +71,15 @@ function renderOverview() {
   document.querySelector('#knowledge-detail').textContent = knowledge.count
     ? `${knowledge.active} en marcha · ${knowledge.pinned} fijadas`
     : 'Aún sin notas guardadas';
+  const nextAction = document.querySelector('#knowledge-next-action');
+  const nextSource = document.querySelector('#knowledge-next-source');
+  if (knowledge.next) {
+    nextAction.textContent = knowledge.next.nextAction;
+    nextSource.textContent = knowledge.next.title || 'Nota de Centro de Conocimiento';
+  } else {
+    nextAction.textContent = 'Aún no hay una siguiente acción registrada.';
+    nextSource.textContent = 'Abre Centro de Conocimiento y añade una acción a una nota o proyecto.';
+  }
   document.querySelector('#overview-updated').textContent = 'Datos de este dispositivo';
 }
 function saveQuickCapture(event) {
