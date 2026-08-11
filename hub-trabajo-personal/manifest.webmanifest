@@ -1,0 +1,13 @@
+{
+  "name": "Hub de Trabajo Personal",
+  "short_name": "Hub Personal",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f1",
+  "theme_color": "#173b2b",
+  "description": "Entrada personal a las aplicaciones de trabajo.",
+  "icons": [{ "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+
