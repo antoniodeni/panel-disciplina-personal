@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#173b2b" />
+  <title>Hub de Trabajo Personal</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div><span class="eyebrow">Centro de mando</span><h1>Hub de Trabajo Personal</h1><p>Una entrada clara para decidir qu&eacute; toca ahora.</p></div>
+      <time id="today" class="date-badge"></time>
+    </header>
+
+    <section class="focus-panel panel">
+      <div class="panel-heading"><div><span class="eyebrow">Prioridad del d&iacute;a</span><h2>Deja claro el siguiente paso</h2></div><span id="save-state" class="save-state">Guardado local</span></div>
+      <div class="focus-grid">
+        <label class="field"><span>Foco de hoy</span><input id="focus" maxlength="180" placeholder="Ejemplo: terminar la primera versi&oacute;n de una app" /></label>
+        <label class="field"><span>Siguiente acci&oacute;n</span><input id="next-action" maxlength="240" placeholder="Ejemplo: escribir el formulario principal" /></label>
+      </div>
+    </section>
+
+    <section class="apps-section">
+      <div class="section-heading"><div><span class="eyebrow">Mis herramientas</span><h2>Abre donde toca trabajar</h2></div><span class="section-note">Tres entradas, una decisi&oacute;n</span></div>
+      <div class="apps-grid">
+        <article class="app-card app-discipline"><div class="app-icon">LC</div><div class="app-copy"><h3>L&iacute;nea Constructiva</h3><p>H&aacute;bitos, rutinas y balance personal.</p></div><a class="button button-primary" href="https://antoniodeni.github.io/panel-disciplina-personal/">Abrir</a></article>
+        <article class="app-card app-money"><div class="app-icon">&euro;</div><div class="app-copy"><h3>Dinero Personal</h3><p>Ingresos, gastos y balance mensual.</p></div><a class="button button-primary" href="https://antoniodeni.github.io/panel-disciplina-personal/dinero-claro/">Abrir</a></article>
+        <article class="app-card app-knowledge"><div class="app-icon">CC</div><div class="app-copy"><h3>Centro de Conocimiento</h3><p>Proyectos, procedimientos y decisiones.</p></div><a class="button button-primary" href="https://antoniodeni.github.io/panel-disciplina-personal/centro-conocimiento/">Abrir</a></article>
+      </div>
+    </section>
+
+    <p class="privacy-note">El Hub guarda solo tu foco y tu siguiente acci&oacute;n en este navegador. Las apps mantienen sus propios datos.</p>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+  <script src="./app.js?v=1"></script>
+  <script>if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));</script>
+</body>
+</html>
+
