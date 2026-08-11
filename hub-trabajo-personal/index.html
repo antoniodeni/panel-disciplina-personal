@@ -23,6 +23,36 @@
       </div>
     </section>
 
+    <section class="overview-section" aria-labelledby="overview-title">
+      <div class="section-heading"><div><span class="eyebrow">Vista r&aacute;pida</span><h2 id="overview-title">Lo que tienes en marcha</h2></div><span id="overview-updated" class="section-note">Se actualiza al volver al Hub</span></div>
+      <div class="overview-grid">
+        <a class="overview-card money-overview" href="https://antoniodeni.github.io/panel-disciplina-personal/dinero-claro/">
+          <span class="overview-icon" aria-hidden="true">&euro;</span>
+          <span class="overview-copy"><strong>Dinero este mes</strong><small id="money-detail">A&uacute;n sin movimientos</small></span>
+          <strong id="money-balance" class="overview-value">0,00 &euro;</strong>
+        </a>
+        <a class="overview-card knowledge-overview" href="https://antoniodeni.github.io/panel-disciplina-personal/centro-conocimiento/">
+          <span class="overview-icon" aria-hidden="true">CC</span>
+          <span class="overview-copy"><strong>Conocimiento</strong><small id="knowledge-detail">A&uacute;n sin notas</small></span>
+          <strong id="knowledge-count" class="overview-value">0</strong>
+        </a>
+        <a class="overview-card discipline-overview" href="https://antoniodeni.github.io/panel-disciplina-personal/">
+          <span class="overview-icon" aria-hidden="true">LC</span>
+          <span class="overview-copy"><strong>L&iacute;nea Constructiva</strong><small>Abre tu estado, rutina y cierre del d&iacute;a</small></span>
+          <span class="overview-arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="capture-panel panel" aria-labelledby="capture-title">
+      <div class="panel-heading"><div><span class="eyebrow">Captura r&aacute;pida</span><h2 id="capture-title">Apunta una idea antes de que se pierda</h2></div><span class="section-note">Se guarda en Centro de Conocimiento</span></div>
+      <form id="quick-capture-form" class="capture-form">
+        <label class="sr-only" for="quick-capture">Nueva idea</label>
+        <input id="quick-capture" maxlength="160" placeholder="Ejemplo: preparar una propuesta para un nuevo cliente" required />
+        <button class="button button-primary" type="submit">Guardar idea</button>
+      </form>
+    </section>
+
     <section class="apps-section">
       <div class="section-heading"><div><span class="eyebrow">Mis herramientas</span><h2>Abre donde toca trabajar</h2></div><span class="section-note">Tres entradas, una decisi&oacute;n</span></div>
       <div class="apps-grid">
@@ -35,7 +65,7 @@
     <p class="privacy-note">El Hub guarda solo tu foco y tu siguiente acci&oacute;n en este navegador. Las apps mantienen sus propios datos.</p>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
   </main>
-  <script src="./app.js?v=1"></script>
+  <script src="./app.js?v=2"></script>
   <script>if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));</script>
 </body>
 </html>
