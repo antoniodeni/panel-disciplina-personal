@@ -1,5 +1,5 @@
-const CACHE_NAME = 'hub-trabajo-personal-shell-v2';
-const APP_SHELL = ['./', './index.html', './styles.css', './app.js?v=2', './manifest.webmanifest', './icon.svg'];
+const CACHE_NAME = 'hub-trabajo-personal-shell-v3';
+const APP_SHELL = ['./', './index.html', './styles.css', './app.js?v=3', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', (event) => event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', (event) => { if (event.request.method === 'GET') event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request))); });
