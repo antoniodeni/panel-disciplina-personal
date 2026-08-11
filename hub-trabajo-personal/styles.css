@@ -25,6 +25,12 @@ button, input { font: inherit; }
 .overview-value { justify-self: end; font-size: 1.05rem; white-space: nowrap; }
 .overview-value.negative { color: #a33c32; }
 .overview-arrow { color: #315e2c; font-size: 1.4rem; font-weight: 900; }
+.next-note-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 5px 16px; align-items: center; margin-top: 14px; padding: 17px; color: var(--ink); background: #fffdf6; border: 1px solid #e4d4a4; border-left: 4px solid var(--gold); border-radius: 8px; text-decoration: none; }
+.next-note-panel:hover { background: #fff9e9; }
+.next-note-label { grid-column: 1; color: #7d6418; font-size: .74rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.next-note-panel strong { grid-column: 1; overflow-wrap: anywhere; }
+.next-note-panel small { grid-column: 1; color: var(--muted); }
+.next-note-panel .overview-arrow { grid-column: 2; grid-row: 1 / 4; }
 .capture-panel { margin: 0 0 28px; padding: 22px; border-top: 4px solid #486985; }
 .capture-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; margin-top: 17px; }
 .capture-form .button { grid-column: auto; }
